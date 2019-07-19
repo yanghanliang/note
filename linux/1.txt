@@ -1,0 +1,3027 @@
+文件目录详解
+/bin    是命令所在的目录,所有用户都可以操作的
+
+/dev    设备目录,硬件都在这里.不能直接访问使用这些目录
+
+/home   家目录(普通用户的家目录).普通用户登录系统的时候,所在的位置
+
+/lib    动态链接文件的目录( .so 结尾的 windows 上面的 .dll 结尾的)
+
+/media  挂载光盘时的目录 DVD VCD
+
+/mnt    挂载目录: U 盘,移动设备的目录
+
+/var    动态变化的文件目录:数据文件,日志文件
+
+/boot   Linux 的内核目录
+
+/etc    配置文件目录
+
+/lost + found  失物招领处!
+异常关机的时候,系统会临时把为保存的东西放在这里
+
+/opt    是第三方程序安装目录
+
+/root   超级用户的家目录
+
+/usr    系统默认安装目录
+
+
+
+
+
+命令:
+
+ls       	查看文件
+
+ls -l    	查看详细信息  ll
+
+ls -a    	查看所有的(包含隐藏的)文件
+
+linux里面，名称前面有一个[.]的，就是隐藏文件。
+
+/* ls -a -l 	查看所有文件的详细信息(包含隐藏的) */
+
+ls -al   	简写查看所有文件的详细信息(包含隐藏的), 前面有 [-] 不可缺少的目录
+
+ls -l ./ 	查看当前目录信息 ls ./  简写
+
+命令的写法:
+
+命令 [选项参数] [目录参数(默认是当前目录)]
+
+ls -l /  参看根目录
+
+ll  查看当前目录的详细信息 == ls -l 的简写方式
+
+pwd  查看当前用户所在的目录
+
+cd   切换目录
+
+命令 [选项参数]
+
+cd ../  切换到上一级
+
+~  代表的是家目录
+
+cd -  切换回上一次所在的目录
+
+cd ~  切换到家目录
+
+clear  到命令行的最底部(清空命令行窗口)
+
+*
+su  切换用户(权限不够的时候使用,执行完后就退出)
+
+su[username] : 不加用户名的时候,默认是管理员的
+
+su 用户名  切换到普通用户
+
+-  切换用户的时候,使用切换用户的环境变量(家目录)
+su - bigc  用这个方法切换用户(推荐)
+*
+
+exit 退出(回到管理员)
+
+shutdown  普通用户是不能使用
+shutdown -h  关机 后面加 时间 分钟(单位)
+		 -r  重启
+		 -k  通知
+		 -c  阻止  其他用户使用的(需要权限)
+
+ctr + c 取消当前窗口的任务
+
+ctr alt F2 到 F6 都切换用户
+ctr alt F1 返回
+
+halt    立即关机，普通用户也可以使用。
+reboot  立即重启，普通用户也可以使用。
+
+tar -zxf 解压文件
+
+
+halt    立即关机
+reboot  立即重启,普通用户也可以使用
+
+grep  [搜索的内容]  [搜索的文本] 文本内容查找
+grep size anac...
+grep font anac...
+
+|  管道
+
+管道:是把左边命令执行完成的结果,一次性的(以文本的方式)给右边
+xargs 把左边执行的结果,一行一行的拿给右边使用
+
+ls -l | grep 搜索的内容
+ls -l | grep cfg
+
+ls -l / | grep (文件名)  查找到这个目录
+ls -l / | grep media
+
+#######################
+
+3、VIM编辑器的三种模式
+
+普通模式：可以实现普通的功能:复制，删除，粘贴, 移动, 还原
+
+命令模式：可以实现普通模式的所有功能。并且可以实现更强大的功
+能。
+
+插入模式：写入数据, 修改内容
+
+命令模式: 末行模式
+普通模式: 命令模式
+
+#########################
+
+vim 文件名  打开这个文件
+总结:
+vim /etc/grub.conf  在打开文件时发现文件的内容
+与想象的不一致(是空的),这时候需要看看是不是因为
+权限问题导致的
+
+/etc/grub.conf  文件详解
+
+default  默认是0,0代表的是系统的索引号
+
+timeout  开机时,倒计时的时间
+
+splashimage  背景图片
+
+hiddenmenu  隐藏菜单
+
+title  系统菜单的标题
+
+15行-17行  centos 系统的列表
+
+#######################
+
+使用 grub.conf 设置装载口令:
+
+a: 确定写入密码的位置
+在 hiddenmenu 后面, title 前面, 他们中间
+
+b: 明文密码的说明：
+容易被识别，所以需要给这个密码，设置成md5的加密的。
+加密，一定是要解密的，他们俩共同认识的一种方式才行。
+
+c: 找到要使用的加密软件:
+grub 按两次 table 键 找到 grub-md5-crypt
+
+d: 使用 grub-md5-crypt 生成加密文件
+grub-md5-crypt 回车即可输入密码
+
+e: 复制生成的加密密码,到 grub.conf
+在写入密码的位置,写上:
+password --md5 加密后的密码
+备注:
+一定要写 md5 ,告诉我们的解码器,我们使用的什么方式加密的
+
+f: 保存退出(wq),重启(reboot),在出现倒计时时,按 e 进入
+按 p 设置 (输入正确的密码),按任意键返回,回车启动
+
+#######################
+
+选择登录界面(/tec/inittab)*
+vim /tec/inittab  内容详解:
+18行,运行级别 0, 表示:关机,不必设置
+19行,运行级别 1, 表示:单用户模式,不必设置
+20行,运行级别 2, 表示:多用户网络不起动,不必设置
+21行,运行级别 3, 表示:多用户模式(终端模式).在服务器都是默认设置的
+22行,运行级别 4, 表示:预留级别,不必设置
+23行,运行级别 5, 图形化
+24行,运行级别 6, 重启,不必设置
+id:5:initdefault:  运行模式:图型化模式(就是设置而已)
+(init3  切换运行级别,别管这个,还没验证呢!)
+
+#######################
+
+挂载文件系统(/etc/fstab)*
+swap 分区(交换分区)
+
+vim /etc/fstab  内容详解
+第一列: uuid, 表示:这个值是不重复的,唯一的
+第二列: 分区的名称
+第三列: 文件系统的类型
+第四列: 默认的分区,执行权限(可读,可写,可执行等!) defaults(默认)
+第五列: 备份: 0, 不备份. 1, 备份
+第六列: 自检: 0, 不自检. 1, 第一个自检. 2, 第二个自检
+
+
+
+#######################
+
+esc 退出
+
+yy  复制
+2yy 复制当前行和下一行的内容
+
+p  粘贴
+
+dd  删除(剪切)
+2dd 删除当前行和下一行的内容
+
+u  还原
+alt u
+
+k  向上移动
+l  向右移动
+j  向下移动
+h  向左移动
+G  移动到底端
+gg 移动到顶端
+125gg  到达125行
+
+set nu  显示行号
+set nonu  取消行号
+
+进入命令模式的方式是: 输入 :
+
+1 co 5  复制第一行的内容到第5行下一行
+
+1,3co 5 把第一行到第3行的内容 复制到第5行的下一行去
+
+5,7d  删除第5行到第7行的内容
+
+1m2 将第一行移动到第二行的下面一行
+
+9,10m 1  移动多行
+
+w   保存
+
+q   退出  有时候退出需要在前面加 :
+
+wq  保存退出
+
+w!  强制保存
+q!  强制退出
+wq! 强制保存退出
+i   光标所在处进入插入模式
+a   光标的后面进入插入模式
+o   光标的下一行进入模式,并且是新增一行空白行
+
+/搜索内容  搜索
+取消搜索高亮的方式:搜索一个不存在的值
+
+C  写入
+
+o  换行
+
+grub  加密
+
+--md5 加密后的密码
+
+/size     搜索 size 内容
+n  向下查找
+N  向上查找
+
+vim +10   直接打开文本,并且定位到第10行
+vim 文件1 文本2 文本3  打开多个文本
+next  查看下一个文件
+prev  查看上一个文件
+last  查看最后一个文件
+frist 查看第一个文件
+
+rpm  查询安装软件
+rpm -qa  查询系统内所有 rpm 包安装的软件
+-q  查询
+a   所有的
+wc -l 文本   统计文本内容行数
+wc -l anaconda-ks.cfg
+rpm -qa | wc -l  统计系统里面安装的所有的 rpm 包个数
+rpm -qa | grep vim  查找 vim 软件
+rpm -e 软件名  卸载(通常会有一个提示说,先卸载下面的文件才能卸载它,卸载完成没有任何提示,需要验证)
+rpm -qa | grep vim  卸载验证
+vi 按两次 table 键  查看是否还存在 vi 开头的某个软件
+
+
+
+面试题 Linux 常用的命令有哪些?
+
+回答的时候,一定不要带关机与重启的命令
+			         参数
+
+为什么不用window 系统 Linux 稳点,可以长时间不关机
+安全性高
+
+##################################
+
+与用户和组相关的文件
+
+组文件:
+/etc/group  组文件
+/etc/gshadow  组密码文件
+
+用户文件:
+/etc/passwd  用户文件
+/etc/shadow  用户密码
+
+用户文件详解
+vim /etc/passwd
+第一列: 用户名,唯一的
+第二列: 用户密码占位符(x占位符)
+第三列: 用户编号,唯一的
+第四列: 组编号,唯一的
+第五列: 注释
+第六列: 家目录的配置
+第七列: shell 类型.指定用户默认使用的 shell 类型
+
+shell 设定命令行解释器的作用
+/sbin/nologin 这个 shell 的意思是:该用户不应该登录
+
+不登录的用户有什么作用呢?
+每一个程序要运行,都必须要有用户名.运行的时候,就需要权限,这些权限都是
+依赖于用户的,所以我们的程序必须有用户
+
+##################################
+
+用户密码文件详解
+vim /etc/shadow
+
+第一列: 用户名
+第二列: 用户密码
+
+##################################
+
+vim /etc/group  组文件详解
+
+第一列: 组名
+第二列: 组密码占位符
+第三列: 组编号
+第四列: 组里面的附属成员信息
+
+##################################
+
+vim /etc/gshadow  组密码文件详解
+第一列: 组名
+第二列: 组密码(空 | ! 都是空密码)
+第三列: 组的管理员
+第四列: 组里面的附属成员信息
+
+##################################
+
+与用户相关的指令:
+
+useradd  添加一个用户
+useradd xiaoming
+
+编号的说明: 500以上给用户使用.500以内给系统使用
+
+-r 创建一个500以内的
+
+#
+usermod  修改
+
+-c  修改注释(vim /etc/passwd  里的第五列内容)
+usermod -c '注释内容' 用户名
+usermod -c 'xiaoming' xiaoming
+
+#
+-u  修改编号
+usermod -u 新编号(不存在的值) 用户名
+usermod -u 502 xiaohong
+
+#
+userdel  删除用户
+-r  删除用户的时候,把创建它的时候带来的东西都回收了
+userdel -r 用户名
+userdel -r xiaohong
+
+如果不加 -r 参数,只是删除用户的信息
+
+##################################
+
+组相关指令
+groupadd  创建组
+groupadd  组名
+groupadd xiaohong
+vim /etc/group  查看组信息
+
+#
+-g  指定我们创建组的时候的编号
+groupadd  -g 组编号 组名
+groupadd -g 666 xiaoqiang
+
+#
+groupmod  修改组
+-n  修改组的名称
+groupmod -n 新的组名 旧的组名
+groupmod -n qiangge xiaoqiang
+
+#
+-g  修改组的编号
+groupmod -g 新的编号 组名
+groupmod -g 888 qiangge
+
+#
+groupdel  删除组
+groupdel 组名
+groupdel qiangge
+
+######################
+gpasswd  附属组的操作
+
+-a  添加
+gpasswd -a 用户名 组名
+gpasswd -a lixm qd
+
+#
+-d  删除
+gpasswd -d 用户名 组名
+gpasswd -d lixm qd
+
+##################################
+
+显示文件内容:
+
+head  文件参数(默认显示文件的前十行内容)
+head anaconda-ks.cfg
+
+#
+head -n 3 文件参数   显示这个文件的前三行信息
+
+#
+显示后面10行信息
+tail 文本参数
+tail anaconda-ks.cfg
+
+tail -n 3 文件参数  显示文件的最后三行信息
+tail -n 3 anaconda-ks.cfg
+
+#
+cat  打印内容到屏幕
+
+#
+tac  倒着打印内容到屏幕
+
+#####################################
+
+使用 man 指令查看帮助手册
+man: 指令
+man userdel
+
+帮助
+命令 --help
+userdel --help
+
+命令 -h
+--help 与 -h 换着使用,这个不行,用另一个
+userdel -h
+
+###############################
+
+设置用户口令
+passwd: 设置用户的密码,修改密码
+passwd 用户名
+
+-S  查看密码状态
+passwd -S root
+
+-l  锁定用户!锁定之后就不能登录了
+passwd -l bigc
+
+-u  解除锁定
+passwd -u bigc
+
+-d  清空用户的密码
+passwd -d bigc
+
+没有密码的用户,直接就可以登录成功
+
+*
+linux服务器是一个在外网上运行的高端服务器。一定要记住，密码的重要性。
+所有当使用清空密码的时候，一定要记住锁定用户。
+*
+在我们清空密码的时候，一定要再一次的锁定我们的用户。让用户没有办法登录。
+
+#
+禁止某个用户登录:
+!!  禁止登录
+在组密码文件(/etc/gshadow)中,密码的前面加上 !! 保存退出即可
+
+禁止所有普通用户登录:
+创建一个文本文件
+使用 vim 打开(创建, vim 当它后面的文件不存在时会自动创建)一个新的文本文件保存退出,即可
+vim /etc/nologin
+
+注意:验证后,赶紧把这个文件给删除了
+rm -rf /etc/nologin
+
+##########################
+
+显示用户信息**
+
+id  显示当前用户的信息
+id username  显示指定的用户信息
+id root
+
+#
+groups  显示当前用户组的信息
+groups username  显示指定用户组的信息
+
+###############################
+
+查看用户的资料信息
+
+chfn  设置用户的资料
+
+#
+finger  查看信息
+显示:bash: finger: command not found  说明:没有这个 finger
+安装 finger 就行了
+
+#
+a.先保证光盘挂载成功,后查找 finger 文件:
+rpm -i /media/CentOS_6.5_Final/Packages/ | grep finger
+
+b.安装这个软件
+rpm -i /media/CentOS_6.5_Final/Packages/finger-0.17-39.....
+
+-v  是显示安装过程
+-h  是以#来显示安装进度
+
+############################
+
+
+
+#
+newgrp  切换主组,临时切换
+切换主组与附属组
+newgrp 组名(bigc) 用户名(root) //只是当前进程有效
+
+root 的主组切换成 root
+root 用户的主组是 root 的时候,创建一个新文件
+
+#
+ls -l
+第三列: 是创建文件用户的主组的名称
+主组的名称,影响文本文件的权限
+
+#
+whoami  我是谁? 快速查出当前用户
+
+############################
+
+赋予某些普通用户特殊功能
+sudo 命令
+sudo shutdown -h 10
+
+sudo的工作使用的方式：个人用户的权限是不够的。管理员配置个人的权限。让个人拥有某一些特别的权限，只要管理员配置了，就可以使用了。
+输入的密码，就是输入的用户自己的（默认）。
+
+管理员给普通用户配置权限：
+配置文件就是sudoers
+
+只要管理员把相应的权限，写在这个sudoers中，就可以了。我们就可以使用这些命令了。
+
+a:找到配置文件
+vim /etc/sudoers
+
+//root ：指的是用户
+//ALL ：第一个，是指我们使用sudo这个命令的ip地址的。ALL就是所有IP地址。
+//(ALL)：第二个，这个是可有可无的，如果没有写，默认是root用户。ALL里面写的就是用户名。
+//ALL ：第三个，这个是写的命令，ALL代表所有的命令。如果你要写命令，就可以写绝对路径。
+
+//自己写一个示例：
+//bigc   ALL=(root)/sbin/shutdown
+//解释这句话：
+//bigc可以使用sudo执行shutdown命令。这个shutdown执行的时候，使用的权限是root的。
+
+//bigc   ALL=(xiao)/sbin/shutdown
+解释这句话：
+//bigc可以在所有的IP地址上面使用sudo执行shutdown命令。
+//这个shutdown执行的时候，使用的权限是xiao的。
+
+b:设置权限
+## Allow root run any commands anywhere
+root ALL=(ALL) 		ALL
+bigc ALL=(root)/sbin/shutdown -r 10  //在这里添加
+//强制保存退出
+
+//sudo的配置文件，可以让我们的权限精确到我们的选项参数。
+//sudo这个命令，在工作中使用频率特别高！可以使用就可以了。
+
+//sudo默认的是连接的操作的时候，是不用输入密码的。
+//但是有过期时间，长时间没有操作。再次操作，就要重新输入密码了。
+
+
+//查看自己的 sudo 有哪些命令
+sudo -l
+
+#
+查看命令的绝对路径
+whereis 命令
+whereis shutdown
+
+#
+编译 sudoers 必须是管理员
+vim /etc/sudoers
+
+#############################
+
+查看文件属性:
+
+ls -l  查看详细信息(查看属主信息,查看属组信息)
+
+#
+文件属性解说
+ls -l  (root ~)中的
+
+第一列:
+文件的类型
+-  文本内容
+d  目录
+l  软链接
+
+第二列：
+权限列：
+前三个列：属主（这个文件属于的主人的权限）
+中三个列：属组（这个文本属于的组织的权限）
+后三个列：其它（非属主非属组的权限）
+
+第三列：
+硬连接数
+
+第四列：
+属主：（文件属于的主人）
+
+第五列：
+属组：（文件属于的组织）
+
+第六列：
+文件的大小
+
+第七列：
+文件的时间
+
+第八列：
+文件名
+
+#
+权限:(区分系统文件和普通文件)
+9个字符占有：前三个是属主，中三个是属组，后三个是其它。
+他们仨都有：r 读 ； w 写； x 执行；
+重点说明：所有权限的符号位，有的时候就有符号，没有的时候就是 – 占有。不可能变成其它的。
+
+执行：就是让我们的文本内容运行起来，产生代码应该有的权限！
+
+属主：rwx  这权限位，有就是相对应的符号，没有就是-
+属组：rwx  这权限位，有就是相对应的符号，没有就是-
+其它：rwx  这权限位，有就是相对应的符号，没有就是-
+
+转换成数字：
+r = 4 ；w = 2 ;  x = 1; - = 0;
+
+属主可以使用一个整数来表示，他的所有权限：rwx
+属组可以使用一个整数来表示，他的所有权限：rwx
+其它可以使用一个整数来表示，他的所有权限：rwx
+
+把他们的整数放在一起，就是我们的数字表示法：777
+
+属主：rwx = 7；属组：rwx = 7; 其它：rwx = 7;
+把他们放在一起：777  =  rwxrwxrwx
+
+示例：
+r-x r-x r-x  =  555
+
+示例：
+rw-r-xr-x  = 655
+
+示例：
+r-- r-x rw- = 456
+整数转成字符：
+547 = r-xr--rwx
+
+614 = rw---xr--
+
+435 = r---wxr-x
+
+我们的符号与数字表示法，非常的重要。所以一定要掌握。
+
+####################
+
+chmod  修改文件权限  重点*
+chmod 547 文件
+
+#
+字符操作法:
+u  代表属主
+g  代表属组
+o  代表其他
+a  代表全部
+
+要增加权限使用 + ; 减少权限使用 -
+
+#
+给文件的属主属组其它都增加执行权限
+chmod a+x 文件名
+chmod a+x anaconda-ks.cfg
+ls -l
+
+#
+将文件所有的执行权限都去掉
+
+chmod a-x anaconda-ks.cfg
+ls -l
+
+#
+将属组的权限增加成 rwx
+chmod g+rwx anaconda-ks.cfg
+ls -l
+
+#
+将属主的权限减少一个 w
+chmod u-w anaconda-ks.cfg
+
+#
+用于创建文件
+mkdir 文件名 创建文件
+mkdir -p 文件路径/文件路径/文件路径/文件名  创建文件(递归创建,有路径的用它创建)
+
+经典面试题：linux下面创建目录的时候，使用什么参数是递归创建！
+mkdir -p 是递归创建目录！
+
+-m  创建目录的时候给定权限
+
+touch  可以直接创建文本文件
+
+#
+修改权限
+chmod 777 test/  //这样只能修改他本身,他里面的文件的权限并没有改变
+
+-R  递归
+chmod 777 test/ -R  //递归修改可以实现他和他所有的子文件的权限
+
+#
+chown  修改属主
+chown 属主名 文件
+chown bigc anaconda-ks.cfg
+
+-R  递归修改
+chown -R bigc test
+
+chown :root test/  修改属组
+chown :root -R test/  递归修改属组
+
+属主与属组一起修改
+chown root:root 文件名
+
+只需要记住：chmod修改权限；chown修改属组属主
+
+#
+
+rm  删除文件
+rm test.html
+
+rm -f  强制删除
+
+-r  删除目录
+
+rm -rf  连用(常用)
+重点：不要使用rm  –rf  /
+
+##################################
+
+复制与剪切(重命名)操作
+
+cp  复制文件
+
+cp 复制的内容 复制到的位置
+cp install.log /home/
+
+说明：复制的内容是文件的时候，复制的位置可以是文件名。这样就直接修改名称。
+如果复制的内容是多个或者是目录，复制到的位置必需是目录。
+
+#
+复制多个文件到目录
+cp 复制内容1 复制内容2 复制内容3 复制到的位置是目录
+cp anaconda-ks.cfg install.log /home/
+
+#
+mv  移动文件
+mv 移动的内容1 移动的内容2 移动的内容3 移动到的位置必须是目录
+mv html/ /home
+
+mv 重命名
+当移动到的位置不是目录时,就会改变文件名
+
+#############################
+
+wc 文件统计
+#
+-l  统计行
+wc -l index.html
+
+#
+-c  统计字符
+
+#
+-w  统计单词
+英文是以空格来确定是不是单词的
+
+
+################
+
+grep 搜索匹配内容
+
+#
+grep 搜索匹配内容 搜索的文件
+grep html index.html
+
+#
+-n  显示搜索到的内容的行号
+grep -n html index.html
+
+#
+-c  搜索次数
+grep -c html index.html
+
+
+#
+-i  不区分大小写
+grep -i e index.html
+
+##########################
+
+创建连接
+硬链接数,就是文件有多少个连接到硬盘数据区上面的个数
+
+软链接:
+快捷方式
+
+ln  创建硬链接
+ln 指向这个 创建的硬链接文件(不能是目录,第一列不能是 d)
+
+-s  创建软链接
+ln -s test.php test.html
+
+##########################
+
+newgrp  切换主组,临时切换
+给 root 增加一个附属组 bigc
+
+gpasswd -a 用户名(root) 组名(bigc)
+
+使用 id 进行查看
+
+################
+切换主组与附属组
+newgrp 组名(bigc) 用户名(root)
+
+newgrp bigc root
+
+################
+root 用户的主组是 bigc
+
+vim index.html
+
+ls -l
+
+################
+
+----------------------------2018-03-14--------------------
+回顾:
+
+权限:
+r = 4 ; w = 2;  x = 1; - = 0
+
+777 = rwxrwxrwx
+654 = rw-r-xr--
+
+grep 非常重要 	文本搜索
+Linux 里面文本内容搜索非常重要的工具有 : grep sed awk
+
+1.文件查找:
+查找是以文本的名称,或者是属性来进行查找的
+
+find 目录参数 搜索方式 搜索条件
+
+a:
+-name  以名称来进行搜索
+find /root -name index.php
+
+b:重点
+(su -  切换环境变量)
+* 表示任意的值,通配的作用
+find /root -name index.php
+find /root -name "*nde*"
+
+
+c:
+-group: 以属组来搜索
+find /root -group root
+
+find /root -user
+
+d:
+-user: 以属主来搜索
+find /home -user bigc
+
+###################
+
+df
+写入数据会失败，一定要看看我们的硬盘是不是满了。
+
+第一列:是硬件真实在系统上表现的位置
+/dev 下面的都是硬件,我们不能直接操作
+
+第二列:数据块
+
+第三列:使用了的空间(是硬盘的大小就占满了)
+
+第四列:未使用的空间
+
+第五列:使用的百分比.100%就用完了
+
+第六列:挂载目录
+
+df -h 以1024进制来显示大小 *
+
+df -H 以1000进制来显示大小
+
+df -T 显示文件系统类型
+
+df -t 显示指定文件系统类型
+df -t ext4
+
+df -x ext4  不显示指定的文件系统类型
+
+########################
+
+文件统计
+
+du  不指定目录的时候,是当前的目录,把每个文件的大小都显示出来 单位 kb
+du /home
+
+-b: 单位:bit 来显示
+du -b /home/
+
+-k: 单位:kb 的大小(和默认的一样)来显示
+du -k /home/
+
+-m: 单位:m 的大小来显示
+
+-h: 以多种单位来显示(容易区分)
+du -h /home/
+
+-s: 查看目录的总大小
+du -s /home/
+
+常用的组合: sh  *
+du -sh /home/
+
+################### 挂载磁盘
+mount 硬件的真实路径 挂载的目录(只有光盘已经连接好了才能挂载)
+光盘的真实路径是: /dev/cdrom
+mount /dev/cdrom /media/
+
+出现read-only 说明挂载成功,查看内容
+ls /media/
+
+Packages  rpm 的安装目录
+
+umount  卸载
+注意：我们用户的位置，不应该在要卸载的目录里面。要卸载的目录里面，也没有正在使用的内容。这个时候，才能卸载的。
+umount 挂载目录    :卸载已经挂载好的目录
+umount /media/
+ls /media
+
+eject  弹出,可以在任意地方执行
+
+###################
+ls /etc/sysconfig/network-scripts/ifcfg-eth0  网络配置文件
+
+1）查看我们的外网ip网卡。环回网卡，没有必要去动。
+vim /etc/sysconfig/network-scripts/ifcfg-eth0
+
+2）如果要修改这里的内容，必需要备份！
+
+3）修改之前的说明：
+
+DEVICE：设备名称
+BOOTPROTO：dhcp，就是我们的网络ip地址，自动获取。我们的网卡是一个客户端，使用dhcp的方式自动获取ip地址。我们的家里连接网络的时候，连接tp-link路由器的时候，里面就有一个dhcp服务器，dhcp服务器，就是提供ip地址。
+		手动设置ip地址，这里就要写成none就可以了。
+手动设置的ip地址，也是会要去dhcp服务器验证的，所有必需是dhcp提供的ip地址才可以。
+
+HWADDR：mac地址：物理地址：千万千万不能修改。
+ONBOOT：yes：启动网卡；no：不启动网卡
+IPADDR：ip地址设置的位置
+NETMASK：子网掩码
+GATEWAY：默认网关
+
+NM_CONTROLLED :说明这个就是我们网络管理的软件，我们在安装的时候，选择自动连接有的同学会报错。就是这个网络管理软件的问题。这个软件，我们设计它的时候，是为了让网络管理更方便。但是我们使用的时候，感觉很麻烦了，问题更多了。所有在工作中，都禁用它。yes启动，no禁用。我们要选择no。
+
+
+r  替换
+
+C 删除后面的
+
+
+
+-----------------------------2018-03-17--------------
+
+Nginx 与服务器集群
+
+客户端: 从服务器获取数据(请求)
+服务器端: 提供数据(被请求的)
+
+监听：这个时候我们的服务器，可以指定是监听谁。服务器监听的时候，必需指定监听谁。默认是监听所有的ip地址。可以指定，只监听谁！
+
+#################################
+
+回顾:
+安装软件：
+	rpm包的安装法，从网上下载rpm包来进行安装！
+	安装方式：
+rpm  -ivh  安装包的路径 ： 安装
+	安装目录的查看：
+rpm  -qpl  安装包的路径 ：安装程序的安装目录的查看
+	安装的依赖：
+rpm  -qp  --requires  安装包的路径 ：查看安装包的依赖
+	安装软件的卸载：
+rpm  -e  软件的名称  :  卸载软件
+	查找到软件：
+rpm  -qa  |  grep  软件的名称 : 不知道软件名称，使用安装包分析。
+	rpm包安装的软件，请使用rpm包的方式卸载。因为这个包里面的很多文件都分散到不同的地方了。这个时候，你自己删除，很难找全的。
+
+源码安装法，从网上下载源码包进行安装！
+	网上下载的安装包都是压缩包，压缩包分不同的类型，要找到相应的解压方式。
+	区分他的压缩类型：
+file  压缩包的路径   ：查看到压缩包的数据格式
+	通过数据格式分析出使用的解压工具
+tar  -zxf  压缩包的路径 ：-f必需在参数的最后面
+	进入到这个解压目录里面：
+cd 解压目录
+
+源码安装三大步骤：
+1）使用./configure生成makefile文件，必需检查环境是否支持。
+①：这个操作的时候，有参数，我们的参数，需要使用./configure –help去查找
+②：查找出来参数，给配置上。分析这些参数，都需要哪些依赖。
+③：确定了依赖，就去解决这些依赖
+这么依赖之中，有很多都可以直接使用rpm包安装，或者直接就默认安装即可
+2）使用make，读取makefile文件，生成二进制文件
+3）使用make install，读取二进制文件，安装到系统。
+
+源码安装的删除，直接删除我们的安装包即可！
+
+剩余的都是一些命令：我们必需要掌握！
+比如：你在安装的时候就会遇见一些命令，反复的操作，就记住了。
+ls  ：查看当前或者是指定目录的内容
+cd ：切换我们的目录
+pwd ：查看当前用户的位置
+
+useradd ：添加用户
+chown ：修改属主或者属组
+chmod ：修改权限
+vim :修改配置文件
+
+tail  |  head ：查看文件的前10行和后10行。
+cat  |  tac  ：打印文本内容到屏幕
+
+grep  ：文本内容搜索，行的方式进行搜索
+sed   awk   :这二个知道就好，面试有问，你就说没有使用过。
+
+find  ：文件搜索
+
+df ：查看硬盘的大小与占用情况
+du ：查看目录的大小
+
+sudo  ：这个非常的重要。
+sudo 命令
+
+mkdir ：创建目录
+-p ：递归创建(面试题)
+
+touch ：创建文件
+
+rm  ：删除文件或者删除目录
+-r ：删除目录
+-f ：强制删除
+
+whereis ：查看命令的路径
+
+服务端与客户端连接的问题：
+	连接不上找服务端，是否启动！
+	如果启动了，还是连接不上。那就是我们的连接的路上出问题。
+
+比如：
+1、	用户的权限够不够。
+2、	服务端的服务器允许不允许进行连接。（防火墙）
+3、	SELinux这个也是一个权限管理（关闭状态）
+4、	网络通不通：客户端能不能与服务器进行有效的沟通的。
+5、	你使用的客户端是正确的吗？
+6、	其它：协议、端口、IP地址
+
+#
+数据库服务器:主要做数据库工作的服务器;
+静态资源服务器:专门做静态资源处理的服务器。
+
+#
+静态资源：css、图片、html、js
+动态资源：php的页面
+
+静态页面：我们静态资源组成的页面，就是静态页面。
+动态页面：动态的页面，是要与后台进行交互的，才是我们动态页面。
+
+#
+cdn服务器:节点服务器就称之为cdn服务器。
+
+#
+2、Nginx特点
+1）热部署 ：不用重启，就可以直接加载已经修改的内容
+2）可以高并发连接 ：相同的资源，nginx会比apache高一些。
+3）低的内存消耗 ：相同的资源，nginx会比apache低一些。
+4）处理响应请求很快 ：静态资源处理响应非常的快。
+5）具有很高的可靠性
+
+
+Apache与Nginx服务器区别
+1）nginx和apache的软件底层架构不一样。
+①：Nginx的并发性要比apache好很多；
+②：nginx属于轻量级服务器软件，apache属于重量级软件；
+③：nginx在处理静态页的效率要比apache好很多，apache在处理动态页面上的效率要比nginx高
+④：apache在安全性要比nginx要好。
+因此有一种不常用的组合：lnamp。
+
+2）运行模式不同的。
+①：apache运行PHP是通过加载php5模块运行。由于是apache去加载php5模块，所以每次修改了php.ini配置文件需要重启apache。
+②：nginx运行php是通过网络连接php-fpm（fastCGI）方式运行。 php-fpm是一个独立的软件（默认端口：9000）。因此在nginx下修改了php.ini配置文件需要重启php-fpm。
+
+#################
+
+LNMP的安装与配置
+
+在 linux 上面直接下载 wget url (需要连接网络)
+
+#
+make clean  清除 make 生成的文件
+
+#
+netstat -tanp
+
+
+502  网关错误
+
+#
+events ：服务器的次要信息
+
+http：这段里面都是虚拟主机的配置
+server ：一个server段就是我们的一个虚拟主机
+
+user  username  [groupname]: 指定用户名或者是组名
+worker_processes :配置我们的worker进程，进程数配置和cpu个数一样就可以。
+
+
+conf：配置文件
+sbin：可执行文件
+html：web站点目录
+
+worker_connections  ：并发连接数！每秒能够连接1024个请求。
+配置这个值的时候，不应该算总数：这个值的设定应该是设置成最高值。并发请求数的最大值。
+
+错误日志  日志的存储地方  错误的级别
+error_log  logs/error.log;     [可选的]
+
+
+#
+错误
+An error occurred.
+Sorry, the page you are looking for is currently unavailable.
+Please try again later.
+
+If you are the system administrator of this resource then you should check the error log for details.
+
+Faithfully yours, nginx.
+
+这个错误是因为 php-fpm 模块没有启动
+
+nginx 用过 php-fpm 模块才能访问 php
+
+
+#
+nginx.conf 详细配置
+vim /working/nginx-1.12.2/conf/nginx.conf
+
+#
+启动负载均衡器
+/working/nginx-1.12.2/sbin/nginx
+
+检测是否启动成功
+ps -ef | grep nginx
+
+#
+/working/php7.1.13-ngx/sbin/php-fpm
+ps -ef | grep php-fpm
+
+#
+站点目录
+vim /working/nginx-1.12.2/html/index.php
+
+#
+设置用户自定义会话存储函数：session_set_save_handler
+
+
+
+-------------------2018-03-18--------------
+
+netstat -tanp   查看进程(进程号)
+ps -ef  查看进程
+
+/working/nginx-1.12.2/sbin/nginx  启动nginx
+
+kill  关闭(杀死)
+kill pid(查看进程中的第三列)(第二列)
+kill -9 pid  强制关闭
+
+memcache特性：
+memcache只是一个缓存工具。
+memcache里面的数据，可以没有。
+memcache它只能存储一种数据类型：字符串
+memcache存储的时候，使用的是k => v
+memcache最大的k是250字节
+memcache最大的v是1m
+
+
+
+get key  查看内容(erre 出现这个错误,多操作几次就好了)
+get false
+get true
+
+#
+add key 0 0 4  添加内容
+
+#
+set key 0 0 4  设置一个值
+
+#
+incr  指定增加的数值
+incr key 2  对数值加2
+
+
+重点(面试)
+memcached 支持的整形相加的值是有范围的
+0-2^64-1  超过就不可以了(不支持负数)
+
+超过最大值就会从0开始
+
+只要不在这个范围,使用incr就会报错
+
+decr  减少
+decr key 2  //不能使用负数
+到了最小值时,就会一直是0,不会继续减下去了
+
+非0-2^64-1这个范围内的 ,不能进行加减
+
+flush_all  清空,整个memcached数据库都会清空
+
+清空的时候,在工作中不能随便使用,
+因为有别人的项目
+
+incr decr
+能不用就不用,因为他们自带加锁功能
+加锁之后,请求是串行的,服务的请求性能会下降
+
+
+
+#
+检查扩展
+
+
+
+-----------------------2018-03-20----------------------
+
+内存重启和关机时数据会消失
+memcached 使用的时候,只有一种数据类型,字符串类型
+
+redis 与 memcached 都是为了应对网络的高并发,大流量而存在的
+他们可以同时接受到的并发请求,都已经过万了,对服务器来说基本不会成为瓶颈.
+
+服务器瓶颈:
+a: 网络
+b: 硬盘
+
+redis 可以持久化, memcached 不能持久化
+持久化:将数据存储在硬盘中
+
+redis 读速度没有 memcached 快,写速度与memcached 基本一致
+redis value 值大小是 512M, memcached 是 1M
+redis 支持主从服务器, memcached 不支持主从服务器
+
+Slave 从服务器
+
+总结:
+从服务器连接上主服务器的时候,会一次性把所有的数据,都传给从服务器,全量同步
+主服务器有了新数据,主服务,就会把新数据传给我们的从服务器,这个就是增量同步
+如果主从服务器之间断开,再一次链接的时候,主从服务器会使用全量同步
+
+C  直接删除后面的
+
+
+1. 下载
+www.redis.io  英文网
+www.redis.cn  中文网
+www.
+
+2. 将下载的文件上传到 linux
+可以使用共享目录
+
+3. 移动到 home 目录
+
+4. 解压
+
+5. 进入
+
+6. 编译生成二进制文件4
+make
+
+7. 安装到安装目录里面去
+make PREFIX=目录地址
+make PREFIX=/working/redis-4.0.6 install
+
+8. 查看安装目录
+ls /working/redis-4.0.6
+ls /working/redis-4.0.6/bin/
+
+9. 查看使用方法
+/working/redis-4.0.6/bin/redis-server --help  (这一步可以去官网查看)
+
+10. 指定我们的配置文件的目录：
+查看有没有配置目录,如果没有,就创建一个
+mkdir /working/redis-4.0.6/conf
+然后:
+cp redis.conf /working/redis-4.0.6/conf/
+
+11. 启动 redis 服务器
+/working/redis-4.0.6/bin/redis-server /working/redis-4.0.6/conf/redis.conf
+
+它会占用执行窗口,ctr + c 结束
+
+12. 修改配置文件
+bin  绑定,客户端只能使用这个ip地址才能访问
+port 6379  redis 默认的端口号,需要记住
+memcached  的默认端口号 11211
+daemonize yes 默认是 no,修改成 yes 就是以后台运行方式启动
+pidfile /var/run/redis_6379.pid  pid 文件的保存路径,主程序号的保存地方
+
+13. 启动 redis
+/working/redis-4.0.6/bin/redis-server /working/redis-4.0.6/conf/redis.conf
+
+14. 验证启动没有
+ps -ef | grep redis
+
+15. 验证端口号
+netstat -tanp | grep redis
+
+########################
+
+Redis快速入门
+我们的服务器是不能直接操作的。必需找到客户端，才能使用客户端给服务器发送命令。发送过去之后，我们的服务器才能响应。
+
+1. 找到客户端：
+ls /working/redis-4.0.6/bin/
+
+2. 查看帮助
+/working/redis-4.0.6/bin/redis-cli --help
+
+
+3. 登录客户端
+/working/redis-4.0.6/bin/redis-cli
+
+##########################
+
+port  端口号
+pid  主进程号
+
+
+#
+验证是否启动
+ps -ef | grep 程序名
+
+#
+验证端口号
+netstat -tanp | grep 程序名
+
+#
+验证端口号
+在windows命令行窗口下执行：
+C:\>netstat -aon|findstr "80"
+
+Redis 支持的数据类型:
+字符串, hash, 列表, 集合, 有序集合, 必须记住,随着发展,还有其他的不常用就没有记
+
+####################
+String (字符串)
+#
+set 添加值(存在的时候是修改,不存在的时候,就是添加)
+语法: set key value
+set name chen
+
+#
+get 获取字符串
+语法: get key
+get key
+
+#
+set (存在的时候就是)修改
+语法: set name bigc
+
+#
+mset 可以同时设置多个值
+语法: mset key value key value
+mset age 18 sex name
+
+#
+语法: mget key key key ...
+mget age sex name
+
+#
+del  删除(可以同时删除多个)
+语法: del key key
+del name sex age
+
+#
+nil  表示没有
+
+#
+incr  增加数值1
+语法: incr key
+incr age
+
+#
+incrby  增加指定的值(可以为负数,为负数时变减)
+incrby key 10 (把key的值加10)
+incrby age 10
+
+#
+memcache 使用incr 的时候,是不能使用负数的,但是 redis 可以使用负数
+
+#
+redis 最大值: 2^63-1 (有符号,正负)
+memcached 最大值: 2^64(无符号的)
+
+#
+set age 值  (设置最大值)
+
+#
+redis 在到达最大值时,继续增加会报错
+memcached 在到达最大值时,会回到0,然后继续向上增加
+
+#
+decr  减一
+decr key
+
+#
+decrby 指定减少多少
+decrby age 值(为负数时变成了加)
+decrby age 10
+
+###########################
+php array(key=>array(field=>value, field=>value))
+
+#
+hset 设置hash
+语法: hset key field value
+hset hash1000 name chen
+
+#
+获取hget
+语法: hget key field
+hget hash1000 name
+
+#
+hmset 设置多个
+语法: hmset key field value field value field value
+hmset hash1000 name bigc age 100 sex 1
+
+#
+获取多个值
+语法: hmget key field field
+hmget hash1000 name age sex
+field 是不能重复,重复了就覆盖
+
+#
+hgetall 获取一个 key 里面全部的值
+语法: hgetall key
+hgetall hash1000
+
+#
+hkeys  (查看字段)获取字段(field)
+hkeys key
+hkeys hash1000
+
+#
+hlen  获取长度(查看长度)
+语法: hlen key
+hlen hash1000
+
+#
+hdel 删除字段(field)
+hdel key field 删除字段
+hdel hash100 name
+
+#
+del 删除key
+del hash100  删除整个hash100
+
+字符串使用 del 删除
+
+请注意：我们的hash操作，就要使用我们的hash里面的方法。不要使用字符串里面的方法。
+
+注意：我们现在使用的redis里面的方式，是操作的我们的redis里面的数据结构！！
+
+##################################
+
+list(列表)
+列表:就是链表
+
+双向链表: 随便进随便出(一个通道,有两个进口,两个出口)
+
+单向: 队列 | 先进先出(一个通道,有一个进口一个出口,一左一右)
+
+堆|栈: 先进后出(一个通道,只有一个进口一个出口,且在同一方向)
+
+#
+数据结构
+事件复杂度和空间复杂度  难点(提升)
+
+#
+语法: lpush key v1 v2 v3 (添加值,从上(左)边插入)
+lpush listkey chen zhao qian su
+List, key 肯定是唯一的,值也可以重复的
+
+#
+lrange 获得 list 里面的值
+lrange 0 -1
+0 就是 list的索引下标,是从0开始的,-1 表示 list 的索引下标,是从0开始的
+
+语法: lrange key 开始值 结束值
+lrange listkey 0 -1
+
+#
+lpop  弹出(的同时从(上边(左边)中删除了这个值)
+语法: lpop key
+lpop listkey
+
+#
+llen  查看 list 的长度
+语法: llen key
+llen listkey
+
+#
+rpush 从右边(下边)插入数值
+语法: rpush key value
+rpush listkey wang
+
+#
+rpop 从右边(下边)弹出
+
+#
+实现双向链表
+使用 lpush(从左边插入) lpop(从左边弹出) rpush(从右边插入) rpop(从右边弹出)
+
+#
+单向链表
+lpush 与 rpop 就可以实现队列
+rpush 与 lpop 就可以实现队列
+
+#
+堆|栈
+lpush 与 lpop
+rpush 与 rpop
+
+###########################
+
+Set  无序集合
+
+#
+sadd  添加值
+语法: sadd key v v v ...
+sadd sss zhao qian shu li
+
+#
+smembers  获取值,查看值
+语法: smembers key
+smembers sss
+
+集合里面的值是不可以重复的
+
+#
+spop 弹出(弹一个)
+语法: spop key
+spop nasha
+
+spop 弹出多个
+语法: spop key 要弹出的个数
+spop nasha 3
+
+#
+sinter  交集
+语法: sinter key1 key2
+sinter set setone
+
+#
+sdiff 差集(交集取反)
+语法: sdiff key1 key2
+sdiff set setone
+
+#
+sunion 并集
+语法: sunion key1 key2
+sunion set setone
+
+###################
+
+SortedSet(有序集合)
+
+#
+zadd  添加值(值写在前面)
+语法: zadd key [整形 value] [整形 value] [整形 value]
+zadd sset 1 zhao 10 qian 2 wang
+有序集合会通过这些整形进行排序
+
+#
+zcard  有序集合的长度
+语法: zcard key
+zcard sset
+
+#
+zrange 获得有序集合里面的值(从小到大排序)
+语法: zrange key start stop
+zrange sset 0 -1
+
+带整形的查看
+zrange sset 0 -1 withscores
+
+#
+zrevrange 倒序(从大到小排序)
+语法: zrevrange key 开始下标 结束下标
+zrevrange sset 0 -1
+
+#
+zincrby  整形,增长指定的值
+语法: zincrby key 指定增长的值 value
+zincrby sset 10 wang
+
+###########################
+
+总结:
+hash 的总结:
+field 是不能重复的, value 是可以重复的
+
+list 的 value 是可以重复的
+list 可以实现双向链表 ,队列,堆栈
+
+set 无序集合
+值不可以重复,存储值没有排序
+
+zset 值是不可以重复的,存储的值是通过整形来进行排序
+
+hash list set zset 他们的 key 要删除,都使用 del
+
+#######################
+
+value 的说明:
+一个字符串类型的值最多能存储512M字节的内容
+
+#
+key(值)  查看key
+key 匹配规则,使用*时候很多
+keys *
+
+#
+keys "s*"
+以s开头的key
+
+#
+key "*t"
+以t结尾的key
+
+#####################
+
+删除 key
+
+#
+语法: /working/redis-4.0.6/bin/redis-cli del key
+/working/redis-4.0.6/bin/redis-cli del nasha
+
+#
+找到以 s 开头的 key 然后删除
+/working/redis-4.0.6/bin/redis-cli keys "s*" | xargs /working/redis-4.0.6/bin/redis-cli del
+
+管道的说明:
+管道是一次性把左边的内容结构,拿给右边使用
+
+加了 xargs 这个参数后:
+管道就把左边执行的结果,一行一行的拿给右边使用.  重点
+
+因为我们左边有可能一次性获得的数据量太大。内存不够。假如你左边一次性操作的结果是5G的内存。在拷贝到给右边。就要占用10G的内存。所以这个是非常的不明志的。
+
+左边执行一行，给右边，左边占用的内存就放出来了。
+
+xargs这个参数，会在linux中的find的时候问它。考点
+
+xargs 就是可以把管道左边，执行一行，就把一行的结果，给右边执行。
+
+##########################
+
+exists 判断值是否存在
+语法: exists key
+exists age
+存在是1  不存在是0
+
+#
+expire  设置过期时间
+语法: expire key
+expire age 20
+
+#
+ttl  查看过期
+语法: ttl key
+过期返回  -2
+永远存在的是  -1
+
+#
+type  判断类型
+语法: type key
+type listkey
+
+#
+select  选择库
+redis 默认是16个库,每一个库都是独立的,默认是在0号库里面
+可以在 vim /working/redis-4.0.6/conf/redis.conf 设置(redis配置文件)
+select 15
+
+#
+客户端连接不上服务器时,可以测试一下
+ping  检查客户端与服务器通不通
+ping abc
+
+#
+flushdb  清空当前库
+
+#
+flushall  清空所有的库 (工作中使用不到)
+
+###########################
+
+重启 redis
+1. ps -ef | grep redis
+2. kill 主进程(不是客户端)
+3. /working/redis-4.0.6/bin/redis-server /working/redis-4.0.6/
+conf/redis.conf
+4. ps ef | grep redis
+
+客户端登录:
+/working/redis-4.0.6/bin/redis-cli
+set name chen
+auth aabbcc
+
+工作中的时候，测试机(redis服务器)，一般情况是没有这个密码的。但是线上服务器都有密码。所以你使用不成功的时候。一定要确定一个你的密码。是否正确。
+
+auth  非常重要,开启密码验证,让redis 进行操作前输入密码(只针对客户端),memcached 没有密码验证
+
+##########################
+
+持久化功能
+
+snap shotting 快照持久化
+
+快照持久化：保存的是我们的内存里面的二进制
+
+#
+差异的说明：
+使用快照持久化的时候，我们的在redis启动的时候，会自动读取我们的数据到内存。一次性就读取到位了。所以的非常的快。
+aof持久化是我们的redis在启动的时候。会一行一行的执行我们的命令。这个过程是非常的慢的。
+
+快照持久化在持久的时候，是每一次都是覆盖写的，所有持久化的时候，消耗是很大的。
+aof持久化的时候，是把我们的执行的命令，记录下来。在写到文件里面。
+
+
+#
+redis  是一个内存服务器,数据在内存中使用,持久化就是把内存中的数据,
+同步到硬盘,让数据有一个安全的地方,再一次 redis 再次使用
+
+save 60 10000: 如果在1分钟之内有10000个keys被改变了.才进行持久化(才保存到硬盘)
+如果设置,根据服务器数据的重要性
+
+持久化,把内存里面的所有数据,压缩一次,一次性把所有的数据全部储存,每一次持久化操作,都是这样做的
+
+#
+nosql 非关系型数据库
+
+
+dir 数据保存地址
+
+#
+精细化持久化
+append only file (AOF持久化,精细持久化)
+打开配置文件
+
+开启:
+/working/redis-4.0.6/conf/redis.conf  配置文件目录
+
+appendonly yes
+
+每一次的更改配置文件都需要重启服务器端的 redis-scr
+#
+appendfilename "appendonly.aof"  保存的文件名
+
+#
+always  总是保存,有任何改变,都立即保存,理想状态下可以保证100%不会有问题
+
+everysec 每一秒保存一次(推荐这种)
+
+no 这个是根据系统的io来进行保存,也就是随机的,不推荐这个
+
+修改配置文件
+
+#
+快照持久化：保存的是内存里面的二进制
+
+------------------------2018-03-21------------------------------
+
+mysql | oracle
+关系型数据库: 存储源数据的
+
+redis | memcached
+NoSQL: 非关系型数据库,中间结果集数据
+
+####################
+
+定时任务: centos
+
+crontab:　定时任务的设置命令
+-l  查看已经设定好的的定时任务
+-e  编辑定时任务,使用和vim 里面一定的命令操作
+-r  清除所有的定时任务
+
+定时任务,在centos中,决定在某一时间,某一时刻,自动运行的程序,都需要定时任务,在一个项目完成之后
+
+#
+设定时间:
+如果5个时间,都是*表示的是每一分钟都执行每一个命令
+
+分钟 小时 天 月 星期
+1 * * * *  每小时的第1分钟,执行这个命令
+1 1 * * *  每天的1小时1分钟,执行这个命令
+
+
+事件参数 命令(绝对路径) [参数] 根据命令接上参数 &> /dev/null
+&>  无论成功还是失败的消息,全部写入设备 /dev/null
+/dev/null
+
+man  可以查看
+
+自动创建
+touch   创建文件(必须要有创建文件名)
+./  当前目录
+file- 文件名的一部分
+$() 解释命令
+date +%M-%S 命令
+\ 转义符(必须要有)
+touch ./file-$(data +\%M-\%S)
+
+#
+查看命令
+crontab -e
+
+清除所有的crontab任务,工作不用
+
+工作时,进入crontab ,dd删除
+
+yum repolist  查看yum源
+
+repodata  rpm包目录
+
+#
+清空yum缓存
+yum clean all
+
+yum install 软件名  安装
+yum update 软件名  更新
+yum remove 软件名  删除
+
+#
+yum list 软件(查看所有的)
+yum list 软件名  查看指定的软件名
+
+yum clran all 清除缓存
+yum makecache 生成缓存
+
+#
+yum search 软件名 搜索
+yum search php
+
+#
+yum repolist 显示
+
+自动安装
+yum install 软件名 -y
+
+#
+卸载
+remove
+
+#
+删除所有 file为文件名前的文件
+rm -rf file*
+
+
+
+
+$v = array(
+	'v' => $value,
+	's' => time(),
+);
+
+$_SESSION['test'] = $v;
+
+
+IO  一次性硬盘读写
+
+###########################
+
+$redis = new redis(); //创建对象
+$redis->connect('ip地址',端口号) //连接
+$redis->auth('aabbcc'); //输入密码
+$ret = $redis->hgetall('pingdao:1000'); //获取哈希值
+
+foreach($ret as $mail => $username){
+
+}
+
+error_reporting(0)
+关闭所有的错误信息
+
+ini_set('max_execution_time','0');
+设置访问超时时长:无限制
+
+
+1   *   1   *   *
+每月第一天每小时第一分钟执行
+
+1   *   *   *   1
+每个星期一的每天的第一分钟执行
+
+2   1   *   *   *
+每天的第一个小时的第二分钟执行
+
+*/2  *   *   *   *
+每天的每两分钟执行
+
+*/4  *   *   *   2
+每个星期二每4分钟执行
+
+1   */3  *   *   *
+每天每3小时的第1分钟执行
+
+1   1    *   *  1-5
+每星期1到星期5的第一个小时的第一分钟
+
+
+Slaves(重服务器)
+
+#################
+
+-----------------------------------2018-03-23---------------------------------
+
+静态化(了解)
+ob 缓存就像在长江上面的水坝,php代码中的echo
+就是长江源,输出的内容,肯定会流向离它最近的...
+
+真静态化:
+由ob缓存生成的静态化
+
+每秒请求的次数: QPS (越大越好)
+
+面试时,介绍自己网站的性能时,就可以介绍代码,QPS是多少
+QPS 4000 ,证明你的服务器,能够同时接受处理4000个请求
+
+优化网站的时候,就应该让这个值,越来越大
+
+ab 压力测试软件(ab比较简单的压力测试软件)
+
+Requ
+
+#########################
+
+真静态化
+
+ob 缓存原理:
+ob_start  开启ob缓存
+ob_flush  刷新ob缓存里面的...
+ob_clean
+
+级别('个数')
+
+123 456 hr 654 hr 789 hr
+
+假设: 没有替换, 并且是以追加的方式执行的(自己理解),考虑销毁
+
+#
+ob_end_flush  关闭默认的ob缓存
+
+#
+header 修改的 http 协议的内容
+
+在使用header的时候,设置信息直接到程序缓冲里面的
+,这个时候必须保证header 前面没有任何数据
+
+
+#
+ob_get_contents()  //把ob缓冲
+
+
+file_put_contents(); ???
+
+filemtime()  //文件检查时间函数
+
+$file_exists(文件名)  //判断文件是否存在
+
+
+设计(做设计图)->前端(做成静态页面)->套php
+测试人员(发现bug后截图发回来)->
+
+-------------------------数据库优化--------------------
+--------------------------2018-03-26----------------
+#当需要的内容在一个很大的数据里面时,用like'% %',查询
+#速度很慢:可以添加索引来进行快速查找.
+
+#添加全文索引(只针对英文:因为英文以空格进行分词)
+alter table table_name add fulltext 取个名称(字段)
+alter table `fulltext` add fulltext fullcon(content);
+
+#查看表结构:
+show create table `fulltext`\G;
+
+#搜索词:
+select * from `表名` where match(`字段`) against(`字段里要搜索的词`);
+select * from `fulltext` where match(`content`) against(`dream`);
+
+#查看表结构:
+show create table `fulltext`\G
+
+#删除全文索引
+alter table table_name drop index 取的名称
+#index: 其实和key是一样的,都可以删除
+alter table `fulltext` drop index fullcon;
+
+#总结：
+对比我们搜索的结果，你会发现，能够搜索到的词，他在一篇文章的出现的机会，是不多的。搜索不到的结果。在一篇文章中出现的机会太多了，而且几乎每篇文章都有。
+
+我们搜索词，会把我们的很多生活常用的词给过滤掉，因为它在文章中，每一篇都有。这个时间搜索的结果，就没有价格了。搜索的词是我们的全文索引定义的。所有我们不必在意这些。
+
+中文文章搜索的时候，也是可以的。只是要使用中间件（第三方工具），来帮助Mysql实现功能。
+
+#前缀索引的选择性:
+计算公式:
+	count(distinct left(字段值,num))/count(字段值) = 0-1; 越接近1越好
+left(字段, 1) : 取字段值里面的第一个字段
+left(字段, 2) : 取字段值里面的第二个字段
+前缀索引的选择性 === 索引的选择性,就是最佳的
+
+#####
+
+前缀索引:
+把字段前面的几个值拿来制作索引
+
+其他索引:
+字段列的全部的值拿来制作索引.
+
+索引覆盖:
+就是查询的返回值,都是索引树上的值,这个时候就是在使用索
+引覆盖,
+表示形式: using index ,这个值在使用 explain
+的时候,可以查看到
+
+####
+索引的选择性
+计算公式:
+count(distinct left(字段值)/count(字段值))
+
+前缀索引的添加方式:
+alert table table_name add key 取个索引名(字段(num))
+
+num: 表示这个字段的多少值
+
+
+插入数据
+
+################################
+MySQL 中的其他功能
+1.慢日志: (重点,面试题)
+有一个文件里面存储的日志内容.因为它储存的内容,主要是我们的sql语句查询慢的时候,
+把这个sql语句给记录下来,我们通过查看这个文件就知道那些sql语句执行的比较慢,然后优化它.
+
+
+1. 慢日志存储的位置
+show variables like 'slow_query%';
+
+slow_query_log: 这个值,就是开启慢日志,1就是开启显示on,
+0就是关闭显示OFF
+
+slow_query_log_file: 慢日志存储的位置,这个地方不要修改.修改之后,就有权限的问题,这个时候,
+权限没搞明白,这个时候就记录不下来.
+
+默认定义是10秒.
+
+工作中定义的时候,一般情况是根据项目来的,没有一定明确的说法
+
+开始设置
+开启慢日志:
+set global slow_query_log=1;
+
+设置时间:
+set long_query_tome = 1.111111;
+
+
+设置的这些是临时生效的,重启mysql 服务器就没有效果了,
+永久生效需要去修改配置文件;
+
+查看日志文件的位置
+打开查看内容
+
+tail的说明：
+-f参数非常的重要。如果我们以后工作，有一个集群的服务器。现在服务器有问题，访问的时候，有时候有bug有时候没有bug。
+
+这个时候，我们就使用tail
+–f打开一个日志文件。当有新的内容生成的，时候，我们就看见了。看见了如果没有问题，就可以排除这个问题。
+
+tail 文件: 打开一个文件后面的10行
+-n  可以设定查看行数
+-f 直接打开文件,并且占用屏幕,当有新内容写入文件的时候,
+就直接显示这个新内容
+
+select * from myisam where name like '%iao60%';
+
+慢日志开启的时候,可以把sql 语句执行慢的记录下面,我们每一次打开都可以看见sql 就可以
+进行优化了
+
+#
+现在使用sql缓存之所以少,是因为现在很多数据都要更新,或者新插入的数据,
+交互的内容越来越多了
+当数据经常发生变化的时候,不适合使用sql缓存的
+原因是当我开启
+
+#
+强制不缓存
+select sql_no_cache * from table_name
+
+############
+
+分区与分表
+当数据量到达一定数量的时候,同样的表在相同的查询的时候会
+变慢,
+解决办法:
+
+
+###
+删除分区
+alter table table_name remove 分区名
+
+###################
+
+hash 分区
+
+增加分区
+alter table table_name add par
+
+less than  小于
+
+创建一个最大的,包含最大可能
+alter table table_name add parition(partion yearmax values less )
+
+
+创建新分区的时候,只能创建一个更大的分区
+
+#删除分区
+alter table table_name drop partition 分区名称
+使用删除分区的时候,数据也会一并的被删除
+
+#删除所有的分区
+alter table table_name remove partitioning
+
+移除分区的时候,数据依然存在,数据移动了,并且占用了资源
+
+#
+have_query_cache : 这个值是yes的时候,就是支持sql语句缓存
+query_cache_limit : 每一条sql语句,可以占用(最大)的空间大小: 1M
+query_cache_min_res_unit : 最少占用的空间大小4k
+query_cache_size 这个是缓存的大小
+这个在5.5的时候是没有设定的,要自己设定!!
+query_cache_type : 这个就是开启或者关闭! on就是开启,off就是关闭
+
+#查看缓存的状态:
+show status like `%qcache%`;
+
+#
+Qcache_free_memory 这个就是我们可以使用的空间,剩余空间
+Qcache_hits 命中,使用了多次次缓存
+Qcache_inserts 插入的缓存
+Qcache_lowmen_prunes 因为内存不够,多少条没有保存
+Qcache_not_cached 不缓存的数据
+Qcache_queries_in_cache 已经缓存的数据
+
+
+
+
+
+
+##
+list 分区操作
+
+1.创建一个表
+
+
+分区的时候注意,要包含
+
+2.查看文件
+
+3.插入数据
+
+4.查看文件大小
+
+删除分区
+alter table table_name drop partition winter
+
+删除分区的时候,会把数据删除的
+
+5.添加一个分区
+alter table_name add partition(partiton winter values in (12,1,2));
+注意:删除的的内容,不会回来的,只是创建了一个相同的表名
+
+查看文件
+
+6.移除分区
+alter table table_name remove partitioning;
+
+验证数据
+验证文件
+说明:移动分区的时候,数据是存在的,占用了IO资源来进行一定数据
+
+7.总结:
+
+range | list
+创建一张表
+create table table_name(表结构)engine=innodb charset=utf8
+partition by range | list(主键的id值, 整形的)add partition(
+partition 取个名称 values less than(一个整形))
+或者
+partition 取个名称 values in(整形1,整形2,整形3...)
+)
+
+移除分区
+alter table table_name remove partitioning;
+
+删除分区的时候,要注意数据会一并删除,所以可以合并分区.
+移除分区的时候,数据是存在的,这个时候,IO资源会被使用,因为要移动数据,
+
+创建分区的时候非常注意,一定要包含所有的可能性,不然插入数据的时候
+没有被包含的,就会报错
+
+#分区的说明:
+分区的时候,取的字段,移动要表达的,可以对整个数据,能够平分分配的值,这样才是最佳的
+
+一定要对数据有一个整体的了解,然后对未来有一定的预期.
+因为现在的数据已经是可以进行划分了,未来的数据,如果能预判的准确,
+那就可以提前的准备好,不至于,操作失误
+
+#
+水平分区表
+面试题
+水平分表: 数据有很多的时候,要进行拆分成多张表,表里面的数据,几张表都
+是一样的,所以表结构一定是一样的.
+
+拆分id策略: 1000W的数据,已经很慢了,拆表
+1.策略: 前500W数据,分在表1里面,后500W数据,分在表2里面
+2.策略: id进行划分,id是单数就在表1里面,id是双数的就在表2里面
+
+实现策略1:
+直接创建两张表,把数据导出来,前500W的数据,导在表1里面,后500W的数据导
+在表2里面.
+
+查询的时候:这类分表,在查询的时候都会获取ID.PHP代码,就会尽量去维护每一个页面数据都会尽量去分配ID.当再次请求的时候,就直接使用ID去查询
+
+没有ID的怎么去查询呢?
+
+myisam 表,就可以使用merge 引擎把myisam 表连接起来,直接插merge引擎的表就可以了,其他引擎的表,
+就可以使用一个中间件,来实现同Merge引擎一样的功能,就可以了.
+
+实现策略2:
+直接创建两张表,进行导表,id是单数的就存储到表1;
+id是双数的就存储在表2里面,新数据进行的时候,直接分配一个id,
+通过这个id来进行数据的插入
+
+维护id 这个值,进行操作.可以使用redis 或者是一张表来进行维护.
+
+查询的时候,通过id进行查询,如果没有id值,就可以
+使用中间件来实现效果
+
+面试:
+数据量大了,分表怎么分??
+上面是一个答案,另一个是:
+如果是用户表,怎么进行分表???
+有新注册人员,新注册人员有哪些信息.分表的时候,使用
+字段里面的唯一值,进行hash,hash之后会把字符串,转成一个整形,
+通过这个整形,就可以进行分表,实现策略2的效果
+
+实现算法:
+hash 取余算法!加入要进行分表,确定有2张表.
+字符串,hash之后,获取一个整形.11212012
+
+分表算法的实现:
+0定义成表2
+1定义成表1
+实现表名:
+表前缀 + 取余的值: goods_0; goods_1
+
+找表名是通过表前缀 +取余的值,就找到了存储的数据表
+
+#
+实现策略2:
+1.创建数据表
+2.创建维护id的表
+确定让id字段增长的sql
+insert into table_name values(null);
+
+#db = mysqli_connect('127.0.0.1', 'root', '123456', 'test');
+mysqli_query($db, 'set names utf8');
+
+$data = array('name'=>'渡水复渡水看',...... );
+
+$sql = "insert into goods_id_incr values (null)";
+
+$id = mysql_insert_id();
+
+$table_last = $id % $table_num;
+
+$table_name = $table_prce . $table_last;
+
+$i_sql = "insert into $tbale_name values ($id, '{$data['name']}',  "
+
+
+#####
+垂直分表
+
+
+#
+锁
+对数据的访问控制的技术
+
+共享锁: 加了共享锁的,大家都可以去读它
+排他锁: 加了排他锁,只有加锁的这个人可以去读写它.
+
+锁的范围:
+表锁: 就是把一张锁给锁定, myisam引擎,实现的就是表锁
+表锁的颗粒大,加锁快,并发访问低
+
+行锁: 即使把一张表里面的一行锁住,innodb引擎,实现的就是行锁,颗粒小,
+加锁慢,并发访问高
+
+加锁的时机:
+悲观锁:
+当使用数据的时候,就认为别人有可能会使用,就赶紧加锁
+
+乐观锁:
+当使用数据的时候,别人
+
+#
+锁冲突:
+当数据在进行加锁的时候,另一个人访问看就会出现锁等待,
+这个时候
+A: 对ID是1的加锁,执行访问ID是2的
+B: 对id是2的加锁,执行访问ID是1的,出现锁等待
+这个就是,锁冲突
+
+所以写代码,一定要从上到下,不要跳着写
+
+对冲突说明:
+当myisam引擎,遇见表冲突的时候,会执行解决,mysql内部实现
+
+读锁:
+开始加锁: lock table table_name read
+解锁:unlock tables
+
+写锁:
+开始加锁: lock tables table_name write
+解锁:unlock tables
+
+lock tables myisam read
+
+总结:
+读锁的时候,当前进程与其他进程都可以读,当前进程不可以写,其他
+进程
+
+总结:
+读锁的时候,可以通过更新数据,转成写锁
+读锁的时候,当前进程可读可写,其他进程可读,
+写锁的时候,当前进程可读可写,其他进程不可见
+
+innodb 不是绝对的行锁,是有条件的行锁,innodb的锁是加个索引上面的,你要使用锁必须是这个查询条件,必须有索引,才能实现行锁,
+查询田间,没有索引
+
+提交事务:
+commit
+
+#
+给没有索引的字段添加字段
+
+#
+//	加锁的时候不要使用这两个索引
+
+#重点(面试)
+总结:
+innodb 引擎一定要记住,它的锁是加载索引上面的,没有索引的字段列在使用的时候,加锁是加的表锁,这个时候,是没办法使用innodb解决
+锁冲突的
+只有加了索引的字段,使用锁的
+
+#
+模拟并发
+ab -n 500 url
+
+#
+加锁的时候,是串行的,串行的时候,性能会下降,但是为了保证数据的完整性,
+必须这样做
+
+#文件锁
+
+
+负载均衡??????
+主从服务器
+
+------------------------2018-03-27----------------------
+mysql 优化
+
+主从服务器:就是我们规定一个服务器为主服务器,规定另一个服务器为从服务器
+
+mysql 在很多场合都是实现一主一从,一主多重不稳定
+
+因为mysql抗压能力不行
+
+#
+注意:主从同步的时候,一定要注意主从服务器在同步之前,数据一定是保持一致的,
+主服务器同步过来的数据有可能
+从服务器没有这张表,就会报错
+
+
+mysql 服务添加(授权)账号
+grant 权限 on 库.表 to 账号@IP地址 identified by 密码
+开启一个新的账户,并且设定密码与权限
+
+创建一个账户
+grant all on *.* to `xiangming`@'%' identified by '123456';
+
+select user,host from mysql.user; #查询
+
+#
+删除用户
+drop user `xiaoming`@'%';
+
+bin日志就是二进制日志
+
+#授权权限
+replication slave
+只有这个权限,才是从服务器,连接主服务器的权限
+
+
+#############
+
+前提是数据有备份(/tmp/)
+
+bin-log日志:
+找到服务器开启这个配置：
+vim /etc/my.cnf
+
+添加
+[mysqld] //在它下面添加以下内容
+log-bin = logfilename  //文件名
+server  = 1  //集群服务器的ID
+
+保存退出,重启就好了
+
+
+#
+grant 权限 on  库.表  to  账号@IP地址  identified by 密码
+
+查看创建的用户
+select user,host from mysql.user;
+
+1）创建一个账户：
+grant all on *.* to ’xiaoming’@’%’ identified by ’123456’;
+
+5）学习删除用户：
+drop user 用户名@IP地址
+
+
+#生成一个新的bin日志文件：(数据文件有多份,可以重启服务器)
+flush logs
+
+2）删除日志文件，并生成一个新的日志文件
+reset master
+
+
+3）查看一下，我们的日志内容：
+show master status;
+
+#
+我们开启二进制日志之后，新插入或者新修改的操作，才会记录到我们的bin日志里面。
+
+ls /usr/local/mysql/bin/
+
+change master to
+master_host='192.168.149.62',
+master_port=3306,
+master_user='slave',
+master_password='123456',
+master_log_file='logfile.000001',
+master_log_pos=250;
+
+
+3、从服务器管理
+查看一下状态：
+show salve status\G
+
+Slave_IO_Running: NO  //这个必须是yes才行
+Slave_SQL_Running: NO  //这个必须是yes才行
+
+Last_Errno: 0  //这两个,如果有错误消息,必须解决才可以,
+Last_Errno:
+
+#
+开启主从服务器
+start slave
+
+#查看状态
+show slave status \G
+
+#停止
+stop slave
+
+#
+说明：当我们每一次同步数据的时候。我们的从服务器都会记录下这个点位。下一次同步的时候，就从这个点位开始执行。
+当你停止之后，我们的点位，也是记录下来的。当你继续开启的，就继续从记录下来的这个点位开始执行。所有数据，依然会同步的。
+
+#
+清空主从同步
+1.先停止:
+stop slave
+
+2.清空配置:
+reset slave all;
+
+3.查看状态:
+show slave status\G
+
+##############
+
+4、读写分离的配置
+重点：
+$dbone = mysqli_connect();主服务器写操作
+$dbtwo = mysqli_connect();从服务器读操作
+
+$sql = “insert into..... “;
+mysqli_query($dbone, $sql);
+
+$sql = “select ....”;
+mysqli_query($dbtwo, $sql);
+
+
+###############
+
+Sphinx
+因为中文需要分词,需要对这些内容进行搜索,必需分词,
+这个软件
+
+总结:
+先安装各个软件
+1. mysql 的先装载数据
+2. 配置sphinx
+3. sphinx连接mysql 取会索引数据,
+索引里面包含了分词与分词id
+4. php 连接
+5. php
+
+#
+搜索模式:
+1. SPH_MATCH_ALL搜索方式:
+搜索值,在MySQL
+
+Sphinx 增量索引
+已经做好了5W 的数据,现在如果有新数据
+
+增量源
+定义增量源的配置,需要使用一张表,记录一下,
+已经生成索引的ID,比这个ID大,就是我们数据
+
+####
+
+3、Sphinx的特性
+高速的建立索引（可达10M/秒）
+高性能的搜索（平均检索时间小于0.1秒）
+可处理海量数据
+提供了优秀的相关度算法
+支持分布式搜索
+提供摘要生成功能
+可作为MySQL存储引擎提供搜索服务
+支持布尔、短语、词语相似度等多种检索模式
+单个文档支持多个全文检索字段（最大不超过32个）
+支持额外的属性信息
+支持单一字节编码和UTF-8编码
+原生支持MySQL、PostgreSQL数据库
+
+
+coreseek：这个是包含中文的sphinx软件。国内都是使用这个。
+
+##
+Coreseek/Sphinx运行原理
+sphinx可以以单独的程序来运行，也可以以mysql扩展的方式运行。
+一般情况都是以单独的程序来运行的，因为这样好维护。
+以扩展的方式来运行，容易出问题！！
+
+##
+要让我们的修改立即生效，就的执行一个命令：
+ldconfig
+
+#
+数据预热
+
+----------------------------------------2018-03-28---------------
+	MongoDB
+memcached redis NoSQL: 非关系型数据库
+
+sql语句:就是一个编程语言,mysql是严格遵守sql语句的规划来进行的 *
+
+#
+MongoDB: 是一个持久化类型的NoSQL,就是数据存储到硬盘里面的,主要存储日志 报表
+子类的数据,这些数据量都是非常大的.缺少一点数据是无所谓的
+
+mongodb里面有库的概念,库下面有集合(表)的概念,集合里面的数据,称之为文档
+(一行一行的数据),mongodb 在语法和js很像
+cloumn 字段(field)
+
+#
+mongodb 的主键索引不能修改,不能删除
+
+#
+1. 下载文件
+2. 放在共享目录
+3. 移动到home(/root)目录
+4. 解压
+5. 查看解压目录
+6. 发现程序包可以直接使用,不用编译了,(每个版本不一样),需要看内容而定
+7. 将它移动到(/working/mongodb) //mongod 很多时候结尾有d的都是服务端
+8. 使用服务端启动 --help 查看帮助
+9. 端口 ftp: 21 , ssh: 22 , mysql: 3306 , http: 80 , https: 443 , php-fpm: 9000
+memcache 11211 , redis: 6379 , mongodb: 27017(面试题,重点)
+10.logpath 日志(文件)
+logappend  日志追加写
+fork 后台运行
+dbpath arg
+storangeEngine arg
+
+netstat -tanp
+
+#
+查看数据库
+show databses
+show dbs
+
+#
+集合
+查看集合:
+show collections;
+show tables;
+
+集合在没有数据的时候,是没有办法创建的,并且有数据的时候,才会自动创建
+
+3.文档(document):插入数据
+db  //表示当前库
+collection_name  //集合名称
+insert  //操作的动作,这个动作就是插入
+{}  //这个文档,就是要写入的数据,以json格式来写的
+
+
+#插入一条数据:
+_id是自动生成的,并且_id这个字段必须是_id,
+我们可以插入id,但必须是_id
+db.collection_name.insert({});
+db.he5.insert({name:"xiaoming", age:18, sex:1});
+db.he5.insert({_id:1,name:"xiaoming1",age:19,sex:1});
+
+验证一下:
+db.he5.find();
+
+插入多条数据的时候:
+db.collection_name.insert([{字段:值,字段:值},{字段:值,字段:值}])
+db.he5.insert([{_id:4,name:"xiao2",age:19,sex:1},{_id:3,name:"xiao3",age:19,sex:1}]);
+
+#查询:
+db.collection_name.find()
+find: 这个动作,就是查询动作
+db.he5.find();
+
+##
+写一段js自动生成数据:
+function antoinsert(){
+	for(i=5;i<15;i++){
+		db.he5.insert([{_id:i,name:"xiao"+i,age:15+i,sex:1}]);
+	}
+}
+
+antoinsert();
+
+#
+重点说明:id是唯一的,不可重复的,必须有索引.
+
+#插入多条数据
+
+#更新
+不要使用它更新
+//db.collection_name.ipdate({},{})
+{} 第一个文档,就是条件
+{} 第二个文档,更新的值
+db.he5.update({name:'xiaoming'},{age:19});
+结果:只有id和age 其他的字段都消失了
+
+#
+$set 这个就是更新什么变什么,其他值不变
+db.he5.update({name:"xiaoming1"},{$set:{sex:0}});
+
+$inc 这个是对数值进行加多少或者减多少
+db.he5.update({name:"xiaoming1"},{$inc:{age:3}});
+db.he5.update({name:"xiaoming1"},{$inc:{age:-3}});
+
+
+#选择器的示例
+db.collection_name
+
+db.he5.update({name:"xiaoming1"},{$set:{sex:0}});
+
+#
+加
+db.he5.update({name:"xiaoming1"},{$inc:{age:3}});
+
+#
+减
+db.he5.update({name:"xiaoming1"},{$inc:{age:-3}});
+
+
+#
+更新相同值
+db.he5.update({age:19},{$set:{sex:2}});
+
+更新的时候,默认是找第一个数值,因为数据量太大.
+
+#
+db.collection_name.update({},{},{});
+{} 第三个文档的说明!
+里面可以有二个值
+multi: true默认值是false,表示只更新第一条数据,true的时候
+匹配到更新
+upsert: true默认值是false,查询的时候,找不到该数据,
+就不更新.true的时候,找不到数据,就插入该数据;
+mysql里面的replace也是相同的效果的
+
+multi: true
+db.he5.update({age:19},{$set:{sex:3}},{multi:true});
+
+upsert: true
+db.he5.update({age:18},{$set:{sex:2}},{upsert:true});
+
+#
+删除
+db.conllection_name.remove();
+
+$查询(重点)
+$eq   等于
+$ne   不等于
+$lt   小于
+$lte  小于等于
+$gt   大于
+$gte  大于等于
+
+总结:
+$eq $ne $lt $lte $gt $gte
+db.collection_name.find({字段:{$eq:19}});
+db.he6.find({age:{$lte:13}});
+
+#
+$in   包含
+db.collection_name.find({age:{$in:[19,18]}});
+
+$nin  不包含
+db.he6.find({age:{$nin:[18,19]}});
+
+总结:
+$in $nin
+db.collection_name.find({age:{$in:[19,20]}});
+
+并且,或者
+db.collection_name.find({$and:[{},{}]})
+
+and 是对
+db.he5.find({$and:[{name:'xiao'},{age:11}]})
+
+
+文档里面,只要有一个字段满足条件,就显示内容
+
+总结:
+$and $or
+db.collection_name.find({$and:[{},{}]});
+
+实现 limit 效果
+skip 跳过, linit 显示
+db.he5.find().skip(3); //跳过前面的三条数据
+
+组合
+db.he5.find().skip(3).limit(4);
+
+#
+count  统计
+db.he5.find().count();
+find 在后面跟条件的时候,是可以跟上
+
+count,默认(false)情况是过滤掉skip limit
+加true 就好了
+
+#
+siez  可以统计count(true) 是一个效果
+
+#
+sort({})
+{} 字段 1 升序, 2 降序
+
+
+{}  意思是文档
+
+mongodb 区分字符串
+
+
+#################
+
+聚合
+db.collection.aggregate({});
+{} 文档里面有三种值
+$match:{} 这个文档里面写的,就是fild里面的,一模一样的,就是查找内容
+$group:{} 这个文档里面的值非常重要
+_id : 这个是必须写的,文档里面有要求的
+{_id:'123'};     123: 就是给每一行文档,一定固定的值是123
+{_id:"$age"};    $age: 字段的值
+{_id:"$age", {$sum:"$sex"}}; //把年龄拿来分组,计算每一个分组sex的总数,求的年龄的sex的总数,
+就放在agesumsex这个字段上面: $sum: 求和
+$avg: 平均值
+
+
+####
+mapReduce 批量处理
+db.collection_name.mapReduce(map,reduce,{});
+map 扫描集合
+
+总结:emit第一个参数,是数组的下标,值不同就会有多个key,emit
+第二个参数,就是key对应的value 里面的一个值,value是数组!
+
+reduce 函数有两个参数(v1,v2)
+第一个参数,就是emit的key值
+第二个参数,就是emit的value值(数组)
+
+reduce函数调用的次数,是emit里面的key的数量,emit里面key有二个,reduce函数就调用两次
+
+{} 第三个参数文档
+out:{inline:1}  打印
+
+##
+批量操作,就是使用两个函数,两个函数都是js里面的语法
+来实现.
+
+#
+查看默认索引
+db.he4.getIndexes();
+
+查看索引
+db.he4.getIndexes();
+
+创建一个新的索引
+db.collection_name.createIndex({name:1});
+{name:1}  name字段名 1递增
+
+
+删除这个索引
+db.collection_name.dropIndex("索引名");
+db.collection_name.dropIndex("name_1");
+
+##
+创建唯一索引
+值不能重复
+db.collection_name.createIndex({},{})
+{} 第一个文档,是表示对那个字段创建索引
+{} 第二个文档,是表示创建什么索引
+
+db.he4.createIndex({name:1}, {unique:true});
+
+##
+
+
+索引的使用:
+db.collection_name.find().explain();
+
+
+db.collection_name.find().explain('executionStats');
+
+executionStats:
+
+总结:
+索引,在mysql里面也是有的,但是和mongodb
+里面的索引是完全不同,这个是为了海量数据而设计的.
+
+创建降序索引
+db.he6.createIndex
+
+#
+一次删除所有的索引(不包含主键索引)
+db.he6.dropIndexes();
+
+#
+创建一个固定集合
+db.createCollection('quan', {capped:true,size:500,max:5});
+
+#
+GridFS功能,一个程序(软件)
+
+搜索自带模糊功能
+
+#
+MongoDB中的权限角色
+角色是权限控制里面,经常使用的
+
+#
+库的角色:
+read 制度的角色
+readWrite  读写的角色
+userAdmin  用户
+
+开启用户验证的时候必须有管理员
+
+#
+用户属于某一个库的,必须在库里面使用它
+
+#
+创建一个管理员库,在管理员库里面创建一个用户
+
+db.createUser({
+	user:'heima2',
+	pwd:'123456',
+	roles:''
+})
+
+
+开启MongoDB权限控制
+
+1.查看进程
+2.关闭进程(kill)
+3.客户端登录(报错,没有权限)
+4.使用用户,登录服务器
+必须注意: 用户登录,必须是某个库
+
+你要登录一个用户,必须在库里面,某个用户,是那个库的管理员,就在这个库
+里面
+
+
+####
+replSet(副本集)
+主机和北极进行通信,当主机挂掉的时候,如果副机大家
+选择自己成为主机,这个时候,通知仲裁机,投票,让谁成为主机
+
+
+##
+php 针对于apache扩展的配置文件所在位置
+ls /etc/php/7.0/apache2/
+
+当发现安装php后发现该有的扩展没有, 可以在配置文件查看,重启apache
+
+##
+/usr/bin/svnserve -d - /svndata/
+svndata  仓库根路径
+
+##
+跳转
+50gg
+50G
+
+
+##
+
+在 ubuntu 的命令行中使用 vi 命令编辑文件，遇到方向键与退格键无法正常使用时可通过如下方式解决 ：
+
+1、打开 /etc/vim/vimrc.tiny 文件，将“compatible”改成“nocompatible”非兼容模式，就可以解决方向
+
+   键变 ABCD 的问题了。
+
+2、添加 set backspace=2 语句，Backspace 退格键恢复正常使用。
+
+
+##
+
+解决端口占用问题：
+
+sudo lsof -i:10005 // 10005 端口号
+sudo kill -9 7401 // -9 强制杀死

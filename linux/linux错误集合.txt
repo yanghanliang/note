@@ -1,0 +1,57 @@
+1.
+vim /working/httpd-2.4.29/conf/httpd.conf
+
+查看这个文件时,用鼠标移动发现只有100多行代码,利用键盘的kxjh移动,G gg 都可以发现它原本行数
+
+总论: 使用键盘的移动方式移动光标
+
+2.
+切换root用户时切换不了
+原因是没有设置root密码 sudo passwd root
+
+3. 
+能ping通本地电脑,但是ping不到外网,有可能是网络原因 ,尝试换
+一个网再试一下
+
+4.
+问题：由于目标计算机积极拒绝 无法连接
+原因: 服务器上svn服务未开启。
+解决: /usr/bin/svnserve -d -r /svndata/
+
+svn up  更新一下svn代码
+
+5.
+当服务器地址更改后需要先右键svn重新定位
+启动svn后,再在服务器端检出代码
+svn co svn://127.0.0.1/www.web05.com ./
+
+6.
+当apache 重启或动起不了时
+
+报错:
+Cannot access directory '/var/www/logs/' for error log of vhost defined at /etc/apache2/sites-enabled/000-default.conf:1
+AH00014: Configuration check failed
+Action 'configtest' failed.
+The Apache error log may have more information.
+
+解决:
+
+apachectl configtest
+
+使用这个命令检测错误
+
+提示: 
+
+Cannot access directory '/var/www/logs/' for error log of vhost defined at /etc/apache2/sites-enabled/000-default.conf:1
+AH00014: Configuration check failed
+Action 'configtest' failed.
+The Apache error log may have more information.
+
+mkdir logs   // 创建这个文件logs
+chmod 777 logs    // 设置权限
+/etc/init.d/apache2 restart   // 重启
+
+
+
+
+

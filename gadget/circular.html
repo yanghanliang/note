@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        .box {
+            width: 90%;
+            height: 90%;
+            border: 1px solid #999;
+        }
+
+        .box .circular {
+            width: 400px;
+            height: 400px;
+            float: left;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .box .circular .c-top {
+            width: 300px;
+            height: 180px;
+            top: 10px;
+            left: 50%;
+            position: absolute;
+            transform: translateX(-50%);
+            /* background-color: blue; */
+        }
+
+        .circular {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            flex-direction: column;
+            background: linear-gradient(1deg, rgba(255, 255, 255, 1) 0%, rgba(244, 246, 248, 1) 100%);
+            box-shadow: 0px 8px 8px 0px rgba(240, 241, 245, 1);
+        }
+
+        .middle {
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 100px;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            background-color: pink;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="circular">
+            <div class="middle">
+
+            </div>
+        </div>
+        <div class="circular">
+
+        </div>
+    </div>
+    <script type="text/javascript">
+        // ele, x, y, data
+        var My = function (param) {
+            this.box = document.querySelector(param.ele) // 盒子元素
+            this.width = this.getStyle(this.box, 'width')
+            this.r = this.width / 2
+            this.middle_limit = 100
+            // this.b_height = this.getStyle(this.box, 'height')
+            // this.x = param.x ? param.x : 3
+            // this.y = param.y ? param.y : 2
+            this.diameter = 50 // 小圆的直径
+            this.data = param.data
+            this.margin = 10 // 边距
+            this.number = this.data.length // 需要位置的个数
+            this.coordinate = [] // 存储坐标
+            this.init()
+        }
+
+        /**
+         * 获取属性值
+         * @return {number} value 属性值
+         *
+         */
+        My.prototype.getStyle = function (ele, attr) {
+            if (window.getComputedStyle) {
+                let value = window.getComputedStyle(ele, null)[attr]
+                let index = value.indexOf('px')
+                return Number(value.slice(0, index))
+            } else {
+                console.log('老铁！解决下兼容')
+                return el.currentStyle;
+            }
+        }
+
+        // 创建元素
+        My.prototype.createElement = function (top, left) {
+            // console.log(top, '!')
+            var div = document.createElement('div')
+            div.style.width = this.diameter + 'px'
+            div.style.height = this.diameter + 'px'
+            div.style.backgroundColor = 'red'
+            div.style.position = 'absolute'
+            div.style.top = top + 'px'
+            div.style.left = left + 'px'
+            div.style.borderRadius = '50%'
+            // div.className = 'circular'
+            this.box.appendChild(div)
+            var span = document.createElement('span')
+            var span2 = document.createElement('span')
+            // span.innerText = this.data[this.index].name
+            // span2.innerText = this.data[this.index].value
+            div.appendChild(span)
+            div.appendChild(span2)
+        }
+
+        // 设置元素位置
+        My.prototype.init = function () {
+            this.myFor() // 递归获取位置
+            var data = this.coordinate
+            for(var i = 0, length = data.length; i < length; i++) {
+                var item = data[i]
+                this.createElement(item.y, item.x)
+            }
+        }
+
+        // 递归获取位置
+        My.prototype.myFor = function () {
+            console.log(this.r + this.middle_limit / 2 + this.diameter + this.margin, this.width - this.diameter - this.diameter / 2)
+            var y_arr = [this.random(this.diameter / 2, this.r - this.middle_limit / 2 - this.diameter - this.margin), this.random(this.r + this.middle_limit / 2, this.width - this.diameter - this.diameter / 2)]
+            // var y = this.random(this.diameter / 2, this.width - this.diameter - this.diameter / 2) // 获取随机的 y 轴坐标
+            var y = y_arr[this.random(0, 1)]
+            var start_x,end_x
+            var x_limit
+            if(y < this.r) {
+                start_x = this.r - Math.sqrt(Math.pow(this.r, 2) - Math.pow(this.r - y, 2)) + this.diameter
+                end_x = this.r + Math.sqrt(Math.pow(this.r, 2) - Math.pow(this.r - y, 2)) - this.diameter - this.diameter
+
+            } else {
+                start_x = this.r - Math.sqrt(Math.pow(this.r, 2) - Math.pow(y - this.r, 2)) + this.diameter
+                end_x = this.r + Math.sqrt(Math.pow(this.r, 2) - Math.pow(y - this.r, 2)) - this.diameter - this.diameter
+            }
+
+
+
+            // var div = document.createElement('div')
+            // div.style.width = end_x - start_x + 'px'
+            // div.style.height = 10 + 'px'
+            // div.style.backgroundColor = 'red'
+            // div.style.position = 'absolute'
+            // div.style.top = y + 'px'
+            // div.style.left = start_x + 'px'
+            // // div.className = 'circular'
+            // this.box.appendChild(div)
+
+
+
+
+            // console.log(y, 'mili', x_limit)
+            var x = this.random(start_x, end_x) // 获取随机的 x 轴坐标
+            // var end_x = x + this.diameter + this.margin
+            // var end_y = y + this.diameter + this.margin
+            var lock = 0 // 判断是否存在重叠的位置
+            var length = this.coordinate.length
+            // this.createElement(y, x)
+            for (var i = 0; i < length; i++) {
+                // console.log('?')
+                var item = this.coordinate[i]
+                // var start_x = item.x - this.diameter - this.margin
+                // var end_x = item.x + this.diameter + this.margin
+                // var start_y = item.y - this.diameter - this.margin
+                // var end_y = item.y + this.diameter + this.margin
+                var is_x = x > item.x + this.diameter + this.margin || x < item.x - this.diameter - this.margin
+                var is_y = y > item.y + this.diameter + this.margin || y < item.y - this.diameter - this.margin
+
+                // console.log(length, 'bie', is_x && is_y)
+                if (is_x || is_y) {
+                    lock += 1
+                }
+
+                // console.log(lock)
+            }
+
+            // console.log(lock, length)
+            if (lock === length) {
+                // console.log('jl')
+                this.coordinate.push({
+                    x: x,
+                    y: y
+                })
+            }
+
+            if (this.coordinate.length < this.number) {
+                return this.myFor()
+            }
+
+            // console.log(this.coordinate, 'temp')
+        }
+
+
+        // 获取某个范围的随机数
+        My.prototype.random = function (min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min)
+        }
+
+        new My({
+            ele: '.circular',
+            data: [{
+                    name: 'abc',
+                    value: 123
+                },
+                {
+                    name: 'def',
+                    value: 456
+                },
+                {
+                    name: 'def',
+                    value: 456
+                },
+                {
+                    name: 'def',
+                    value: 456
+                },
+                {
+                    name: 'def',
+                    value: 456
+                },
+                {
+                    name: 'def',
+                    value: 456
+                },
+                {
+                    name: 'def',
+                    value: 456
+                },
+                {
+                    name: 'def',
+                    value: 456
+                },
+                {
+                    name: 'def',
+                    value: 456
+                },
+                {
+                    name: 'def',
+                    value: 456
+                },
+                {
+                    name: 'def',
+                    value: 456
+                }
+            ]
+        })
+    </script>
+</body>
+
+</html>

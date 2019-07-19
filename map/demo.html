@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <style>
+            body,html {
+                padding: 0;
+                margin: 0;
+                width: 100%;
+                height: 100%;
+            }
+
+            #container{
+                width: 700px; /* 宽高不能写百分比 */
+                height: 700px;
+                margin: 100px auto;
+            }
+
+            /* info */
+            .content-window-card {
+                position: relative;
+                box-shadow: none;
+                bottom: 0;
+                left: 0;
+                width: auto;
+                padding: 0;
+            }
+
+            .content-window-card p {
+                height: 2rem;
+            }
+
+            .custom-info {
+                border: solid 1px silver;
+            }
+
+            div.info-top {
+                position: relative;
+                background: none repeat scroll 0 0 #F9F9F9;
+                border-bottom: 1px solid #CCC;
+                border-radius: 5px 5px 0 0;
+            }
+
+            div.info-top div {
+                display: inline-block;
+                color: #333333;
+                font-size: 14px;
+                font-weight: bold;
+                line-height: 31px;
+                padding: 0 10px;
+            }
+
+            div.info-top img {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                transition-duration: 0.25s;
+            }
+
+            div.info-top img:hover {
+                box-shadow: 0px 0px 5px #000;
+            }
+
+            div.info-middle {
+                font-size: 12px;
+                padding: 10px 6px;
+                line-height: 20px;
+            }
+
+            div.info-bottom {
+                height: 0px;
+                width: 100%;
+                clear: both;
+                text-align: center;
+            }
+
+            div.info-bottom img {
+                position: relative;
+                z-index: 104;
+            }
+
+            span {
+                margin-left: 5px;
+                font-size: 11px;
+            }
+
+            .info-middle img {
+                float: left;
+                margin-right: 6px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="box">
+            <div id="container"></div>
+        </div>
+
+        <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=9916dd57aea502f19da1475330d735e7"></script>
+        <script type="text/javascript">
+            // lng 经度
+            // lat 纬度值
+
+            var layer = new AMap.TileLayer({
+                  zooms:[3,20],    //可见级别
+                  visible:true,    //是否可见
+                  opacity:1,       //透明度
+                  zIndex:0         //叠加层级
+            })
+
+            var map = new AMap.Map('container', {
+                zoom:11, // 级别
+                center: [116.397428, 39.90923], // 中心点坐标
+                viewMode:'3D', // 使用3D视图
+                resizeEnable: true, // 和下面的实时路况同时使用
+                // layers: [ // 使用多个图层
+                //     new AMap.TileLayer.Satellite(), // 实物 || 卫星图层
+                //     new AMap.TileLayer.RoadNet() // 位置名称 || 路网图层
+                //     layer, // 默认
+                // ],
+                zooms: [4,18], // 设置地图级别范围
+                visible: true, // 是否可见
+                opacity: 1, // 透明度
+                zIndex: 0 // 叠加层级
+            });
+
+            //---
+            // 实时路况图层
+            var trafficLayer = new AMap.TileLayer.Traffic({
+                zIndex: 10,
+                'autoRefresh': true,     // 是否自动刷新，默认为 false
+                'interval': 5,         // 刷新间隔，默认180s
+            });
+
+            // 添加图层到地图
+            map.add(trafficLayer);
+
+            //-- 移除
+            // map.remove(traffic) // 需要时可以移除
+
+            //---  加上之后会有一个 点图标指向
+            var marker = new AMap.Marker({
+                position:[116.39, 39.9] // 位置
+            })
+            map.add(marker);//添加到地图
+
+            //--- 加上之后会有一个 线条
+            // var lineArr = [
+            //    [116.368904, 39.913423],
+            //    [116.382122, 39.901176],
+            //    [116.387271, 39.912501],
+            //    [116.398258, 39.904600]
+            // ];
+            // var polyline = new AMap.Polyline({
+            //    path: lineArr,          // 设置线覆盖物路径
+            //    strokeColor: "#3366FF", // 线颜色
+            //    strokeWeight: 5,        // 线宽
+            //    strokeStyle: "solid",   // 线样式
+            // });
+            // map.add(polyline);
+            // map.remove(polyline);
+
+            //--- 圆
+            var circleMarker = new AMap.CircleMarker({
+                center: new AMap.LngLat(116.39,39.9),  // 圆心位置
+                radius: 100, // 圆半径
+                fillColor: 'red',   // 圆形填充颜色
+                strokeColor: '#fff', // 描边颜色
+                strokeWeight: 2, // 描边宽度
+                fillOpacity: 0.2,
+            });
+
+            map.add(circleMarker);
+
+            //- 事件功能与信息窗体
+            // var infoWindow = new AMap.InfoWindow({ //创建信息窗体
+            //     isCustom: true,  //使用自定义窗体
+            //     content:'<div>信息窗体</div>', // 信息窗体的内容可以是任意html片段
+            //     offset: new AMap.Pixel(16, -45)
+            // });
+            // var onMarkerClick  =  function(e) {
+            //     infoWindow.open(map, e.target.getPosition());//打开信息窗体
+            //     //e.target就是被点击的Marker
+            // }
+            // var marker = new AMap.Marker({
+            //      position: [116.481181, 39.989792]
+            // })
+            // map.add(marker);
+            // marker.on('click', onMarkerClick);//绑定click事件
+
+
+// --------------------------------------------
+
+            addMarker();
+
+            //添加marker标记
+            function addMarker() {
+                map.clearMap();
+                var marker = new AMap.Marker({
+                    map: map,
+                    position: [116.39, 39.9]
+                });
+
+                var circleMarker = new AMap.CircleMarker({
+                    center: new AMap.LngLat(116.39,39.9),  // 圆心位置
+                    radius: 100, // 圆半径
+                    fillColor: 'red',   // 圆形填充颜色
+                    strokeColor: '#fff', // 描边颜色
+                    strokeWeight: 2, // 描边宽度
+                    fillOpacity: 0.2,
+                });
+
+                map.add(circleMarker);
+
+
+                // 鼠标点击 marker 弹出自定义的信息窗体
+                AMap.event.addListener(marker, 'click', function () {
+                    infoWindow.open(map, marker.getPosition());
+                });
+            }
+
+            // 实例化信息窗体
+            var title = '方恒假日酒店<span style="font-size:11px;color:#F00;">价格:318</span>',
+                content = [];
+
+            content.push("<img src='http://tpc.googlesyndication.com/simgad/5843493769827749134'>地址：北京市朝阳区阜通东大街6号院3号楼东北8.3公里");
+            content.push("电话：010-64733333");
+            content.push("<a href='https://ditu.amap.com/detail/B000A8URXB?citycode=110105'>详细信息</a>");
+            var infoWindow = new AMap.InfoWindow({
+                isCustom: true,  //使用自定义窗体
+                content: createInfoWindow(title, content.join("<br/>")),
+                offset: new AMap.Pixel(16, -45)
+            });
+
+            // 构建自定义信息窗体
+            function createInfoWindow(title, content) {
+                var info = document.createElement("div");
+                info.className = "custom-info input-card content-window-card";
+
+                //可以通过下面的方式修改自定义窗体的宽高
+                //info.style.width = "400px";
+                // 定义顶部标题
+                var top = document.createElement("div");
+                var titleD = document.createElement("div");
+                var closeX = document.createElement("img");
+                top.className = "info-top";
+                titleD.innerHTML = title;
+                closeX.src = "https://webapi.amap.com/images/close2.gif";
+                closeX.onclick = closeInfoWindow;
+
+                top.appendChild(titleD);
+                top.appendChild(closeX);
+                info.appendChild(top);
+
+                // 定义中部内容
+                var middle = document.createElement("div");
+                middle.className = "info-middle";
+                middle.style.backgroundColor = 'white';
+                middle.innerHTML = content;
+                info.appendChild(middle);
+
+                // 定义底部内容
+                var bottom = document.createElement("div");
+                bottom.className = "info-bottom";
+                bottom.style.position = 'relative';
+                bottom.style.top = '0px';
+                bottom.style.margin = '0 auto';
+                var sharp = document.createElement("img");
+                sharp.src = "https://webapi.amap.com/images/sharp.png";
+                bottom.appendChild(sharp);
+                info.appendChild(bottom);
+                return info;
+            }
+
+            // 关闭信息窗体
+            function closeInfoWindow() {
+                map.clearInfoWindow();
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // window.onLoad  = function(){
+            //    var map = new AMap.Map('container');
+            // }
+            // var url = 'https://webapi.amap.com/maps?v=1.4.15&key=9916dd57aea502f19da1475330d735e7&callback=onLoad';
+            // var jsapi = doc.createElement('script');
+            // jsapi.charset = 'utf-8';
+            // jsapi.src = url;
+            // document.head.appendChild(jsapi);
+        </script>
+    </body>
+</html>

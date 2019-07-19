@@ -1,0 +1,250 @@
+-----------------------2018-04-15---------------------------
+
+footer   
+
+定义和用法:
+<footer> 标签定义文档或节的页脚。
+<footer> 元素应当含有其包含元素的信息。
+页脚通常包含文档的作者、版权信息、使用条款链接、联系信息等等。
+您可以在一个文档中使用多个 <footer> 元素。
+
+<footer>
+  <p>Posted by: W3School</p>
+  <p>Contact information: <a href="mailto:someone@example.com">someone@example.com</a>.</p>
+</footer>
+
+###############################################################
+
+-css
+	过渡
+	转换
+	动画
+
+-html
+	标签语义化
+	表单类型
+	表单属性
+	本地存储
+	历史记录
+	地理位置
+
+
+
+####
+
+1. 属性diff值为red的li元素文字红色
+2. 选中第三个li元素文字红色
+3. 选中第二第列所有的li元素文字绿色
+4. 选中倒数三个li元素为粉色
+5. 鼠标经过第10个li元素
+
+
+###
+
+过渡:
+transition: 需要过渡的元素 过渡的时间 动画的速度 延迟;
+
+all 所有属性
+
+transition-property: all; /*设置需要过度的属性,all表示所有的属性都过渡*/
+
+
+
+转换:
+transform: 转换类型(rotate|scale|translate|skew)
+rotate(360deg);  旋转方向: 顺时针旋转
+scale(0.5);  缩放中心: 默认的以中心
+translate-origin: 0px 0px; 定位
+translate:(-80px,80px);  位移方向: 数学的x轴和html的x轴一样,y轴相反
+transform: skew(45deg,0);  倾斜: 建议使用一个值,两个相同的值最后会消失
+
+transform: rotate(360deg);
+
+/*****************************************************************************************/
+
+transition-duration: 2s; //过度时间
+
+transition-timing-function: ease; //默认的速度ease先快后慢,linear匀速
+
+transition-delay: 0s; //延迟时间
+
+------------------------animation  动画函数-----------------------------
+animation-name:colorFuc  动画序列
+animation-duration: 4s  动画执行时间
+animation-timing-function: ease  默认速度 ease 先快后慢 linear 匀速
+animation-delay:2s  延迟时间
+animation-iteration-count:infinite  执行次数,infinite(无数次),可以直接设置需要的次数如: 2
+animation-direction: alternate  逆播放
+animation-play-state: paused  播放状态:暂停,默认:
+animation-fill-mode: forwards 最后的状态; forwards保留结束动画,backwards默认回答起始动画状态
+
+
+组合写法:
+animation: colorFuc 4s linear 0s 1 alternate forwards
+
+拆分写法:
+animation-name: colorFuc;
+animation-duration: 4s;
+animation-timing-function: linear;
+animation-delay: 0s;
+animation-iteration-count: 1;
+animation-direction: alternate;
+animation-fill-mode: forwards;
+animation-play-state: running;
+
+
+li:nth-child(20){
+	animation: colorFuc 4s; //调用下面这个函数
+}
+
+@keyframes colorFuc{
+	0%{
+
+	}
+
+	50%{
+		//中间
+	}
+
+	100%{
+		background-color: blue;
+	}
+}
+
+
+colorFuc  动画函数名(可以随便定义)
+from{}  代表: 0%{}
+to{}	代表: 100{}
+
+#
+perspective: 500px;  视距(眼睛距离电脑屏幕的距离)
+
+
+------------------------------下午-----------------------
+
+rotateX(40deg)  上部分是进去,下部分是出来,对着X轴正方向是顺时针旋转
+rotateY(40deg)  右边进去,左边出来,
+rotateZ(40deg)  顺时针旋转
+
+perspective: 500px; //父元素设置
+transform: translateZ(100px);  //子元素变大
+
+transform: translate3d(0,0,-100px)
+
+旋转过后z轴会改变
+
+
+####
+
+设置自适应背景边框
+
+组合写法:
+
+border-image: url("image/1.png") 167/40px round;
+
+角不会平铺,边会平铺
+40 边宽宽度  167 边框角的大小(正方形)
+round   等比例缩放
+repeat  平铺,从边框的中间向两侧平铺,不留空白,当有时候可能对出现不完整
+
+拆分写法:
+border-image-source: url("image/1.png"); //边框图片
+
+border-image-slice: 167 167 167 167; //裁剪尺寸
+
+border-image-repeat: stretch; //默认值
+
+
+#########
+
+flex: 1;  			占满剩余的内容
+
+novalidate   		忽略h5的检验
+autocomplete="off" 	不记录上一次的输入内容
+placeholder="" 		输入框的提示内容
+required 			必须输入的内容,如果没有输入则自动提示
+
+##
+box.classList.add('类名')
+box.
+
+##
+
+自定义属性: 非标准属性,就是自定义属性
+标准属性: 本身元素自带支持的属性
+非标准属性: abc
+但是H5规范: data-* 属性以data-开头( 遵循小驼峰命名)
+
+
+
+box.getAttribute('data-abc');
+box.dataset.abc;
+box.dataset['abc'];
+
+##
+function(ev){
+	//获取当前点击的(事件触发源)
+	var curren = ev.target;
+}
+
+####
+
+draggable="true"  //允许拖拽
+
+e.preventDefault  //阻止默认方式
+
+
+//监听到图片放置容器
+var box = document.queSelect('.box');
+
+box.addEventList('dragenter', function(e){
+	e.preventDefault();
+})
+
+
+box.addEventList('dragenter', function(e){
+	e.preventDefault();
+})
+
+
+$_FILES;
+
+move_uploaded_file($image['image']['temp_name'], $image['image']['temp_name']);
+
+
+
+requestFullscreen()  //全屏操作
+cancelFullScreen() //全屏操作
+webkit //私有前缀  谷歌 safari(苹果浏览器)
+moz //火狐浏览器
+o  //欧鹏浏览器
+ms //IE浏览器
+
+
+点击实现全屏效果
+document.querySelector('.btn').onclick = function(ev){
+	if(box.webkitRequestFullscreen{
+		box.webkitRequestFullscreen(); //兼容谷歌
+	}
+
+
+	if(box.mozRequestFullScreen){
+		mozRequestFullScreen(); //兼容火狐
+	}
+}
+
+
+
+document.querySelect('.btn2').onclick = function(ev){
+	document.webkitCancelFullScreen(); //取消全屏
+}
+
+
+-----------------------第三天 2018-04-19-----------------------------------
+
+
+
+
+
+
+

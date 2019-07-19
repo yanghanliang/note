@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <style>
+            body,html {
+                padding: 0;
+                margin: 0;
+                width: 100%;
+                height: 100%;
+            }
+
+            .box {
+                width: 100%;
+                height: 100%;
+                border: 1px solid #999;
+                position: absolute;
+            }
+
+            .min-box {
+                width: 200px;
+                height: 200px;
+                top: 50%;
+                left: 20px;
+                position: absolute;
+                background-color: pink;
+                transform: translateY(-50%);
+            }
+
+            .line {
+                width: 100%;
+                height: 10px;
+                top: 50%;
+                /* background-color: blue; */
+                transform: translateY(-50%);
+                position: absolute;
+            }
+
+            canvas {
+                /* background-color: pink; */
+            }
+        </style>
+    </head>
+    <body>
+        <div class="box">
+            <div class="line"></div>
+            <canvas id="canvas", width="1000", height="500"></canvas>
+            <div class="min-box"></div>
+        </div>
+
+        <script type="text/javascript">
+            var My = function() {
+                this.data = [
+                    {
+                         name: 'kasj',
+                         value: 12233,
+                         child: [
+                             { name: 'sasa', value: 12233 },
+                             { name: 'sasa', value: 12233 },
+                             { name: 'sasa', value: 12233 }
+                         ]
+                    },
+                    {
+                         name: 'kasj',
+                         value: 12233,
+                         child: [
+                             { name: 'sasa', value: 12233 },
+                             { name: 'sasa', value: 12233 },
+                             { name: 'sasa', value: 12233 },
+                             {
+                                 name: 'sasa',
+                                 value: 12233,
+                                 child: [
+                                     { name: 'sasa', value: 12233 },
+                                     { name: 'sasa', value: 12233 },
+                                 ]
+                             }
+                         ]
+                    },
+                    {
+                         name: 'kasj',
+                         value: 12233,
+                         child: [
+                         ]
+                    }
+                ]
+                this.init()
+            }
+
+            My.prototype.init = function() {
+                this.index = 0
+                this.top_index = 0
+                this.min_box_height = 50
+                this.x_step = 100
+                this.y_step = 100
+                this.box = this.getEle('.box')
+                var canvas = this.getEle('#canvas')
+                this.ctx = canvas.getContext('2d')
+                this.width = this.box.clientWidth
+                this.height = this.box.clientHeight
+                canvas.width = this.width
+                canvas.height = this.height
+
+                // 获取开始的元素
+                var min_box = this.getEle('.min-box')
+                var box_width = this.getStyle(min_box, 'width')
+                var box_height = this.getStyle(min_box, 'height')
+                var box_left = this.getStyle(min_box, 'left')
+                var box_top = this.getStyle(min_box, 'top')
+                // 获取开始的坐标
+                this.x = box_left + box_width
+                this.y = box_top
+                // this.x2 = x + 100
+                // this.y2 = y + 50
+                this.logic()
+            }
+
+            /**
+             * 获取属性值
+             * @return {number} value 属性值
+             *
+            */
+            My.prototype.getStyle = function (ele, attr) {
+                if (window.getComputedStyle) {
+                    let value = window.getComputedStyle(ele, null)[attr]
+                    let index = value.indexOf('px')
+                    return Number(value.slice(0, index))
+                } else {
+                    console.log('老铁！解决下兼容')
+                    return el.currentStyle;
+                }
+            }
+
+            /*
+             * 获取元素
+             * @param {string} ele: .box | #box | div
+             *
+             */
+            My.prototype.getEle = function (ele) {
+                return document.querySelector(ele)
+            }
+
+            // 画线
+            My.prototype.drawLine = function(x, y, x2, y2) {
+                this.ctx.moveTo(x, y)
+                this.ctx.lineTo(x2, y2)
+                this.ctx.stroke()
+            }
+
+            // 创建元素
+            /*
+                @param x
+                @param y
+            */
+            My.prototype.createElement = function(x, height) {
+                var div = document.createElement('div')
+                div.style.width = this.min_box_height + 'px'
+                div.style.height = this.min_box_height + 'px'
+                div.style.backgroundColor = 'red'
+                div.style.position = 'absolute'
+                div.style.left = x + 'px'
+                div.style.top = height - this.min_box_height / 2 + 'px'
+                this.box.appendChild(div)
+                return 100
+            }
+
+            // 逻辑
+            My.prototype.logic = function() {
+                this.coordinate(this.data, this.x, this.y, 0, this.height)
+                // this.top(this.x, this.y, this.height/2)
+                // this.bottom(this.x, this.y, this.height/2)
+            }
+
+            // 确定坐标
+            My.prototype.coordinate = function(data, x, y, start_y, height) {
+                var branch = data.length // 分支个数
+                var split = 2
+                var number = branch * split // 分成多少份
+                var step = height / number // 每份的大小
+                var start_index = Math.floor(number / 2) // 取中间坐标
+                var y_coordinate = [] // y 轴坐标
+                var x2 = x + this.x_step // x 轴坐标
+                this.drawLine(x, y, x2, y) // 向右
+                for(var i = 0; i < branch; i++) {
+                    var y = (i * split + 1) * step + start_y
+                    y_coordinate.push(y)
+                    this.drawLine(x2, y, x2 + this.x_step, y) // 横线
+                    this.createElement(x2 + this.x_step, y) // 创建元素
+
+                    //--------------------------------------------
+                    var child = data[i].child
+                    if(child && child.length > 0) {
+                        this.coordinate(child, x2 + this.x_step + this.min_box_height, y, y - step, step*2)
+                    }
+                }
+                this.drawLine(x2, y_coordinate[0], x2, y_coordinate[branch - 1]) // 竖线
+            }
+
+
+            new My()
+        </script>
+    </body>
+</html>

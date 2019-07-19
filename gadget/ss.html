@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <style>
+            body,html {
+                padding: 0;
+                margin: 0;
+                width: 100%;
+                height: 100%;
+            }
+
+            table {
+                width: 500px;
+                height: 500px;
+                margin: 100px auto;
+                border: 1px solid #ddd;
+            }
+        </style>
+    </head>
+    <body>
+        <table rules="all">
+            <tr>
+                <td></td>
+                <td>
+                    <tr>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                    </tr>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+        <script type="text/javascript">
+        var strSplicing = function(value, limit) {
+            var tempArr = []
+            var val = String(value)
+            var myEach = function(v, l) {
+                var length = v.length
+                if(length > l) {
+                    let str = v.substr(length - l)
+                    let surplus = v.substr(0, length - l)
+                    tempArr.unshift(str)
+                    if(surplus.length > l) {
+                        myEach(surplus, l)
+                    } else {
+                        tempArr.unshift(surplus)
+                    }
+                } else {
+                    return v
+                }
+                return tempArr.join(',')
+            }
+           return myEach(val, limit)
+       }
+       console.log(strSplicing(12345678, 3))
+        </script>
+    </body>
+</html>
