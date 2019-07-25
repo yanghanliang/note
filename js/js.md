@@ -695,13 +695,27 @@ BOM的概念:Browser Object Model 浏览器对象模型
 
     //搜索的
 
-    //很重要----下面的两种方式,历史记录中都没有
-    页面跳转的两个方法
-    location.href="www.zm.com";//属性
-    location.assign("http://www.zm.com");//方法
+---
+
+#### 页面跳转
+
+```js
+
+    // 很重要----下面的两种方式,历史记录中都没有
+    // 页面跳转的两个方法
+    location.href="www.zm.com"; // 属性
+    location.assign("http://www.zm.com"); // 方法
     window.open(`https://www.baidu.com/s?wd=${message.data}`, '_blank') // 在新窗口中打开链接
 
+```
 
+```html
+
+<a href="javascript:window.history.go(-1);"></a>
+
+```
+
+---
 
 -----------------------------navigator对象-----------------------------
 
