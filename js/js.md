@@ -641,6 +641,8 @@ console.log(str);
 
 --------------------------元素创建三种方式:-----------------------------
 
+### 创建元素
+
 1.  document.write('标签代码及内容');
 
 2. 对象.innerHTML='标签代码及内容';
@@ -1206,9 +1208,17 @@ divZj.remove();
 
 
 ---------------------------克隆----------------------------
+
 cloneNode
-//克隆一个ul中的li,并追加到最后一个
+
+// 克隆一个ul中的li,并追加到最后一个
 ul.appendChild(ul.children[0].cloneNode(true));
+
+```js
+
+document.querySelector('body').cloneNode(true)
+
+```
 
 
 
