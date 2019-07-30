@@ -24,15 +24,15 @@
         <div id="app">
             <svg id="line-box" xmlns="http://www.w3.org/2000/svg" version="1.1" :width="size[0]" :height="size[1]" ref="svg">
                 <template v-for="(item, index) in points">
-                    <g class="line" :identity="item.start + '&' + item.end" :p-start="item.start" :p-end="item.end">
+                    <g class="line" :identity="item.start + '&' + item.end" :s-junction="item.s_junction" :e-junction="item.e_junction">
                         <polyline :points="item.coordinate" :key="index" marker-end="url(#arrow)"></polyline>
                         <use xlink:href="#scissors" width="19" height="16" fill="blue"></use>
                     </g>
                 </template>
             </svg>
             <div class="content">
-                <div class="item" v-for="i in 9" :key="i" :id="'item_' + i">
-                    <div class="item-content" v-if="i != 5">
+                <div class="item" v-for="i in 9" :key="i">
+                    <div class="item-content" :id="'item_' + i" v-if="i != 5">
                         {{ i }}
                         <i class="junction item-top"></i>
                         <i class="junction item-right"></i>
@@ -517,6 +517,9 @@
                                 this.sJunction = null               // 开始元素的方向
                                 this.e_junction = null              // 结束元素的方向
                                 this.isDrag = false                 // 拖动
+                                this.cloneEle = null                // 克隆内容元素
+                                this.parentEle = null               // 盒子元素
+                                this.data = []                      // 连接的数据
                                 this.init()
                             }
 
@@ -543,9 +546,14 @@
                                     // 判断鼠标按下时的元素
                                     if(className.includes('item-content')) {
                                         // 内容元素
-                                        this.isDrag = true
+                                        that.isDrag = true
                                         // 获取开始元素
                                         that.startEle = target
+
+                                        // 克隆需要的元素并追加到父元素中
+                                        that.parentEle = that.startEle.parentElement
+                                        that.cloneEle = that.startEle.cloneNode(true)
+                                        that.parentEle.append(that.cloneEle)
                                     } else if(className.includes('junction')) {
                                         // 连接点
                                         // 获取开始元素
@@ -570,6 +578,8 @@
                                     // 移动提示线条
                                     that.moveTipLine(e)
 
+                                    console.log(that.isDrag, 'that.isDrag')
+
                                     // 判断是否需要移动元素
                                     if(that.isDrag) {
                                         // 分别兼容ie和chrome
@@ -578,19 +588,9 @@
                                         // 获取 x 和 y
                                         let end_x = e.clientX + scrollX
                                         let end_y = e.clientY + scrollY
-
-                                        // 判断是否点击了连接点
-                                        if(className.includes('junction')) {
-                                            line.attr("x2", end_x).attr("y2", end_y) // 设置结束坐标
-                                        } else {
-                                            // 拖拽元素
-                                            // 设置克隆元素的位置
-                                            $(item_content).css({
-                                                top: end_y - offset_start_y - that.height / 2,
-                                                left: end_x - offset_start_x - that.width / 2,
-                                                zIndex: -1
-                                            })
-                                        }
+                                        that.cloneEle.style.top = end_y - that.parentEle.offsetTop - that.height / 2 + 'px'
+                                        that.cloneEle.style.left = end_x - that.parentEle.offsetLeft - that.width / 2 + 'px'
+                                        that.cloneEle.style.zIndex = -1
                                     }
                                 }
                             }
@@ -606,8 +606,15 @@
                                     // 获取目标元素的类名
                                     let className = target.className
 
-                                    // 判断鼠标按下时的元素
-                                    if(className.includes('item-content')) {
+                                    console.log(className, 'className')
+                                    // 判断鼠标抬起时的元素
+                                    if(typeof className === 'object') {
+                                        // svg || 外面
+                                        console.log('error', that.endEle)
+
+                                        
+                                        // return false
+                                    } else if(className.includes('item-content')) {
                                         // 内容元素
                                         console.log('内容元素')
                                         that.endEle = target
@@ -615,15 +622,20 @@
                                         // 连接点
                                         console.log(target, target.parentElement, '连接点')
                                         that.endEle = target.parentElement
-                                    } else {
-                                        console.log('??')
+                                        
+                                        // 鼠标抬起时清空提示线条
+                                        that.line.remove()
+                                    } else if(className.includes('item')) {
+                                        // 盒子元素
+                                        console.log('盒子元素')
+                                        that.endEle = target
                                     }
-                                    // 画线
-                                    let potion = that.connection(that.startEle, that.endEle, that.sJunction, 'top')
-                                    vueObj.points.push(potion)
 
-                                    // 鼠标抬起时清空提示线条
-                                    that.line.remove()
+                                    // 鼠标抬起后的复杂逻辑
+                                    that.mouseupLogic()
+
+                                    // 重置鼠标状态 || 重新开启连线
+                                    that.isDrag = false
                                 }
                             }
 
@@ -742,6 +754,7 @@
                                                 points.push(`${start_left + this.width / 2},${start_top + this.height}`)
                                                 points.push(`${start_left + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                 if(e_junction === 'top') {
+                                                    console.log('从下到上')
                                                     points.push(`${end_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width + this.width / 2},${end_top - this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
@@ -1257,9 +1270,13 @@
                                                 points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top}`)
                                             } else {
-                                                console.log('从左到右')
-                                                points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                console.log('从左到右?')
+                                                points.push(`${end_left - this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                points.push(`${end_left - this.width / 2},${end_top - this.height / 2}`)
+                                                points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top}`)
+                                                // points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                // points.push(`${end_left + this.width / 2},${end_top}`)
                                             }
                                         } else if(e_junction === 'right') {
                                             console.log('下到右')
@@ -1322,9 +1339,11 @@
                                     }
                                 }
                                 let obj = {
-                                    coordinate: points.join(' '), // 坐标
-                                    start: $(start).attr('id'), // 开始元素的 id
-                                    end: $(end).attr('id') // 结束元素的 id
+                                    coordinate: points.join(' '),   // 坐标
+                                    start: $(start).attr('id'),     // 开始元素的 id
+                                    end: $(end).attr('id'),         // 结束元素的 id
+                                    s_junction: s_junction,          // 开始的方向
+                                    e_junction: e_junction           // 结束的方向
                                 }
                                 return obj
                             }
@@ -1367,6 +1386,91 @@
 
                                 // 设置结束坐标
                                 this.line.attr("x2", end_x).attr("y2", end_y)
+                            }
+
+                            // 鼠标抬起后的复杂逻辑
+                            My.prototype.mouseupLogic = function() {
+                                // 判断当前状态: 点击元素 || 点击连接点-进行连线
+                                if(this.isDrag) {
+                                    // 元素拖动
+                                    console.log('元素拖动')
+                                    let className = this.endEle.getAttribute('class')
+                                    if(this.endEle === null || className.includes('item-content')) {
+                                        // 还原初始状态
+                                        this.cloneEle.remove()
+                                    } else {
+                                        // 移动
+                                        this.cloneEle && this.cloneEle.remove()
+                                        this.endEle.append(this.startEle)
+
+                                        // 判断元素是否存在已有连线
+                                        this.isExistentialConnection()
+                                    }
+                                } else {
+                                    // 提示线条拖动
+                                    console.log('提示线条拖动')
+                                    // 暂时写死
+                                    this.eJunction = 'top'
+                                    console.log(this.startEle, this.endEle, '?????')
+                                    // 画线
+                                    let potion = this.connection(this.startEle, this.endEle, this.sJunction, this.eJunction)
+                                    vueObj.points.push(potion)
+                                }
+
+                                // 删除提示线条
+                                this.line.remove()
+
+                                console.log(vueObj.points, '已有连线')
+                            }
+
+                            // 判断元素是否存在已有连线
+                            My.prototype.isExistentialConnection = function() {
+                                console.log(this.startEle.getAttribute('id'), 'id')
+                                // 获取移动元素的 id
+                                let id = this.startEle.getAttribute('id')
+                                // 获取此元素的线条
+                                let lineArr = document.querySelectorAll(`g[identity*=${id}]`)
+                                let length = lineArr.length
+                                // 如果存在已有连线，则返回开始连线的元素
+                                if(length > 0) {
+                                    for(i = 0; i < length; i++) {
+                                        let identity = lineArr[i].getAttribute('identity').split('&')
+                                        let start = identity[0]
+                                        let end = identity[1]
+                                        let startEle = document.getElementById(start)
+                                        let endEle = document.getElementById(end)
+
+                                        this.deleteConnection(start)
+                                        let potion = this.connection(startEle, endEle, this.sJunction, this.eJunction)
+                                        vueObj.points.push(potion)
+                                    }
+                                } else {
+                                    console.log('此元素没有连线')
+                                    return null
+                                }
+                            }
+
+                            // 删除连线
+                            My.prototype.deleteConnection = function(startClassName) {
+                                let arr = vueObj.points
+                                let length = arr.length
+                                let tempArr = []
+                                console.log(arr, 'arr')
+                                for(let i = 0; i < length; i++) {
+                                    let item = arr[i]
+                                    let start = item.start
+                                    let end = item.end
+                                    if(start !== startClassName && end !== startClassName) {
+                                        tempArr.push(item)
+                                    }
+                                }
+
+                                vueObj.points = tempArr
+                            }
+
+                            // 重绘连线
+                            My.prototype.reConnection = function() {
+
                             }
 
                             new My()
