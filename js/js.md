@@ -3313,25 +3313,28 @@ if(tur){ setTimeout(haha,1000); tur = false;
 ##################################
 判断鼠标滚动方向
 
-    var scrollFunc=function(e){
-        var direct=0;
-        e=e || window.event;
+```js
 
-        var t1=document.getElementById("wheelDelta");
-        var t2=document.getElementById("detail");
-        if(e.wheelDelta){//IE/Opera/Chrome
-            t1.value=e.wheelDelta;
-        }else if(e.detail){//Firefox
-            t2.value=e.detail;
-        }
-        ScrollText(direct);
+var scrollFunc=function(e){
+    var direct=0;
+    e=e || window.event;
+
+    var t1=document.getElementById("wheelDelta");
+    var t2=document.getElementById("detail");
+    if(e.wheelDelta){//IE/Opera/Chrome
+        t1.value=e.wheelDelta;
+    }else if(e.detail){//Firefox
+        t2.value=e.detail;
     }
-    //注册事件
-    if(document.addEventListener){
-        document.addEventListener('DOMMouseScroll',scrollFunc,false);
-    }//W3C
-    window.onmousewheel=document.onmousewheel=scrollFunc;//IE/Opera/Chrome/Safari
+    ScrollText(direct);
+}
+//注册事件
+if(document.addEventListener){
+    document.addEventListener('DOMMouseScroll',scrollFunc,false);
+}//W3C
+window.onmousewheel=document.onmousewheel=scrollFunc;//IE/Opera/Chrome/Safari
 
+```
 
 ###################################
 
@@ -3386,7 +3389,9 @@ $(document).keydown(function(event){
 Array.sum()
 
 
-######################
+---
+
+### 获取属性值
 
 getComputedStyle 和 element.style 的相同点就是二者返回的都是 CSSStyleDeclaration 对象，
 取相应属性值得时候都是采用的 CSS 驼峰式写法，均需要注意 float 属性。
@@ -3401,6 +3406,26 @@ getComputedStyle 和 element.style 的相同点就是二者返回的都是 CSSSt
 let 的「创建」过程被提升了，但是初始化没有提升。
 var 的「创建」和「初始化」都被提升了。
 function 的「创建」「初始化」和「赋值」都被提升了。
+
+```js
+
+/**
+* 获取属性值
+* @return {number} value 属性值
+*
+*/
+My.prototype.getStyle = function (ele, attr) {
+    if (window.getComputedStyle) {
+        let value = window.getComputedStyle(ele, null)[attr]
+        let index = value.indexOf('px')
+        return Number(value.slice(0, index))
+    } else {
+        console.log('老铁！解决下兼容')
+        return el.currentStyle;
+    }
+}
+
+```
 
 
 ##########

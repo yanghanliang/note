@@ -173,9 +173,9 @@
                     data: {
                         size: [0, 0],
                         polyline: [
-                            // {
-                            //     start: 'item_1', end: 'item_2', s_junction: 'top', e_junction: 'left'
-                            // },
+                            {
+                                start: 'item_6', end: 'item_9', sJunction: 'bottom', eJunction: 'top'
+                            },
                             // {
                             //     start: 'item_1', end: 'item_9', s_junction: 'right', e_junction: 'left'
                             // },
@@ -203,10 +203,13 @@
                     methods: {
                         // 设置画布容器大小
                         setPaper() {
-                            let $el = $(this.$el)
-                            this.size = [$el.width(), $el.height()]
-                            let points = [].concat(this.polyline).map(item => this.getPoints(item))
-                            this.points = points
+                            let ele = document.getElementById('app')
+                            let width = window.getComputedStyle(ele, null).width
+                            let height = window.getComputedStyle(ele, null).height
+                            console.log(width, height)
+                            this.size = [width, height]
+                            // let points = [].concat(this.polyline).map(item => this.getPoints(item))
+                            // this.points = points
                         },
                         getPoints(data) {
                             let start = $(`#${data.start}`)[0] // 获取开始的元素
@@ -514,16 +517,18 @@
                                 this.endEle = null                  // 结束元素
                                 this.width = 100                    // 盒子的宽
                                 this.height = 100                   // 盒子的高
-                                this.sJunction = null               // 开始元素的方向
-                                this.e_junction = null              // 结束元素的方向
+                                this.sJunction = 'top'              // 开始元素的方向
+                                this.eJunction = 'top'              // 结束元素的方向
                                 this.isDrag = false                 // 拖动
                                 this.cloneEle = null                // 克隆内容元素
                                 this.parentEle = null               // 盒子元素
                                 this.data = []                      // 连接的数据
-                                this.init()
+                                this.init()                         // 初始化
                             }
 
+                            // 初始化
                             My.prototype.init = function() {
+                                this.initialize()   // 初始化连线
                                 this.pressDown()    // 鼠标按下
                                 this.mousemove()    // 鼠标移动
                                 this.mouseup()      // 鼠标抬起事件
@@ -622,6 +627,7 @@
                                         // 连接点
                                         console.log(target, target.parentElement, '连接点')
                                         that.endEle = target.parentElement
+                                        that.eJunction = that.isDirection(className)
                                         
                                         // 鼠标抬起时清空提示线条
                                         that.line.remove()
@@ -651,11 +657,6 @@
                                 this.line = this.svg.append("line").attr("stroke", "black").attr("stroke-width", "2px").style("z-index", "999").style("position", "absolute")
                                 // 设置开始坐标
                                 this.line.attr("x1", x).attr("y1", y).attr("x2", x).attr("y2", y)
-                            }
-                            
-                            // 元素拖动
-                            My.prototype.eleDrag = function() {
-
                             }
 
                             /**
@@ -702,8 +703,8 @@
 
                                 if(start_top === end_top) { // 同一行
                                     console.log('同一行')
+                                    e_junction = e_junction ? e_junction : s_junction
                                     if(Math.abs(start_left - end_left) === this.width * 2) {
-                                        // let start_y = start_top + this.height / 2
                                         // 判断开始的坐标是否在结束元素的右侧
                                         if(start_left > end_left) {
                                             // 从右往左
@@ -977,18 +978,6 @@
                                     }
                                 } else if(start_left === end_left) { // 同一列
                                     console.log('同一列')
-                                    // let temp = 0
-                                    // let data = this.limitedScope
-                                    // let length = data.length
-                                    // for(let i = 0; i < length; i++) {
-                                    //     let item = data[i]
-                                    //     let top = item.top
-                                    //     console.log()
-                                    //     if(start_top === top) {
-                                    //         temp++
-                                    //     }
-                                    // }
-
                                     let start_x = start_left + this.width / 2
                                     // 判断开始的坐标是否在结束元素的下边
                                     if(start_top > end_top) {
@@ -1141,6 +1130,7 @@
                                             points.push(`${start_left + this.width / 2},${start_top + this.height}`)
                                             points.push(`${start_left + this.width / 2},${start_top + this.height + this.height / 2}`)
                                             if(e_junction === 'top') { // 不一样
+                                                console.log('从下往上')
                                                 let distance = Math.abs(start_top - end_top)
                                                 if(distance > this.height * 2) {
                                                     points.push(`${end_left - this.width / 2},${start_top + this.height + this.height / 2}`)
@@ -1148,6 +1138,7 @@
                                                     points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)                                             
                                                     points.push(`${end_left + this.width / 2},${end_top}`)
                                                 } else {
+                                                    console.log('??')
                                                     points.push(`${start_left + this.width / 2},${end_top}`)
                                                 }
                                             } else if(e_junction === 'right') {
@@ -1409,9 +1400,6 @@
                                 } else {
                                     // 提示线条拖动
                                     console.log('提示线条拖动')
-                                    // 暂时写死
-                                    this.eJunction = 'top'
-                                    console.log(this.startEle, this.endEle, '?????')
                                     // 画线
                                     let potion = this.connection(this.startEle, this.endEle, this.sJunction, this.eJunction)
                                     vueObj.points.push(potion)
@@ -1419,8 +1407,6 @@
 
                                 // 删除提示线条
                                 this.line.remove()
-
-                                console.log(vueObj.points, '已有连线')
                             }
 
                             // 判断元素是否存在已有连线
@@ -1430,23 +1416,24 @@
                                 let id = this.startEle.getAttribute('id')
                                 // 获取此元素的线条
                                 let lineArr = document.querySelectorAll(`g[identity*=${id}]`)
+                                console.log(lineArr, 'lineArr')
                                 let length = lineArr.length
-                                // 如果存在已有连线，则返回开始连线的元素
+                                // 如果存在已有连线，则重绘连线
                                 if(length > 0) {
                                     for(i = 0; i < length; i++) {
-                                        let identity = lineArr[i].getAttribute('identity').split('&')
+                                        let item = lineArr[i]
+                                        let identity = item.getAttribute('identity').split('&')
                                         let start = identity[0]
                                         let end = identity[1]
                                         let startEle = document.getElementById(start)
                                         let endEle = document.getElementById(end)
+                                        let sJunction = item.getAttribute('s-junction')
+                                        let eJunction = item.getAttribute('e-junction')
 
                                         this.deleteConnection(start)
-                                        let potion = this.connection(startEle, endEle, this.sJunction, this.eJunction)
+                                        let potion = this.connection(startEle, endEle, sJunction, eJunction)
                                         vueObj.points.push(potion)
                                     }
-                                } else {
-                                    console.log('此元素没有连线')
-                                    return null
                                 }
                             }
 
@@ -1468,9 +1455,30 @@
                                 vueObj.points = tempArr
                             }
 
-                            // 重绘连线
-                            My.prototype.reConnection = function() {
+                            // 初始化连线
+                            My.prototype.initialize = function() {
+                                let arr = vueObj.polyline
+                                let length = arr.length
+                                for(let i = 0; i < length; i++) {
+                                    let item = arr[i]
+                                    let startEle = document.getElementById(item.start)
+                                    let endEle = document.getElementById(item.end)
+                                    let potion = this.connection(startEle, endEle, item.sJunction, item.eJunction)
+                                    vueObj.points.push(potion)
+                                }
+                            }
 
+                            // 判断两个元素连接点的方向,返回坐标
+                            My.prototype.isDirection = function(class_name) {
+                                if(class_name.includes('item-top')) {
+                                    return 'top'
+                                } else if(class_name.includes('item-right')) {
+                                    return 'right'
+                                } else if(class_name.includes('item-bottom')) {
+                                    return 'bottom'
+                                } else if(class_name.includes('item-left')) {
+                                    return 'left'
+                                }
                             }
 
                             new My()
