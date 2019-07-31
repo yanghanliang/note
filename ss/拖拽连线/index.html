@@ -24,7 +24,7 @@
         <div id="app">
             <svg id="line-box" xmlns="http://www.w3.org/2000/svg" version="1.1" :width="size[0]" :height="size[1]" ref="svg">
                 <template v-for="(item, index) in points">
-                    <g class="line" :identity="item.start + '&' + item.end" :s-junction="item.s_junction" :e-junction="item.e_junction">
+                    <g class="line" :identity="item.start + '&' + item.end" :s-junction="item.s_junction" :e-junction="item.e_junction" @mouseenter="handleMouseenter">
                         <polyline :points="item.coordinate" :key="index" marker-end="url(#arrow)"></polyline>
                         <use xlink:href="#scissors" width="19" height="16" fill="blue"></use>
                     </g>
@@ -206,10 +206,7 @@
                             let ele = document.getElementById('app')
                             let width = window.getComputedStyle(ele, null).width
                             let height = window.getComputedStyle(ele, null).height
-                            console.log(width, height)
                             this.size = [width, height]
-                            // let points = [].concat(this.polyline).map(item => this.getPoints(item))
-                            // this.points = points
                         },
                         getPoints(data) {
                             let start = $(`#${data.start}`)[0] // 获取开始的元素
@@ -301,6 +298,19 @@
                             My.prototype.mousemove = function() {
                                 let that = this
                                 window.onmousemove = function(event) {
+                                    console.log(event, event.target.tagName, '??')
+                                    // 利用传参兼容火狐
+                                    let e = window.event || event
+                                    // 获取目标元素
+                                    let target = e.target ? e.target : e.srcElement
+                                    // 获取元素标签内容
+                                    let tagName = event.target.tagName
+
+                                    // 划过连线时执行
+                                    if(tagName === 'polyline') {
+                                        
+                                    }
+
                                     // 判断按下的状态
                                     if(!that.isPressDown) {
                                         // 鼠标抬起
@@ -313,13 +323,8 @@
                                         return false
                                     }
 
-                                    // 利用传参兼容火狐
-                                    let e = window.event || event
-
                                     // 移动提示线条
                                     that.moveTipLine(e)
-
-                                    console.log(that.isDrag, 'that.isDrag')
 
                                     // 判断是否需要移动元素
                                     if(that.isDrag) {
@@ -1239,8 +1244,16 @@
                                 this.initialize(arr)
                             }
 
+                            // 划过连线
+                            My.prototype.mousemoveConnection = function() {
+
+                            }
+
                             new My()
                         },
+                        handleMouseenter() {
+                            console.log('ml')
+                        }
                     }
                 })
             }
