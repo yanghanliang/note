@@ -231,282 +231,6 @@
                         },
                         // 拖拽
                         dragAndDrop() {
-                            // let that = this
-                            // let start_x, start_y // 开始坐标
-                            // let end_x, end_y // 结束坐标
-                            // let startEle, endEle // 开始元素 && 结束元素
-                            // let offset_start_x, offset_start_y, offset_end_x, offset_end_y // 偏移量
-                            // let svg = d3.select('#line-box') // 获取 svg 元素
-                            // let line = null // 提示线条
-                            // let isMy = null // 判断元素的标识
-                            // let item_content = null // 内容元素
-                            // let ele = null // 存储点击元素所在连线的开始元素&&结束元素&&当前元素的位置（开始||结束）
-                            // let className = null // 根据点击的类名去进行元素的判断
-                            // let s_junction = 'top' // 开始元素的连接点方向 默认为 'top'
-                            // let end_junction = 'top' // 结束元素的连接点方向 默认为 'top'
-                            // this.clickELe = '' // 按下的元素
-
-                            // // 给盒子设置鼠标按下事件
-                            // this.itemEle.on('mousedown', function(event) {
-                            //     let e = window.event || event // 利用传参兼容火狐
-                            //     let target = e.target ? e.target : e.srcElement
-                            //     className = $(e.target).attr('class') // 获取当前点击元素的样式
-                            //     let x = e.clientX // 获取鼠标坐标
-                            //     let y = e.clientY - scrollY
-                                
-                            //     // 区分按下时的元素
-                            //     if(className.includes('item-content')) {
-                            //         // 内容元素
-                            //         // console.log('item-content')
-                            //         this.clickELe = 'item-content'
-                            //     } else {
-                            //         this.clickELe = 'junction'
-                            //         // console.log('连接点')
-                            //         // 连接点
-                            //         // 创建一条直线并给它设置样式
-                            //         line = svg.append("line").attr("stroke", "black").attr("stroke-width", "2px").style("z-index", "999").style("position", "absolute")
-                            //         // 设置开始坐标
-                            //         line.attr("x1", x).attr("y1", y).attr("x2", x).attr("y2", y)
-                            //         // 获取连接点方向
-                            //         s_junction = that.isDirection(className)
-                            //     }
-                                
-                            //     // 获取开始元素的偏移量
-                            //     offset_start_x = this.offsetLeft
-                            //     offset_start_y = this.offsetTop
-                            //     // 开关打开
-                            //     that.isDown = true
-                            //     // 保存当前元素
-                            //     isMy = this
-
-                            //     // 拖拽元素
-                            //     // 保存内容的元素
-                            //     item_content = $(this).find('.item-content')
-
-                            //     // 判断当前点击的元素是否有内容
-                            //     if(item_content.length === 0) {
-                            //         return false
-                            //     }
-
-                            //     // 判断元素是否已有连线
-                            //     ele = that.isLine(this)
-                            //     console.log(ele, 'ele')
-                            //     // 如果存在
-                            //     // 判断当前点击的元素是否存在已有连线，有则不显示提示连线（线条）
-                            //     if(ele) {
-                            //         // 重新设置开始元素和结束元素
-                            //         // startEle = ele.start
-                            //         // endEle = ele.end
-                            //     } else {
-                            //         // 获取开始元素
-                            //         startEle = this
-                            //     }
-                            // })
-
-                            // // 鼠标移动
-                            // window.onmousemove = function(event) {
-                            //     // 防止鼠标在移动的过程中抬起
-                            //     if (that.isDown == false) {
-                            //         return
-                            //     }
-
-                            //     // 分别兼容ie和chrome
-                            //     let scrollX = document.documentElement.scrollLeft || document.body.scrollLeft
-                            //     let scrollY = document.documentElement.scrollTop || document.body.scrollTop
-                            //     let e = window.event || event // 利用传参兼容火狐
-                            //     // 获取 x 和 y
-                            //     end_x = e.clientX + scrollX
-                            //     end_y = e.clientY + scrollY
-
-                            //     // 判断是否点击了连接点
-                            //     if(className.includes('junction')) {
-                            //         line.attr("x2", end_x).attr("y2", end_y) // 设置结束坐标
-                            //     } else {
-                            //         // 拖拽元素
-                            //         // 设置克隆元素的位置
-                            //         $(item_content).css({
-                            //             top: end_y - offset_start_y - that.height / 2,
-                            //             left: end_x - offset_start_x - that.width / 2,
-                            //             zIndex: -1
-                            //         })
-                            //     }
-                                
-                            //     // 如果当前点击的元素存在已有连线，则不显示提示连线（线条）
-                            //     // if(!ele && item_content.length > 0) {
-                                    
-                            //     // }
-                            // }
-
-                            // // 鼠标抬起事件
-                            // document.onmouseup = function(event) {
-                            //     let e = window.event || event // 利用传参兼容火狐
-                            //     let target = e.target ? e.target : e.srcElement
-                            //     let className = target.getAttribute('class')
-
-                            //     // 判断是否在元素中抬起
-                            //     if(!className || !className.includes('item')) {
-                            //         // console.log('在外面抬起了')
-                            //         line && line.remove()
-
-                            //         // 归位
-                            //         $(item_content).css({
-                            //             top: 0,
-                            //             left: 0,
-                            //             zIndex: 'auto'
-                            //         })
-                            //         item_content = null
-
-                            //         // 判断当前点击的元素是否存在已有连线
-                            //         if(ele) {
-                            //             // 恢复原有线条
-                            //             let tempPoint = {
-                            //                 start: $(ele).attr('id'),
-                            //                 end: $(ele.end).attr('id'),
-                            //                 coordinate: ele.points
-                            //             }
-                            //             that.points.push(tempPoint)
-                            //         }
-                            //     }
-                            // }
-
-                            // // 鼠标抬起事件
-                            // this.itemEle.on('mouseup', function(event) {
-                            //     let e = window.event || event // 利用传参兼容火狐
-                            //     let target = e.target ? e.target : e.srcElement // 兼容所有浏览器
-                            //     let className = $(target).attr('class') // 获取当前点击元素的样式
-
-                            //     // 如果提示线条存在则删除提示线条
-                            //     line && line.remove()
-
-                            //     // 判断是否是当前元素
-                            //     if(this === isMy) {
-                            //         $(item_content).css({
-                            //             top: 0,
-                            //             left: 0,
-                            //             zIndex: 'auto'
-                            //         })
-                            //         $(this).append(item_content.clone())
-                            //         item_content.remove()
-                            //         item_content = null
-                            //         return false
-                            //     }
-
-                            //     // 开关关闭
-                            //     that.isDown = false
-                            //     // 获取鼠标坐标
-                            //     let x = e.clientX
-                            //     let y = e.clientY
-                            //     // 获取结束元素的偏移量
-                            //     offset_end_x = this.offsetLeft
-                            //     offset_end_y = this.offsetTop
-
-                            //     endEle = this
-
-                            //     // 判断开始元素和结束元素是否都存在
-                            //     if(startEle && endEle) {
-                            //         let startContent = $(startEle).find('.item-content')
-                            //         let endContent = $(endEle).find('.item-content')
-                            //         // 判断开始内容和结束内容都存在
-                            //         if(startContent.length > 0 && endContent.length > 0 && !ele) {
-                            //             // 判断抬起时是否在连接点处
-                            //             if(className.includes('junction')) {
-                            //                 e_junction = that.isDirection(className)
-                            //                 // 获取两个元素连线的坐标
-                            //                 let potion = that.drawLine(startEle, endEle, s_junction, e_junction)
-                            //                 // 存储已连线的元素
-                            //                 that.polyline.push({
-                            //                     start: startEle,
-                            //                     end: endEle
-                            //                 })
-
-                            //                 // 画线
-                            //                 that.points.push(potion)
-                            //             }
-                            //         } else if(ele) { // 判断是否存在已有连线
-                            //             console.log('存在连线')
-                            //             // 重新画线
-                            //             // that.reLine(ele, endEle)
-                            //             // return false
-                            //             // 判断抬起时是否在连接点处
-                            //             if(className.includes('junction')) {
-                            //                 // 获取连接点方向
-                            //                 e_junction = that.isDirection(className)
-                            //                 // 获取两个元素连线的坐标
-                            //                 let potion = ''
-                            //                 console.log(ele, 'ele', this.clickEle)
-                                            
-                            //                 // 判断按下的元素是否是开始元素
-                            //                 if(ele.position === 'start') {
-                            //                     if(ele.start === startEle && ele.end === endEle) {
-                            //                         // 恢复原有线条
-                            //                         let tempPoint = {
-                            //                             start: $(ele).attr('id'),
-                            //                             end: $(ele.end).attr('id'),
-                            //                             coordinate: ele.points
-                            //                         }
-                            //                         that.points.push(tempPoint)
-                            //                     } else {
-                            //                         potion = that.drawLine(endEle, ele.end, s_junction, e_junction)
-                            //                     }
-                            //                 } else {
-                            //                     // 判断线条的开始位置和结束位置是否一致
-                            //                     // 如果是,则说明用户在进行两个元素连线位置之间的交换
-                            //                     // console.log(startEle, '===', endEle)
-                            //                     if(startEle === endEle) {
-                            //                         startEle = isMy
-                            //                         potion = that.drawLine(startEle, endEle, s_junction, e_junction)
-                            //                     } else {
-                            //                         potion = that.drawLine(endEle, ele.start, s_junction, e_junction)
-                            //                     }
-                            //                 }
-
-                            //                 // 存储已连线的元素
-                            //                 // that.polyline.push({
-                            //                 //     start: ele.start,
-                            //                 //     end: ele.end
-                            //                 // })
-
-                            //                 // 画线
-                            //                 that.points.push(potion)
-                            //             } else {
-                            //                 console.log('需要重新连线')
-                            //                 console.log(ele)
-                            //                 // 判断按下的元素是否是开始元素
-                            //                 if(ele.position === 'start') {
-                            //                     console.log('当前元素为开始元素')
-                            //                     potion = that.drawLine(endEle, ele.end, s_junction, e_junction)
-                            //                     that.points.push(potion)
-                            //                 } else {
-                            //                     potion = that.drawLine(ele.start, endEle, s_junction, e_junction)
-                            //                     that.points.push(potion)
-                            //                     console.log('当前元素为结束元素')
-                            //                 }
-                            //             }
-                            //         }
-                            //     }
-
-                            //     // 拖拽元素
-                            //     // 获取当前元素的内容元素
-                            //     let ic = $(this).find('.item-content')
-                            //     // 判断内容元素是否为空
-                            //     if(ic.length === 1) {
-                            //         $(item_content).css({
-                            //             top: offset_start_y - offset_start_y,
-                            //             left: offset_start_x - offset_start_x,
-                            //             zIndex: 'auto'
-                            //         })
-                            //     } else {
-                            //         $(item_content).css({
-                            //             top: 0,
-                            //             left: 0,
-                            //             zIndex: 'auto'
-                            //         })
-                            //         $(this).append(item_content.clone())
-                            //         item_content.remove()
-                            //         item_content = null
-                            //     }
-                            // })
-                        
                             let vueObj = this
 
                             let My = function() {
@@ -522,22 +246,26 @@
                                 this.isDrag = false                 // 拖动
                                 this.cloneEle = null                // 克隆内容元素
                                 this.parentEle = null               // 盒子元素
-                                this.data = []                      // 连接的数据
+                                this.data = vueObj.polyline         // 连接的数据
+                                this.isPressDown = false            // 按下 默认 false || 抬起的状态
                                 this.init()                         // 初始化
                             }
 
                             // 初始化
                             My.prototype.init = function() {
-                                this.initialize()   // 初始化连线
-                                this.pressDown()    // 鼠标按下
-                                this.mousemove()    // 鼠标移动
-                                this.mouseup()      // 鼠标抬起事件
+                                this.initialize(this.data)      // 初始化连线
+                                this.pressDown()                // 鼠标按下
+                                this.mousemove()                // 鼠标移动
+                                this.mouseup()                  // 鼠标抬起事件
                             }
 
                             // 鼠标按下
                             My.prototype.pressDown = function() {
                                 let that = this
                                 this.box.addEventListener('mousedown', function(event) {
+                                    // 修改按下的状态
+                                    that.isPressDown = true
+
                                     // 利用传参兼容火狐
                                     let e = window.event || event
                                     // 获取目标元素
@@ -573,7 +301,15 @@
                             My.prototype.mousemove = function() {
                                 let that = this
                                 window.onmousemove = function(event) {
+                                    // 判断按下的状态
+                                    if(!that.isPressDown) {
+                                        // 鼠标抬起
+                                        return false
+                                    }
+
+                                    // 判断提示线条是否存在
                                     if(!that.line) {
+                                        // 提示线条不存在
                                         return false
                                     }
 
@@ -604,6 +340,9 @@
                             My.prototype.mouseup = function() {
                                 let that = this
                                 window.onmouseup = function(event) {
+                                    // 修改按下的状态
+                                    that.isPressDown = false
+
                                     // 利用传参兼容火狐
                                     let e = window.event || event
                                     // 获取目标元素
@@ -997,7 +736,7 @@
                                                 points.push(`${end_left + this.width},${end_top + this.height / 2}`)
                                             } else if(e_junction === 'bottom') {
                                                 let distance = Math.abs(start_top - end_top)
-                                                if(temp > 2 && distance > this.width * 2) {
+                                                if(distance > this.width * 2) {
                                                     points.push(`${start_left + this.width / 2},${start_top - this.height / 2}`)
                                                     points.push(`${start_left + this.width + this.width / 2},${start_top - this.height / 2}`)
                                                     points.push(`${start_left + this.width + this.width / 2},${end_top + this.height + this.height / 2}`)
@@ -1431,9 +1170,10 @@
                                         let eJunction = item.getAttribute('e-junction')
 
                                         this.deleteConnection(start)
-                                        let potion = this.connection(startEle, endEle, sJunction, eJunction)
-                                        vueObj.points.push(potion)
+                                        // let potion = this.connection(startEle, endEle, sJunction, eJunction)
+                                        // vueObj.points.push(potion)
                                     }
+                                    this.reDrawLine(lineArr)
                                 }
                             }
 
@@ -1456,8 +1196,7 @@
                             }
 
                             // 初始化连线
-                            My.prototype.initialize = function() {
-                                let arr = vueObj.polyline
+                            My.prototype.initialize = function(arr) {
                                 let length = arr.length
                                 for(let i = 0; i < length; i++) {
                                     let item = arr[i]
@@ -1481,91 +1220,27 @@
                                 }
                             }
 
+                            // 重绘连线
+                            My.prototype.reDrawLine = function(lineArr) {
+                                let length = lineArr.length
+                                let arr = []
+                                for(let i = 0; i < length; i++) {
+                                    let item = lineArr[i]
+                                    let identity = item.getAttribute('identity').split('&')
+                                    let obj = {
+                                        start: identity[0],
+                                        end: identity[1],
+                                        sJunction: item.getAttribute('s-junction'),
+                                        eJunction: item.getAttribute('e-junction')
+                                    }
+                                    vueObj.polyline.push(obj)
+                                    arr.push(obj)
+                                }
+                                this.initialize(arr)
+                            }
+
                             new My()
                         },
-                        /**
-                         * 判断当前点击的元素是否存在已有连线
-                         * @param   {Object}  ele  元素对象
-                         * @returns {Array}        当前点击元素所有的连线元素信息
-                        */
-                        isLine(ele) {
-                            let id = $(ele).attr('id') // 获取 id
-                            let tempLine = $(`g[identity*=${id}]`)
-                            console.log(tempLine, 'line')
-                            // 如果存在已有连线，则返回开始连线的元素
-                            if(tempLine.length > 0) {
-                                return this.saveLine(tempLine, id)
-                            } else {
-                                // console.log('此元素没有连线')
-                                return null
-                            }
-                        },
-                        // 判断两个元素连接点的方向,返回坐标
-                        isDirection(class_name) {
-                            if(class_name.includes('item-top')) {
-                                return 'top'
-                            } else if(class_name.includes('item-right')) {
-                                return 'right'
-                            } else if(class_name.includes('item-bottom')) {
-                                return 'bottom'
-                            } else if(class_name.includes('item-left')) {
-                                return 'left'
-                            }
-                        },
-                        /**
-                         * 保存已有连线
-                         * @param {Obejct} tempLine jquery 对象 - 当前点击元素所有的连线元素
-                         * @param {String} direction 方向 - 根据传入的id,去判断
-                        */
-                        saveLine(tempLine, direction) {
-                            let length = tempLine.length
-                            let arr = []
-                            for(let i = 0; i < length; i++) {
-                                console.log(tempLine[i], '**')
-                                // 获取当前连线元素的开始元素和结束元素
-                                let start = $(tempLine[i]).attr('p-start')
-                                let end = $(tempLine[i]).attr('p-end')
-                                // 当前点击的元素是开始元素||结束元素
-                                let position = ''
-                                // 判断当前元素是开始元素或结束元素
-                                if(direction === start) {
-                                    position = 'start'
-                                } else {
-                                    position = 'end'
-                                }
-
-                                // 删除当前连线
-                                // tempLine.remove()
-                                let obj = {
-                                    start: $(`.item#${start}`)[0],
-                                    end: $(`.item#${end}`)[0],
-                                    points: tempLine.find('polyline').attr('points'), // 线条的坐标
-                                    position: position // 点击元素的位置
-                                }
-                                arr.push(obj)
-                            }
-                            return arr
-                        },
-                        /**
-                         * 重新画线
-                         * @param {Array}   line    线条
-                         * @param {Object}  endEle  鼠标抬起时的元素
-                        */
-                        reLine(line, endEle) {
-                            console.log(line, endEle)
-                            let length = line.lengthn
-                            for(let i = 0; i < length; i++) {
-
-                            }
-                        },
-                        // 内容的方法: 点击||拖动||抬起
-                        boxFn() {
-
-                        },
-                        // 连接点的方法: 点击||拖动||抬起
-                        boxFn() {
-
-                        }
                     }
                 })
             }
