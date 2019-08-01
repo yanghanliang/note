@@ -173,9 +173,9 @@
                     data: {
                         size: [0, 0],
                         polyline: [
-                            {
-                                start: 'item_6', end: 'item_9', sJunction: 'bottom', eJunction: 'top'
-                            },
+                            // {
+                            //     start: 'item_6', end: 'item_9', sJunction: 'bottom', eJunction: 'top'
+                            // },
                             // {
                             //     start: 'item_1', end: 'item_9', sJunction: 'right', eJunction: 'left'
                             // },
@@ -183,7 +183,11 @@
                             //     start: 'item_7', end: 'item_4', sJunction: 'left', eJunction: 'left'
                             // },
                         ],
-                        points: [], // 连线的坐标
+                        points: [
+                            {
+                                start: 'item_6', end: 'item_9', sJunction: 'bottom', eJunction: 'top'
+                            }
+                        ], // 连线的坐标
                         limitedScope: [], // 限制范围
                         width: 100,
                         height: 100,
@@ -208,12 +212,12 @@
                             let height = window.getComputedStyle(ele, null).height
                             this.size = [width, height]
                         },
-                        getPoints(data) {
-                            let start = $(`#${data.start}`)[0] // 获取开始的元素
-                            let end = $(`#${data.end}`)[0] // 获取结束的元素
-                            let point = this.drawLine(start, end, data.sJunction, data.eJunction) // 画线
-                            return point
-                        },
+                        // getPoints(data) {
+                        //     let start = $(`#${data.start}`)[0] // 获取开始的元素
+                        //     let end = $(`#${data.end}`)[0] // 获取结束的元素
+                        //     let point = this.drawLine(start, end, data.sJunction, data.eJunction) // 画线
+                        //     return point
+                        // },
                         // 获取所有元素的坐标范围
                         getEleAllPoints() {
                             let ele = $('.content .item')
@@ -238,12 +242,11 @@
                                 this.endEle = null                                  // 结束元素
                                 this.width = 100                                    // 盒子的宽
                                 this.height = 100                                   // 盒子的高
-                                this.sJunction = 'top'                              // 开始元素的方向
-                                this.eJunction = 'top'                              // 结束元素的方向
+                                this.sJunction = null                               // 开始元素的方向
+                                this.eJunction = null                               // 结束元素的方向
                                 this.isDrag = false                                 // 拖动
                                 this.cloneEle = null                                // 克隆内容元素
                                 this.parentEle = null                               // 盒子元素
-                                this.data = vueObj.polyline                         // 连接的数据
                                 this.isPressDown = false                            // 按下 默认 false || 抬起的状态
                                 this.end_x = 0                                      // 鼠标 x 轴坐标
                                 this.end_y = 0                                      // 鼠标 y 轴坐标
@@ -254,10 +257,10 @@
 
                             // 初始化
                             My.prototype.init = function() {
-                                this.initialize(this.data)      // 初始化连线
-                                this.pressDown()                // 鼠标按下
-                                this.mousemove()                // 鼠标移动
-                                this.mouseup()                  // 鼠标抬起事件
+                                this.initialize(vueObj.points)      // 初始化连线
+                                this.pressDown()                    // 鼠标按下
+                                this.mousemove()                    // 鼠标移动
+                                this.mouseup()                      // 鼠标抬起事件
                             }
 
                             // 鼠标按下
@@ -277,6 +280,8 @@
                                     // 提示线条
                                     that.createTipLine(e)
 
+                                    console.log(className, 'className')
+
                                     // 判断鼠标按下时的元素
                                     if(className.includes('item-content')) {
                                         // 内容元素
@@ -294,6 +299,9 @@
                                         that.startEle = target.parentElement
                                         // 获取开始元素的方向
                                         that.sJunction = that.ifDirection(className)
+                                    } else {
+                                        // 防止点击空元素时连线
+                                        that.startEle = null
                                     }
                                 })
                             }
@@ -445,7 +453,7 @@
 
 
                                 // 错位连接从下到下
-                                dislocationBB = function (start, end) {
+                                let dislocationBB = function (start, end) {
                                     let coordinate = []
                                     if(start_left > end_left) {
                                         // 从右往左
@@ -464,195 +472,204 @@
                                     return coordinate
                                 }
 
-                                if(start_top === end_top) { // 同一行
+                                // 同一行
+                                let colleague = () => {
                                     console.log('同一行')
-                                    eJunction = eJunction ? eJunction : sJunction
                                     if(Math.abs(start_left - end_left) === this.width * 2) {
+                                        // 相邻的
                                         // 判断开始的坐标是否在结束元素的右侧
                                         if(start_left > end_left) {
                                             // 从右往左
-                                            if(sJunction === 'top') {
-                                                points.push(`${start_left + this.width / 2},${start_top}`)
-                                                points.push(`${start_left + this.width / 2},${start_top - this.height / 2}`)
-                                                if(eJunction === 'top') {
-                                                    points.push(`${end_left + this.width / 2},${start_top - this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${end_top}`)
-                                                } else if(eJunction === 'right') {
-                                                    points.push(`${end_left + this.width + this.width / 2},${start_top - this.height / 2}`)
-                                                    points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
-                                                    points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                                } else if(eJunction === 'bottom') {
-                                                    points.push(`${end_left + this.width + this.width / 2},${start_top - this.height / 2}`)
-                                                    points.push(`${end_left + this.width + this.width / 2},${end_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${end_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${end_top + this.height}`)
-                                                } else if(eJunction === 'left') {
-                                                    points.push(`${end_left - this.width / 2},${start_top - this.height / 2}`)
-                                                    points.push(`${end_left - this.width / 2},${end_top + this.height / 2}`)
-                                                    points.push(`${end_left},${end_top + this.height / 2}`)
-                                                }
-                                            } else if(sJunction === 'right') {
-                                                points.push(`${start_left + this.width},${start_top + this.height / 2}`)
-                                                points.push(`${start_left + this.width + this.width / 2},${start_top + this.height / 2}`)
-                                                // 右上
-                                                if(eJunction === 'top') {
-                                                    points.push(`${start_left + this.width + this.width / 2},${start_top - this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${start_top - this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${start_top}`)
-                                                } else if(eJunction === 'right') {
-                                                    points.push(`${start_left + this.width + this.width / 2},${start_top  + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width + this.width / 2},${start_top  + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
-                                                    points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                                } else if(eJunction === 'bottom') {
-                                                    points.push(`${start_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${start_top + this.height}`)
-                                                } else if(eJunction === 'left') {
-                                                    points.push(`${start_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height / 2}`)
-                                                    points.push(`${end_left},${start_top + this.height / 2}`)
-                                                }
-                                            } else if(sJunction === 'bottom') {
-                                                points.push(`${start_left + this.width / 2},${start_top + this.height}`)
-                                                points.push(`${start_left + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                if(eJunction === 'top') {
-                                                    console.log('从下到上')
-                                                    points.push(`${end_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width + this.width / 2},${end_top - this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${end_top}`)
-                                                } else if(eJunction === 'right') {
-                                                    points.push(`${end_left + this.width + this.width / 2},${start_top  + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
-                                                    points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                                } else if(eJunction === 'bottom') {
-                                                    points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${start_top + this.height}`)
-                                                } else if(eJunction === 'left') {
-                                                    points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height / 2}`)
-                                                    points.push(`${end_left},${start_top + this.height / 2}`)
-                                                }
-                                            } else if(sJunction === 'left') {
-                                                points.push(`${start_left},${start_top + this.height / 2}`)
-                                                points.push(`${start_left - this.width / 2},${start_top + this.height / 2}`)
-                                                if(eJunction === 'top') {
-                                                    points.push(`${end_left + this.width + this.width / 2},${end_top - this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${end_top}`)
-                                                } else if(eJunction === 'right') {
-                                                    points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
-                                                    points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                                } else if(eJunction === 'bottom') {
-                                                    points.push(`${start_left - this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${start_top + this.height}`)
-                                                } else if(eJunction === 'left') {
-                                                    points.push(`${start_left - this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height / 2}`)
-                                                    points.push(`${end_left},${start_top + this.height / 2}`)
-                                                }
-                                            }
-                                        } else {
-                                            // 从左往右
-                                            if(sJunction === 'top') {
-                                                points.push(`${start_left + this.width / 2},${start_top}`)
-                                                points.push(`${start_left + this.width / 2},${start_top - this.height / 2}`)
-                                                if(eJunction === 'top') {
-                                                    points.push(`${end_left + this.width / 2},${start_top - this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${end_top}`)
-                                                } else if(eJunction === 'right') {
-                                                    points.push(`${end_left + this.width + this.width / 2},${start_top - this.height / 2}`)
-                                                    points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
-                                                    points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                                } else if(eJunction === 'bottom') {
-                                                    points.push(`${end_left + this.width + this.width / 2},${start_top - this.height / 2}`)
-                                                    points.push(`${end_left + this.width + this.width / 2},${end_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${end_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${end_top + this.height}`)
-                                                } else if(eJunction === 'left') {
-                                                    points.push(`${end_left - this.width / 2},${start_top - this.height / 2}`)
-                                                    points.push(`${end_left - this.width / 2},${end_top + this.height / 2}`)
-                                                    points.push(`${end_left},${end_top + this.height / 2}`)
-                                                }
-                                            } else if(sJunction === 'right') {
-                                                console.log('开始是右')
-                                                // points.push(`${start_left + this.width},${start_top + this.height / 2}`)
-                                                // points.push(`${start_left + this.width + this.width / 2},${start_top + this.height / 2}`)
-                                                // 右上
-                                                if(eJunction === 'top') {
+                                            let colleagueRL = () => {
+                                                if(sJunction === 'top') {
+                                                    points.push(`${start_left + this.width / 2},${start_top}`)
+                                                    points.push(`${start_left + this.width / 2},${start_top - this.height / 2}`)
+                                                    
+                                                    if(eJunction === 'top') {
+                                                        points.push(`${end_left + this.width / 2},${start_top - this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${end_top}`)
+                                                    } else if(eJunction === 'right') {
+                                                        points.push(`${end_left + this.width + this.width / 2},${start_top - this.height / 2}`)
+                                                        points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
+                                                        points.push(`${end_left + this.width},${end_top + this.height / 2}`)
+                                                    } else if(eJunction === 'bottom') {
+                                                        points.push(`${end_left + this.width + this.width / 2},${start_top - this.height / 2}`)
+                                                        points.push(`${end_left + this.width + this.width / 2},${end_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${end_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${end_top + this.height}`)
+                                                    } else if(eJunction === 'left') {
+                                                        points.push(`${end_left - this.width / 2},${start_top - this.height / 2}`)
+                                                        points.push(`${end_left - this.width / 2},${end_top + this.height / 2}`)
+                                                        points.push(`${end_left},${end_top + this.height / 2}`)
+                                                    }
+                                                } else if(sJunction === 'right') {
                                                     points.push(`${start_left + this.width},${start_top + this.height / 2}`)
                                                     points.push(`${start_left + this.width + this.width / 2},${start_top + this.height / 2}`)
-                                                    points.push(`${start_left + this.width + this.width / 2},${end_top - this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${end_top}`)
-                                                } else if(eJunction === 'right') {
-                                                    points.push(`${start_left + this.width + this.width / 2},${start_top  + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width + this.width / 2},${start_top  + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
-                                                    points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                                } else if(eJunction === 'bottom') {
-                                                    points.push(`${start_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${start_top + this.height}`)
-                                                } else if(eJunction === 'left') {
-                                                    console.log('pkq')
-                                                    points.push(`${start_left + this.width},${start_top + this.height / 2}`)
-                                                    points.push(`${end_left},${start_top + this.height / 2}`)
-                                                    // points.push(`${start_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    // points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    // points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height / 2}`)
-                                                    // points.push(`${end_left},${start_top + this.height / 2}`)
-                                                }
-                                            } else if(sJunction === 'bottom') {
-                                                points.push(`${start_left + this.width / 2},${start_top + this.height}`)
-                                                points.push(`${start_left + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                if(eJunction === 'top') {
-                                                    points.push(`${end_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width + this.width / 2},${end_top - this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${end_top}`)
-                                                } else if(eJunction === 'right') {
-                                                    points.push(`${end_left + this.width + this.width / 2},${start_top  + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
-                                                    points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                                } else if(eJunction === 'bottom') {
-                                                    points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${start_top + this.height}`)
-                                                } else if(eJunction === 'left') {
-                                                    points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height / 2}`)
-                                                    points.push(`${end_left},${start_top + this.height / 2}`)
-                                                }
-                                            } else if(sJunction === 'left') {
-                                                points.push(`${start_left},${start_top + this.height / 2}`)
-                                                points.push(`${start_left - this.width / 2},${start_top + this.height / 2}`)
-                                                if(eJunction === 'top') {
-                                                    points.push(`${start_left - this.width / 2},${start_top - this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${end_top}`)
-                                                } else if(eJunction === 'right') {
-                                                    console.log('从左到右')
-                                                    points.push(`${start_left - this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width + this.width / 2},${start_top + this.height / 2}`)
-                                                    points.push(`${end_left + this.width},${start_top + this.height / 2}`)
-                                                } else if(eJunction === 'bottom') {
-                                                    points.push(`${start_left - this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left + this.width / 2},${start_top + this.height}`)
-                                                } else if(eJunction === 'left') {
-                                                    points.push(`${start_left - this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                    points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height / 2}`)
-                                                    points.push(`${end_left},${start_top + this.height / 2}`)
+                                                    // 右上
+                                                    if(eJunction === 'top') {
+                                                        points.push(`${start_left + this.width + this.width / 2},${start_top - this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${start_top - this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${start_top}`)
+                                                    } else if(eJunction === 'right') {
+                                                        points.push(`${start_left + this.width + this.width / 2},${start_top  + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width + this.width / 2},${start_top  + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
+                                                        points.push(`${end_left + this.width},${end_top + this.height / 2}`)
+                                                    } else if(eJunction === 'bottom') {
+                                                        points.push(`${start_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${start_top + this.height}`)
+                                                    } else if(eJunction === 'left') {
+                                                        points.push(`${start_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height / 2}`)
+                                                        points.push(`${end_left},${start_top + this.height / 2}`)
+                                                    }
+                                                } else if(sJunction === 'bottom') {
+                                                    points.push(`${start_left + this.width / 2},${start_top + this.height}`)
+                                                    points.push(`${start_left + this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                    if(eJunction === 'top') {
+                                                        console.log('从下到上')
+                                                        points.push(`${end_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width + this.width / 2},${end_top - this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${end_top}`)
+                                                    } else if(eJunction === 'right') {
+                                                        points.push(`${end_left + this.width + this.width / 2},${start_top  + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
+                                                        points.push(`${end_left + this.width},${end_top + this.height / 2}`)
+                                                    } else if(eJunction === 'bottom') {
+                                                        points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${start_top + this.height}`)
+                                                    } else if(eJunction === 'left') {
+                                                        points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height / 2}`)
+                                                        points.push(`${end_left},${start_top + this.height / 2}`)
+                                                    }
+                                                } else if(sJunction === 'left') {
+                                                    points.push(`${start_left},${start_top + this.height / 2}`)
+                                                    points.push(`${start_left - this.width / 2},${start_top + this.height / 2}`)
+                                                    if(eJunction === 'top') {
+                                                        points.push(`${end_left + this.width + this.width / 2},${end_top - this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${end_top}`)
+                                                    } else if(eJunction === 'right') {
+                                                        points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
+                                                        points.push(`${end_left + this.width},${end_top + this.height / 2}`)
+                                                    } else if(eJunction === 'bottom') {
+                                                        points.push(`${start_left - this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${start_top + this.height}`)
+                                                    } else if(eJunction === 'left') {
+                                                        points.push(`${start_left - this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height / 2}`)
+                                                        points.push(`${end_left},${start_top + this.height / 2}`)
+                                                    }
                                                 }
                                             }
+                                            colleagueRL()
+                                        } else {
+                                            // 从左往右
+                                            let colleagueLR = () => {
+                                                if(sJunction === 'top') {
+                                                    points.push(`${start_left + this.width / 2},${start_top}`)
+                                                    points.push(`${start_left + this.width / 2},${start_top - this.height / 2}`)
+                                                    if(eJunction === 'top') {
+                                                        points.push(`${end_left + this.width / 2},${start_top - this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${end_top}`)
+                                                    } else if(eJunction === 'right') {
+                                                        points.push(`${end_left + this.width + this.width / 2},${start_top - this.height / 2}`)
+                                                        points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
+                                                        points.push(`${end_left + this.width},${end_top + this.height / 2}`)
+                                                    } else if(eJunction === 'bottom') {
+                                                        points.push(`${end_left + this.width + this.width / 2},${start_top - this.height / 2}`)
+                                                        points.push(`${end_left + this.width + this.width / 2},${end_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${end_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${end_top + this.height}`)
+                                                    } else if(eJunction === 'left') {
+                                                        points.push(`${end_left - this.width / 2},${start_top - this.height / 2}`)
+                                                        points.push(`${end_left - this.width / 2},${end_top + this.height / 2}`)
+                                                        points.push(`${end_left},${end_top + this.height / 2}`)
+                                                    }
+                                                } else if(sJunction === 'right') {
+                                                    console.log('开始是右')
+                                                    // points.push(`${start_left + this.width},${start_top + this.height / 2}`)
+                                                    // points.push(`${start_left + this.width + this.width / 2},${start_top + this.height / 2}`)
+                                                    // 右上
+                                                    if(eJunction === 'top') {
+                                                        points.push(`${start_left + this.width},${start_top + this.height / 2}`)
+                                                        points.push(`${start_left + this.width + this.width / 2},${start_top + this.height / 2}`)
+                                                        points.push(`${start_left + this.width + this.width / 2},${end_top - this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${end_top}`)
+                                                    } else if(eJunction === 'right') {
+                                                        points.push(`${start_left + this.width + this.width / 2},${start_top  + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width + this.width / 2},${start_top  + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
+                                                        points.push(`${end_left + this.width},${end_top + this.height / 2}`)
+                                                    } else if(eJunction === 'bottom') {
+                                                        points.push(`${start_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${start_top + this.height}`)
+                                                    } else if(eJunction === 'left') {
+                                                        console.log('pkq')
+                                                        points.push(`${start_left + this.width},${start_top + this.height / 2}`)
+                                                        points.push(`${end_left},${start_top + this.height / 2}`)
+                                                        // points.push(`${start_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        // points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        // points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height / 2}`)
+                                                        // points.push(`${end_left},${start_top + this.height / 2}`)
+                                                    }
+                                                } else if(sJunction === 'bottom') {
+                                                    points.push(`${start_left + this.width / 2},${start_top + this.height}`)
+                                                    points.push(`${start_left + this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                    if(eJunction === 'top') {
+                                                        points.push(`${end_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width + this.width / 2},${end_top - this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${end_top}`)
+                                                    } else if(eJunction === 'right') {
+                                                        points.push(`${end_left + this.width + this.width / 2},${start_top  + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
+                                                        points.push(`${end_left + this.width},${end_top + this.height / 2}`)
+                                                    } else if(eJunction === 'bottom') {
+                                                        points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${start_top + this.height}`)
+                                                    } else if(eJunction === 'left') {
+                                                        points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height / 2}`)
+                                                        points.push(`${end_left},${start_top + this.height / 2}`)
+                                                    }
+                                                } else if(sJunction === 'left') {
+                                                    points.push(`${start_left},${start_top + this.height / 2}`)
+                                                    points.push(`${start_left - this.width / 2},${start_top + this.height / 2}`)
+                                                    if(eJunction === 'top') {
+                                                        points.push(`${start_left - this.width / 2},${start_top - this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${end_top}`)
+                                                    } else if(eJunction === 'right') {
+                                                        console.log('从左到右')
+                                                        points.push(`${start_left - this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width + this.width / 2},${start_top + this.height / 2}`)
+                                                        points.push(`${end_left + this.width},${start_top + this.height / 2}`)
+                                                    } else if(eJunction === 'bottom') {
+                                                        points.push(`${start_left - this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left + this.width / 2},${start_top + this.height}`)
+                                                    } else if(eJunction === 'left') {
+                                                        points.push(`${start_left - this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height + this.height / 2}`)
+                                                        points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height / 2}`)
+                                                        points.push(`${end_left},${start_top + this.height / 2}`)
+                                                    }
+                                                }
+                                            }
+                                            colleagueLR()
                                         }
                                     } else {
+                                        // 间隔的
                                         if(sJunction === 'top') {
                                             points.push(`${start_left + this.width / 2},${start_top}`)
                                             points.push(`${start_left + this.width / 2},${start_top - this.height / 2}`)
@@ -739,8 +756,12 @@
                                             }
                                         }
                                     }
-                                } else if(start_left === end_left) { // 同一列
+                                }
+
+                                // 同一列
+                                let sameColumn = () => {
                                     console.log('同一列')
+
                                     let start_x = start_left + this.width / 2
                                     // 判断开始的坐标是否在结束元素的下边
                                     if(start_top > end_top) {
@@ -941,7 +962,10 @@
                                             }
                                         }
                                     }
-                                } else { // 错位连线
+                                }
+
+                                // 错位连线
+                                let dislocation = () => {
                                     console.log('错位连线')
                                     if(sJunction === 'top') {
                                         points.push(`${start_left + this.width / 2},${start_top}`)
@@ -1062,6 +1086,7 @@
                                             // }
                                         }
                                     } else if(sJunction === 'left') {
+                                        console.log('开始是左', eJunction)
                                         points.push(`${start_left},${start_top + this.height / 2}`)
                                         points.push(`${start_left - this.width / 2},${start_top + this.height / 2}`)
                                         if(eJunction === 'top') {
@@ -1093,12 +1118,21 @@
                                         }
                                     }
                                 }
+
+                                if(start_top === end_top) { // 同一行
+                                    colleague()
+                                } else if(start_left === end_left) { // 同一列
+                                    sameColumn()
+                                } else { // 错位连线
+                                    dislocation()
+                                }
+
                                 let obj = {
                                     coordinate: points.join(' '),   // 坐标
                                     start: $(start).attr('id'),     // 开始元素的 id
                                     end: $(end).attr('id'),         // 结束元素的 id
-                                    sJunction: sJunction,          // 开始的方向
-                                    eJunction: eJunction           // 结束的方向
+                                    sJunction: sJunction,           // 开始的方向
+                                    eJunction: eJunction            // 结束的方向
                                 }
                                 return obj
                             }
@@ -1140,8 +1174,8 @@
                                 // 判断当前状态: 点击元素 || 点击连接点-进行连线
                                 if(this.isDrag) {
                                     // 元素拖动
-                                    console.log('元素拖动')
-                                    let className = this.endEle.getAttribute('class')
+                                    console.log('元素拖动', this.endEle)
+                                    let className = this.endEle ? this.endEle.getAttribute('class') : null
                                     if(this.endEle === null || className.includes('item-content')) {
                                         // 还原初始状态
                                         this.cloneEle.remove()
@@ -1161,8 +1195,10 @@
                                     vueObj.points.push(potion)
                                 }
 
-                                // 删除提示线条
+                                // 重置状态
                                 this.line && this.line.remove()
+                                this.startEle = null
+                                this.endEle = null
                             }
 
                             // 判断元素是否存在已有连线
@@ -1176,20 +1212,7 @@
                                 let length = lineArr.length
                                 // 如果存在已有连线，则重绘连线
                                 if(length > 0) {
-                                    for(i = 0; i < length; i++) {
-                                        let item = lineArr[i]
-                                        let identity = item.getAttribute('identity').split('&')
-                                        let start = identity[0]
-                                        let end = identity[1]
-                                        let startEle = document.getElementById(start)
-                                        let endEle = document.getElementById(end)
-                                        let sJunction = item.getAttribute('s-junction')
-                                        let eJunction = item.getAttribute('e-junction')
-
-                                        this.deleteConnection(start)
-                                        // let potion = this.connection(startEle, endEle, sJunction, eJunction)
-                                        // vueObj.points.push(potion)
-                                    }
+                                    this.deleteConnection(id)
                                     this.reDrawLine(lineArr)
                                 }
                             }
@@ -1204,7 +1227,9 @@
                                     let item = arr[i]
                                     let start = item.start
                                     let end = item.end
+                                    console.log(item, startClassName, '??')
                                     if(start !== startClassName && end !== startClassName) {
+                                        console.log('**')
                                         tempArr.push(item)
                                     }
                                 }
@@ -1265,19 +1290,23 @@
                                 this.deleteEle = target
                             }
 
-                            // 判断是否重复连线
+                            // 判断是否重复连线 || 错误连线
                             My.prototype.isRepeat = function() {
                                 let arr = vueObj.points
                                 let length = arr.length
                                 let start = this.startEle.getAttribute('id')
                                 let end = this.endEle.getAttribute('id')
-                                // let identification = 0 // 判断是否重复的标识
+
+                                // 如果开始元素和结束元素是同一个元素则停止
+                                if(this.startEle === this.endEle) {
+                                    return false
+                                }
+
+                                // 判断是否重复连线
                                 for(let i = 0; i < length; i++) {
                                     let item = arr[i]
-                                    // this.startEle, this.endEle, this.sJunction, this.eJunction
-                                    console.log(item, 'item')
-                                    console.log(item.start, '===', start ,',', item.end, '===', end , ',', item.sJunction, '===', this.sJunction, ',', item.eJunction, '===', this.eJunction)
                                     if(item.start === start && item.end === end && item.sJunction === this.sJunction && item.eJunction === this.eJunction) {
+                                        console.log('重复连线')
                                         return false
                                     }
                                 }
@@ -1286,6 +1315,7 @@
 
                             new My()
                         },
+                        // 删除连线
                         deleteLine(index) {
                             this.points.splice(index, 1)
                         }
