@@ -24,7 +24,7 @@
         <div id="app">
             <svg id="line-box" xmlns="http://www.w3.org/2000/svg" version="1.1" :width="size[0]" :height="size[1]" ref="svg">
                 <template v-for="(item, index) in points">
-                    <g class="line" :identity="item.start + '&' + item.end" :s-junction="item.s_junction" :e-junction="item.e_junction">
+                    <g class="line" :identity="item.start + '&' + item.end" :s-junction="item.sJunction" :e-junction="item.eJunction">
                         <polyline :points="item.coordinate" :key="index" marker-end="url(#arrow)" @click="deleteLine(index)"></polyline>
                         <use xlink:href="#scissors" width="19" height="16" fill="blue" style="display: none"></use>
                     </g>
@@ -177,10 +177,10 @@
                                 start: 'item_6', end: 'item_9', sJunction: 'bottom', eJunction: 'top'
                             },
                             // {
-                            //     start: 'item_1', end: 'item_9', s_junction: 'right', e_junction: 'left'
+                            //     start: 'item_1', end: 'item_9', sJunction: 'right', eJunction: 'left'
                             // },
                             // {
-                            //     start: 'item_7', end: 'item_4', s_junction: 'left', e_junction: 'left'
+                            //     start: 'item_7', end: 'item_4', sJunction: 'left', eJunction: 'left'
                             // },
                         ],
                         points: [], // 连线的坐标
@@ -211,7 +211,7 @@
                         getPoints(data) {
                             let start = $(`#${data.start}`)[0] // 获取开始的元素
                             let end = $(`#${data.end}`)[0] // 获取结束的元素
-                            let point = this.drawLine(start, end, data.s_junction, data.e_junction) // 画线
+                            let point = this.drawLine(start, end, data.sJunction, data.eJunction) // 画线
                             return point
                         },
                         // 获取所有元素的坐标范围
@@ -248,7 +248,7 @@
                                 this.end_x = 0                                      // 鼠标 x 轴坐标
                                 this.end_y = 0                                      // 鼠标 y 轴坐标
                                 this.deleteEle = null                               // 剪刀 || 删除的元素
-                                this.polylineEle = null                                // 滑过的线条元素
+                                this.polylineEle = null                             // 滑过的线条元素
                                 this.init()                                         // 初始化
                             }
 
@@ -426,13 +426,13 @@
                              * 画线
                              * @param {Object}      start 开始元素
                              * @param {Object}      end   结束元素
-                             * @param {String}      s_junction  开始元素的方向
-                             * @param {String}      e_junction  结束元素的方向
+                             * @param {String}      sJunction  开始元素的方向
+                             * @param {String}      eJunction  结束元素的方向
                              * 
                              */
-                            My.prototype.connection = function(start, end, s_junction, e_junction) {
+                            My.prototype.connection = function(start, end, sJunction, eJunction) {
                                 console.log('画线')
-                                console.log(start, end, s_junction, e_junction)
+                                console.log(start, end, sJunction, eJunction)
                                 let that = this
                                 let points = []
                                 // 分别兼容ie和chrome
@@ -466,90 +466,90 @@
 
                                 if(start_top === end_top) { // 同一行
                                     console.log('同一行')
-                                    e_junction = e_junction ? e_junction : s_junction
+                                    eJunction = eJunction ? eJunction : sJunction
                                     if(Math.abs(start_left - end_left) === this.width * 2) {
                                         // 判断开始的坐标是否在结束元素的右侧
                                         if(start_left > end_left) {
                                             // 从右往左
-                                            if(s_junction === 'top') {
+                                            if(sJunction === 'top') {
                                                 points.push(`${start_left + this.width / 2},${start_top}`)
                                                 points.push(`${start_left + this.width / 2},${start_top - this.height / 2}`)
-                                                if(e_junction === 'top') {
+                                                if(eJunction === 'top') {
                                                     points.push(`${end_left + this.width / 2},${start_top - this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${end_top}`)
-                                                } else if(e_junction === 'right') {
+                                                } else if(eJunction === 'right') {
                                                     points.push(`${end_left + this.width + this.width / 2},${start_top - this.height / 2}`)
                                                     points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
                                                     points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                                } else if(e_junction === 'bottom') {
+                                                } else if(eJunction === 'bottom') {
                                                     points.push(`${end_left + this.width + this.width / 2},${start_top - this.height / 2}`)
                                                     points.push(`${end_left + this.width + this.width / 2},${end_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${end_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${end_top + this.height}`)
-                                                } else if(e_junction === 'left') {
+                                                } else if(eJunction === 'left') {
                                                     points.push(`${end_left - this.width / 2},${start_top - this.height / 2}`)
                                                     points.push(`${end_left - this.width / 2},${end_top + this.height / 2}`)
                                                     points.push(`${end_left},${end_top + this.height / 2}`)
                                                 }
-                                            } else if(s_junction === 'right') {
+                                            } else if(sJunction === 'right') {
                                                 points.push(`${start_left + this.width},${start_top + this.height / 2}`)
                                                 points.push(`${start_left + this.width + this.width / 2},${start_top + this.height / 2}`)
                                                 // 右上
-                                                if(e_junction === 'top') {
+                                                if(eJunction === 'top') {
                                                     points.push(`${start_left + this.width + this.width / 2},${start_top - this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${start_top - this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${start_top}`)
-                                                } else if(e_junction === 'right') {
+                                                } else if(eJunction === 'right') {
                                                     points.push(`${start_left + this.width + this.width / 2},${start_top  + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width + this.width / 2},${start_top  + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
                                                     points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                                } else if(e_junction === 'bottom') {
+                                                } else if(eJunction === 'bottom') {
                                                     points.push(`${start_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${start_top + this.height}`)
-                                                } else if(e_junction === 'left') {
+                                                } else if(eJunction === 'left') {
                                                     points.push(`${start_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height / 2}`)
                                                     points.push(`${end_left},${start_top + this.height / 2}`)
                                                 }
-                                            } else if(s_junction === 'bottom') {
+                                            } else if(sJunction === 'bottom') {
                                                 points.push(`${start_left + this.width / 2},${start_top + this.height}`)
                                                 points.push(`${start_left + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                if(e_junction === 'top') {
+                                                if(eJunction === 'top') {
                                                     console.log('从下到上')
                                                     points.push(`${end_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width + this.width / 2},${end_top - this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${end_top}`)
-                                                } else if(e_junction === 'right') {
+                                                } else if(eJunction === 'right') {
                                                     points.push(`${end_left + this.width + this.width / 2},${start_top  + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
                                                     points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                                } else if(e_junction === 'bottom') {
+                                                } else if(eJunction === 'bottom') {
                                                     points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${start_top + this.height}`)
-                                                } else if(e_junction === 'left') {
+                                                } else if(eJunction === 'left') {
                                                     points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height / 2}`)
                                                     points.push(`${end_left},${start_top + this.height / 2}`)
                                                 }
-                                            } else if(s_junction === 'left') {
+                                            } else if(sJunction === 'left') {
                                                 points.push(`${start_left},${start_top + this.height / 2}`)
                                                 points.push(`${start_left - this.width / 2},${start_top + this.height / 2}`)
-                                                if(e_junction === 'top') {
+                                                if(eJunction === 'top') {
                                                     points.push(`${end_left + this.width + this.width / 2},${end_top - this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${end_top}`)
-                                                } else if(e_junction === 'right') {
+                                                } else if(eJunction === 'right') {
                                                     points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
                                                     points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                                } else if(e_junction === 'bottom') {
+                                                } else if(eJunction === 'bottom') {
                                                     points.push(`${start_left - this.width / 2},${start_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${start_top + this.height}`)
-                                                } else if(e_junction === 'left') {
+                                                } else if(eJunction === 'left') {
                                                     points.push(`${start_left - this.width / 2},${start_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height / 2}`)
@@ -558,47 +558,47 @@
                                             }
                                         } else {
                                             // 从左往右
-                                            if(s_junction === 'top') {
+                                            if(sJunction === 'top') {
                                                 points.push(`${start_left + this.width / 2},${start_top}`)
                                                 points.push(`${start_left + this.width / 2},${start_top - this.height / 2}`)
-                                                if(e_junction === 'top') {
+                                                if(eJunction === 'top') {
                                                     points.push(`${end_left + this.width / 2},${start_top - this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${end_top}`)
-                                                } else if(e_junction === 'right') {
+                                                } else if(eJunction === 'right') {
                                                     points.push(`${end_left + this.width + this.width / 2},${start_top - this.height / 2}`)
                                                     points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
                                                     points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                                } else if(e_junction === 'bottom') {
+                                                } else if(eJunction === 'bottom') {
                                                     points.push(`${end_left + this.width + this.width / 2},${start_top - this.height / 2}`)
                                                     points.push(`${end_left + this.width + this.width / 2},${end_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${end_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${end_top + this.height}`)
-                                                } else if(e_junction === 'left') {
+                                                } else if(eJunction === 'left') {
                                                     points.push(`${end_left - this.width / 2},${start_top - this.height / 2}`)
                                                     points.push(`${end_left - this.width / 2},${end_top + this.height / 2}`)
                                                     points.push(`${end_left},${end_top + this.height / 2}`)
                                                 }
-                                            } else if(s_junction === 'right') {
+                                            } else if(sJunction === 'right') {
                                                 console.log('开始是右')
                                                 // points.push(`${start_left + this.width},${start_top + this.height / 2}`)
                                                 // points.push(`${start_left + this.width + this.width / 2},${start_top + this.height / 2}`)
                                                 // 右上
-                                                if(e_junction === 'top') {
+                                                if(eJunction === 'top') {
                                                     points.push(`${start_left + this.width},${start_top + this.height / 2}`)
                                                     points.push(`${start_left + this.width + this.width / 2},${start_top + this.height / 2}`)
                                                     points.push(`${start_left + this.width + this.width / 2},${end_top - this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${end_top}`)
-                                                } else if(e_junction === 'right') {
+                                                } else if(eJunction === 'right') {
                                                     points.push(`${start_left + this.width + this.width / 2},${start_top  + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width + this.width / 2},${start_top  + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
                                                     points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                                } else if(e_junction === 'bottom') {
+                                                } else if(eJunction === 'bottom') {
                                                     points.push(`${start_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${start_top + this.height}`)
-                                                } else if(e_junction === 'left') {
+                                                } else if(eJunction === 'left') {
                                                     console.log('pkq')
                                                     points.push(`${start_left + this.width},${start_top + this.height / 2}`)
                                                     points.push(`${end_left},${start_top + this.height / 2}`)
@@ -607,44 +607,44 @@
                                                     // points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height / 2}`)
                                                     // points.push(`${end_left},${start_top + this.height / 2}`)
                                                 }
-                                            } else if(s_junction === 'bottom') {
+                                            } else if(sJunction === 'bottom') {
                                                 points.push(`${start_left + this.width / 2},${start_top + this.height}`)
                                                 points.push(`${start_left + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                                if(e_junction === 'top') {
+                                                if(eJunction === 'top') {
                                                     points.push(`${end_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width + this.width / 2},${end_top - this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${end_top}`)
-                                                } else if(e_junction === 'right') {
+                                                } else if(eJunction === 'right') {
                                                     points.push(`${end_left + this.width + this.width / 2},${start_top  + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
                                                     points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                                } else if(e_junction === 'bottom') {
+                                                } else if(eJunction === 'bottom') {
                                                     points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${start_top + this.height}`)
-                                                } else if(e_junction === 'left') {
+                                                } else if(eJunction === 'left') {
                                                     points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height / 2}`)
                                                     points.push(`${end_left},${start_top + this.height / 2}`)
                                                 }
-                                            } else if(s_junction === 'left') {
+                                            } else if(sJunction === 'left') {
                                                 points.push(`${start_left},${start_top + this.height / 2}`)
                                                 points.push(`${start_left - this.width / 2},${start_top + this.height / 2}`)
-                                                if(e_junction === 'top') {
+                                                if(eJunction === 'top') {
                                                     points.push(`${start_left - this.width / 2},${start_top - this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${end_top}`)
-                                                } else if(e_junction === 'right') {
+                                                } else if(eJunction === 'right') {
                                                     console.log('从左到右')
                                                     points.push(`${start_left - this.width / 2},${start_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width + this.width / 2},${start_top + this.height / 2}`)
                                                     points.push(`${end_left + this.width},${start_top + this.height / 2}`)
-                                                } else if(e_junction === 'bottom') {
+                                                } else if(eJunction === 'bottom') {
                                                     points.push(`${start_left - this.width / 2},${start_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left + this.width / 2},${start_top + this.height}`)
-                                                } else if(e_junction === 'left') {
+                                                } else if(eJunction === 'left') {
                                                     points.push(`${start_left - this.width / 2},${start_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                     points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height / 2}`)
@@ -653,85 +653,85 @@
                                             }
                                         }
                                     } else {
-                                        if(s_junction === 'top') {
+                                        if(sJunction === 'top') {
                                             points.push(`${start_left + this.width / 2},${start_top}`)
                                             points.push(`${start_left + this.width / 2},${start_top - this.height / 2}`)
-                                            if(e_junction === 'top') {
+                                            if(eJunction === 'top') {
                                                 points.push(`${end_left + this.width / 2},${start_top - this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top}`)
-                                            } else if(e_junction === 'right') {
+                                            } else if(eJunction === 'right') {
                                                 points.push(`${end_left + this.width + this.width / 2},${start_top - this.height / 2}`)
                                                 points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
                                                 points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                            } else if(e_junction === 'bottom') {
+                                            } else if(eJunction === 'bottom') {
                                                 points.push(`${end_left + this.width + this.width / 2},${start_top - this.height / 2}`)
                                                 points.push(`${end_left + this.width + this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top + this.height}`)
-                                            } else if(e_junction === 'left') {
+                                            } else if(eJunction === 'left') {
                                                 points.push(`${end_left - this.width / 2},${start_top - this.height / 2}`)
                                                 points.push(`${end_left - this.width / 2},${end_top + this.height / 2}`)
                                                 points.push(`${end_left},${end_top + this.height / 2}`)
                                             }
-                                        } else if(s_junction === 'right') {
+                                        } else if(sJunction === 'right') {
                                             points.push(`${start_left + this.width},${start_top + this.height / 2}`)
                                             points.push(`${start_left + this.width + this.width / 2},${start_top + this.height / 2}`)
-                                            if(e_junction === 'top') {
+                                            if(eJunction === 'top') {
                                                 points.push(`${start_left + this.width + this.width / 2},${start_top - this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${start_top - this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${start_top}`)
-                                            } else if(e_junction === 'right') {
+                                            } else if(eJunction === 'right') {
                                                 points.push(`${start_left + this.width + this.width / 2},${start_top  + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width + this.width / 2},${start_top  + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
                                                 points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                            } else if(e_junction === 'bottom') {
+                                            } else if(eJunction === 'bottom') {
                                                 points.push(`${start_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${start_top + this.height}`)
-                                            } else if(e_junction === 'left') {
+                                            } else if(eJunction === 'left') {
                                                 points.push(`${start_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height / 2}`)
                                                 points.push(`${end_left},${start_top + this.height / 2}`)
                                             }
-                                        } else if(s_junction === 'bottom') {
+                                        } else if(sJunction === 'bottom') {
                                             points.push(`${start_left + this.width / 2},${start_top + this.height}`)
                                             points.push(`${start_left + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                            if(e_junction === 'top') {
+                                            if(eJunction === 'top') {
                                                 points.push(`${end_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width + this.width / 2},${end_top - this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top}`)
-                                            } else if(e_junction === 'right') {
+                                            } else if(eJunction === 'right') {
                                                 points.push(`${end_left + this.width + this.width / 2},${start_top  + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
                                                 points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                            } else if(e_junction === 'bottom') {
+                                            } else if(eJunction === 'bottom') {
                                                 points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${start_top + this.height}`)
-                                            } else if(e_junction === 'left') {
+                                            } else if(eJunction === 'left') {
                                                 points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height / 2}`)
                                                 points.push(`${end_left},${start_top + this.height / 2}`)
                                             }
-                                        } else if(s_junction === 'left') {
+                                        } else if(sJunction === 'left') {
                                             points.push(`${start_left},${start_top + this.height / 2}`)
                                             points.push(`${start_left - this.width / 2},${start_top + this.height / 2}`)
-                                            if(e_junction === 'top') {
+                                            if(eJunction === 'top') {
                                                 points.push(`${start_left - this.width / 2},${start_top - this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top}`)
-                                            } else if(e_junction === 'right') {
+                                            } else if(eJunction === 'right') {
                                                 points.push(`${start_left - this.width / 2},${start_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left+ this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
                                                 points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                            } else if(e_junction === 'bottom') {
+                                            } else if(eJunction === 'bottom') {
                                                 points.push(`${start_left - this.width / 2},${start_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${start_top + this.height}`)
-                                            } else if(e_junction === 'left') {
+                                            } else if(eJunction === 'left') {
                                                 points.push(`${start_left - this.width / 2},${start_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left - this.width  + this.width / 2},${start_top + this.height / 2}`)
@@ -745,20 +745,20 @@
                                     // 判断开始的坐标是否在结束元素的下边
                                     if(start_top > end_top) {
                                         // 从下往上
-                                        if(s_junction === 'top') {
+                                        if(sJunction === 'top') {
                                             points.push(`${start_left + this.width / 2},${start_top}`)
-                                            if(e_junction === 'top') {
+                                            if(eJunction === 'top') {
                                                 points.push(`${start_left + this.width / 2},${start_top - this.height / 2}`)
                                                 points.push(`${start_left + this.width + this.width / 2},${start_top - this.height / 2}`)
                                                 points.push(`${start_left + this.width + this.width / 2},${end_top - this.height / 2}`)
                                                 points.push(`${start_left + this.width / 2},${end_top - this.height / 2}`)
                                                 points.push(`${start_left + this.width / 2},${end_top}`)
-                                            } else if(e_junction === 'right') {
+                                            } else if(eJunction === 'right') {
                                                 points.push(`${start_left + this.width / 2},${start_top - this.height / 2}`)
                                                 points.push(`${start_left + this.width + this.width / 2},${start_top - this.height / 2}`)
                                                 points.push(`${start_left + this.width + this.width / 2},${end_top + this.height / 2}`)
                                                 points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                            } else if(e_junction === 'bottom') {
+                                            } else if(eJunction === 'bottom') {
                                                 let distance = Math.abs(start_top - end_top)
                                                 if(distance > this.width * 2) {
                                                     points.push(`${start_left + this.width / 2},${start_top - this.height / 2}`)
@@ -770,73 +770,73 @@
                                                     console.log('相邻元素')
                                                     points.push(`${start_left + this.width / 2},${end_top + this.height}`)
                                                 }
-                                            } else if(e_junction === 'left') {
+                                            } else if(eJunction === 'left') {
                                                 points.push(`${start_left + this.width / 2},${start_top - this.height / 2}`)
                                                 points.push(`${start_left - this.width / 2},${start_top - this.height / 2}`)
                                                 points.push(`${start_left - this.width / 2},${end_top + this.height / 2}`)
                                                 points.push(`${end_left},${end_top + this.height / 2}`)
                                             }
-                                        } else if(s_junction === 'right') {
+                                        } else if(sJunction === 'right') {
                                             points.push(`${start_left + this.width},${start_top + this.height / 2}`)
                                             points.push(`${start_left + this.width + this.width / 2},${start_top + this.height / 2}`)
-                                            if(e_junction === 'top') {
+                                            if(eJunction === 'top') {
                                                 points.push(`${start_left + this.width + this.width / 2},${end_top - this.height / 2}`)
                                                 points.push(`${start_left + this.width / 2},${end_top - this.height / 2}`)
                                                 points.push(`${start_left + this.width / 2},${end_top}`)
-                                            } else if(e_junction === 'right') {
+                                            } else if(eJunction === 'right') {
                                                 points.push(`${start_left + this.width + this.width / 2},${end_top + this.height / 2}`)
                                                 points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                            } else if(e_junction === 'bottom') {
+                                            } else if(eJunction === 'bottom') {
                                                 points.push(`${start_left + this.width + this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top + this.height}`)
-                                            } else if(e_junction === 'left') {
+                                            } else if(eJunction === 'left') {
                                                 points.push(`${start_left + this.width + this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${start_left - this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${start_left - this.width / 2},${end_top + this.height / 2}`)
                                                 points.push(`${end_left},${end_top + this.height / 2}`)
                                             }
-                                        } else if(s_junction === 'bottom') {
+                                        } else if(sJunction === 'bottom') {
                                             points.push(`${start_left + this.width / 2},${start_top + this.height}`)
                                             points.push(`${start_left + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                            if(e_junction === 'top') {
+                                            if(eJunction === 'top') {
                                                 console.log('相邻元素')
                                                 points.push(`${start_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                 points.push(`${start_left + this.width + this.width / 2},${end_top - this.height / 2}`)
                                                 points.push(`${start_left + this.width / 2},${end_top - this.height / 2}`)
                                                 points.push(`${start_left + this.width / 2},${end_top}`)
-                                            } else if(e_junction === 'right') {
+                                            } else if(eJunction === 'right') {
                                                 points.push(`${start_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                 points.push(`${start_left + this.width + this.width / 2},${end_top + this.height / 2}`)
                                                 points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                            } else if(e_junction === 'bottom') {
+                                            } else if(eJunction === 'bottom') {
                                                 points.push(`${start_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                 points.push(`${start_left + this.width + this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top + this.height}`)
-                                            } else if(e_junction === 'left') {
+                                            } else if(eJunction === 'left') {
                                                 points.push(`${end_left - this.width / 2},${start_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left - this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left - this.width / 2},${end_top + this.height / 2}`)
                                                 points.push(`${end_left},${end_top + this.height / 2}`)
                                             }
-                                        } else if(s_junction === 'left') {
+                                        } else if(sJunction === 'left') {
                                             points.push(`${start_left},${start_top + this.height / 2}`)
                                             points.push(`${start_left - this.width / 2},${start_top + this.height / 2}`)
-                                            if(e_junction === 'top') {
+                                            if(eJunction === 'top') {
                                                 points.push(`${start_left - this.width / 2},${end_top - this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top}`)
-                                            } else if(e_junction === 'right') {
+                                            } else if(eJunction === 'right') {
                                                 points.push(`${start_left - this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width + this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
                                                 points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                            } else if(e_junction === 'bottom') {
+                                            } else if(eJunction === 'bottom') {
                                                 points.push(`${start_left - this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top + this.height}`)
-                                            } else if(e_junction === 'left') {
+                                            } else if(eJunction === 'left') {
                                                 points.push(`${end_left - this.width / 2},${end_top + this.height / 2}`)
                                                 points.push(`${end_left},${end_top + this.height / 2}`)
                                             }
@@ -844,55 +844,55 @@
                                     } else {
                                         // 从上往下
                                         console.log('从上往下')
-                                        if(s_junction === 'top') {
+                                        if(sJunction === 'top') {
                                             points.push(`${start_left + this.width / 2},${start_top}`)
-                                            if(e_junction === 'top') {
+                                            if(eJunction === 'top') {
                                                 points.push(`${start_left + this.width / 2},${start_top - this.height / 2}`)
                                                 points.push(`${start_left + this.width + this.width / 2},${start_top - this.height / 2}`)
                                                 points.push(`${start_left + this.width + this.width / 2},${end_top - this.height / 2}`)
                                                 points.push(`${start_left + this.width / 2},${end_top - this.height / 2}`)
                                                 points.push(`${start_left + this.width / 2},${end_top}`)
-                                            } else if(e_junction === 'right') {
+                                            } else if(eJunction === 'right') {
                                                 points.push(`${start_left + this.width / 2},${start_top - this.height / 2}`)
                                                 points.push(`${start_left + this.width + this.width / 2},${start_top - this.height / 2}`)
                                                 points.push(`${start_left + this.width + this.width / 2},${end_top + this.height / 2}`)
                                                 points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                            } else if(e_junction === 'bottom') {
+                                            } else if(eJunction === 'bottom') {
                                                 points.push(`${start_left + this.width / 2},${start_top - this.height / 2}`)
                                                 points.push(`${end_left + this.width + this.width / 2},${start_top - this.height / 2}`)
                                                 points.push(`${end_left + this.width + this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top + this.height}`)
-                                            } else if(e_junction === 'left') {
+                                            } else if(eJunction === 'left') {
                                                 points.push(`${start_left + this.width / 2},${start_top - this.height / 2}`)
                                                 points.push(`${start_left - this.width / 2},${start_top - this.height / 2}`)
                                                 points.push(`${start_left - this.width / 2},${end_top + this.height / 2}`)
                                                 points.push(`${end_left},${end_top + this.height / 2}`)
                                             }
-                                        } else if(s_junction === 'right') {
+                                        } else if(sJunction === 'right') {
                                             points.push(`${start_left + this.width},${start_top + this.height / 2}`)
                                             points.push(`${start_left + this.width + this.width / 2},${start_top + this.height / 2}`)
-                                            if(e_junction === 'top') {
+                                            if(eJunction === 'top') {
                                                 points.push(`${start_left + this.width + this.width / 2},${end_top - this.height / 2}`)
                                                 points.push(`${start_left + this.width / 2},${end_top - this.height / 2}`)
                                                 points.push(`${start_left + this.width / 2},${end_top}`)
-                                            } else if(e_junction === 'right') {
+                                            } else if(eJunction === 'right') {
                                                 points.push(`${start_left + this.width + this.width / 2},${end_top + this.height / 2}`)
                                                 points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                            } else if(e_junction === 'bottom') {
+                                            } else if(eJunction === 'bottom') {
                                                 points.push(`${start_left + this.width + this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top + this.height}`)
-                                            } else if(e_junction === 'left') {
+                                            } else if(eJunction === 'left') {
                                                 points.push(`${start_left + this.width + this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${start_left - this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${start_left - this.width / 2},${end_top + this.height / 2}`)
                                                 points.push(`${end_left},${end_top + this.height / 2}`)
                                             }
-                                        } else if(s_junction === 'bottom') {
+                                        } else if(sJunction === 'bottom') {
                                             points.push(`${start_left + this.width / 2},${start_top + this.height}`)
                                             points.push(`${start_left + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                            if(e_junction === 'top') { // 不一样
+                                            if(eJunction === 'top') { // 不一样
                                                 console.log('从下往上')
                                                 let distance = Math.abs(start_top - end_top)
                                                 if(distance > this.height * 2) {
@@ -904,38 +904,38 @@
                                                     console.log('??')
                                                     points.push(`${start_left + this.width / 2},${end_top}`)
                                                 }
-                                            } else if(e_junction === 'right') {
+                                            } else if(eJunction === 'right') {
                                                 points.push(`${start_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                 points.push(`${start_left + this.width + this.width / 2},${end_top + this.height / 2}`)
                                                 points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                            } else if(e_junction === 'bottom') {
+                                            } else if(eJunction === 'bottom') {
                                                 points.push(`${start_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                 points.push(`${start_left + this.width + this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top + this.height}`)
-                                            } else if(e_junction === 'left') { // 不一样
+                                            } else if(eJunction === 'left') { // 不一样
                                                 points.push(`${end_left - this.width / 2},${start_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left - this.width / 2},${end_top + this.height / 2}`)
                                                 points.push(`${end_left},${end_top + this.height / 2}`)
                                             }
-                                        } else if(s_junction === 'left') {
+                                        } else if(sJunction === 'left') {
                                             points.push(`${start_left},${start_top + this.height / 2}`)
                                             points.push(`${start_left - this.width / 2},${start_top + this.height / 2}`)
-                                            if(e_junction === 'top') {
+                                            if(eJunction === 'top') {
                                                 console.log('从下到上')
                                                 points.push(`${start_left - this.width / 2},${end_top - this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top}`)
-                                            } else if(e_junction === 'right') {
+                                            } else if(eJunction === 'right') {
                                                 points.push(`${start_left - this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width + this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
                                                 points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                            } else if(e_junction === 'bottom') {
+                                            } else if(eJunction === 'bottom') {
                                                 points.push(`${start_left - this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top + this.height}`)
-                                            } else if(e_junction === 'left') {
+                                            } else if(eJunction === 'left') {
                                                 points.push(`${end_left - this.width / 2},${end_top + this.height / 2}`)
                                                 points.push(`${end_left},${end_top + this.height / 2}`)
                                             }
@@ -943,19 +943,19 @@
                                     }
                                 } else { // 错位连线
                                     console.log('错位连线')
-                                    if(s_junction === 'top') {
+                                    if(sJunction === 'top') {
                                         points.push(`${start_left + this.width / 2},${start_top}`)
                                         points.push(`${start_left + this.width / 2},${start_top - this.height / 2}`)
-                                        if(e_junction === 'top') {
+                                        if(eJunction === 'top') {
                                             points.push(`${end_left - this.width / 2},${start_top - this.height / 2}`)
                                             points.push(`${end_left - this.width / 2},${end_top - this.height / 2}`)
                                             points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
                                             points.push(`${end_left + this.width / 2},${end_top}`)
-                                        } else if(e_junction === 'right') {
+                                        } else if(eJunction === 'right') {
                                             points.push(`${end_left + this.width + this.width / 2},${start_top - this.height / 2}`)
                                             points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
                                             points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                        } else if(e_junction === 'bottom') {
+                                        } else if(eJunction === 'bottom') {
                                             if(start_left > end_left) {
                                                 points.push(`${end_left + this.width / 2},${start_top - this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top + this.height}`)
@@ -966,15 +966,15 @@
                                                 points.push(`${end_left + this.width / 2},${end_top + this.height + this.height / 2}`)
                                                 points.push(`${end_left + this.width / 2},${end_top + this.height}`)
                                             }
-                                        } else if(e_junction === 'left') {
+                                        } else if(eJunction === 'left') {
                                             points.push(`${end_left - this.width / 2},${start_top - this.height / 2}`)
                                             points.push(`${end_left - this.width / 2},${end_top + this.height / 2}`)
                                             points.push(`${end_left},${end_top + this.height / 2}`)
                                         }
-                                    } else if(s_junction === 'right') {
+                                    } else if(sJunction === 'right') {
                                         points.push(`${start_left + this.width},${start_top + this.height / 2}`)
                                         points.push(`${start_left + this.width + this.width / 2},${start_top + this.height / 2}`)
-                                        if(e_junction === 'top') {
+                                        if(eJunction === 'top') {
                                             if(start_left > end_left) {
                                                 // 从右往左
                                                 points.push(`${start_left + this.width + this.width / 2},${start_top - this.height / 2}`)
@@ -985,17 +985,17 @@
                                             points.push(`${end_left - this.width / 2},${end_top - this.height / 2}`)
                                             points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
                                             points.push(`${end_left + this.width / 2},${end_top}`)
-                                        } else if(e_junction === 'right') {
+                                        } else if(eJunction === 'right') {
                                             points.push(`${start_left + this.width + this.width / 2},${start_top - this.height / 2}`)
                                             points.push(`${end_left + this.width + this.width / 2},${start_top - this.height / 2}`)
                                             points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
                                             points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                        } else if(e_junction === 'bottom') {
+                                        } else if(eJunction === 'bottom') {
                                             console.log('右到下')
                                             points.push(`${start_left + this.width + this.width / 2},${end_top + this.height + this.height / 2}`)
                                             points.push(`${end_left + this.width / 2},${end_top + this.height + this.height / 2}`)
                                             points.push(`${end_left + this.width / 2},${end_top}`)
-                                        } else if(e_junction === 'left') {
+                                        } else if(eJunction === 'left') {
                                             // 从右往左
                                             console.log('从右往左')
                                             if(start_top > end_top) {
@@ -1012,10 +1012,10 @@
                                             }
                                             
                                         }
-                                    } else if(s_junction === 'bottom') {
+                                    } else if(sJunction === 'bottom') {
                                         points.push(`${start_left + this.width / 2},${start_top + this.height}`)
                                         points.push(`${start_left + this.width / 2},${start_top + this.height + this.height / 2}`)
-                                        if(e_junction === 'top') {
+                                        if(eJunction === 'top') {
                                             console.log('从下到上')
                                             if(start_left > end_left) {
                                                 console.log('从右到左')
@@ -1032,7 +1032,7 @@
                                                 // points.push(`${end_left + this.width / 2},${start_top + this.height + this.height / 2}`)
                                                 // points.push(`${end_left + this.width / 2},${end_top}`)
                                             }
-                                        } else if(e_junction === 'right') {
+                                        } else if(eJunction === 'right') {
                                             console.log('下到右')
                                             points.push(`${end_left + this.width + this.width / 2},${start_top + this.height + this.height / 2}`)
                                             points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
@@ -1042,9 +1042,9 @@
                                             // points.push(`${end_left + this.width + this.width / 2},${start_top - this.height / 2}`)
                                             // points.push(`${end_left + this.width + this.width / 2},${end_top + this.height / 2}`)
                                             // points.push(`${end_left + this.width},${end_top + this.height / 2}`)
-                                        } else if(e_junction === 'bottom') {
+                                        } else if(eJunction === 'bottom') {
                                             points = points.concat(dislocationBB(start, end))
-                                        } else if(e_junction === 'left') {
+                                        } else if(eJunction === 'left') {
                                             // console.log('从下往左')
                                             // if(start_left > end_left) {
                                             //     // 从右往左
@@ -1061,14 +1061,14 @@
                                             //     points.push(`${end_left},${end_top + this.height / 2}`)                                            
                                             // }
                                         }
-                                    } else if(s_junction === 'left') {
+                                    } else if(sJunction === 'left') {
                                         points.push(`${start_left},${start_top + this.height / 2}`)
                                         points.push(`${start_left - this.width / 2},${start_top + this.height / 2}`)
-                                        if(e_junction === 'top') {
+                                        if(eJunction === 'top') {
                                             points.push(`${start_left - this.width / 2},${end_top - this.height / 2}`)
                                             points.push(`${end_left + this.width / 2},${end_top - this.height / 2}`)
                                             points.push(`${end_left + this.width / 2},${end_top}`)
-                                        } else if(e_junction === 'right') {
+                                        } else if(eJunction === 'right') {
                                             let distance = Math.abs(start_left - end_left)
                                             if(distance > this.width * 2) {
                                                 points.push(`${start_left - this.width / 2},${start_top - this.height / 2}`)
@@ -1079,11 +1079,12 @@
                                                 points.push(`${start_left - this.width / 2},${end_top + this.height / 2}`)                                        
                                                 points.push(`${end_left + this.width},${end_top + this.height / 2}`)
                                             }
-                                        } else if(e_junction === 'bottom') {
+                                        } else if(eJunction === 'bottom') {
                                             points.push(`${start_left - this.width / 2},${end_top + this.height + this.height / 2}`)
                                             points.push(`${end_left + this.width / 2},${end_top + this.height + this.height / 2}`)
                                             points.push(`${end_left + this.width / 2},${end_top + this.height}`)
-                                        } else if(e_junction === 'left') {
+                                        } else if(eJunction === 'left') {
+                                            console.log('从左到左')
                                             points.push(`${start_left - this.width / 2},${start_top - this.height / 2}`)
                                             points.push(`${start_left + this.width + this.width / 2},${start_top - this.height / 2}`)
                                             points.push(`${end_left - this.width / 2},${start_top - this.height / 2}`)
@@ -1096,8 +1097,8 @@
                                     coordinate: points.join(' '),   // 坐标
                                     start: $(start).attr('id'),     // 开始元素的 id
                                     end: $(end).attr('id'),         // 结束元素的 id
-                                    s_junction: s_junction,          // 开始的方向
-                                    e_junction: e_junction           // 结束的方向
+                                    sJunction: sJunction,          // 开始的方向
+                                    eJunction: eJunction           // 结束的方向
                                 }
                                 return obj
                             }
@@ -1152,7 +1153,7 @@
                                         // 判断元素是否存在已有连线
                                         this.isExistentialConnection()
                                     }
-                                } else if(this.startEle && this.endEle) {
+                                } else if(this.startEle && this.endEle && this.isRepeat()) {
                                     // 提示线条拖动
                                     console.log('提示线条拖动')
                                     // 画线
@@ -1262,6 +1263,25 @@
                                 target.setAttribute('x', this.end_x - 10)
                                 target.setAttribute('y', this.end_y - 10)
                                 this.deleteEle = target
+                            }
+
+                            // 判断是否重复连线
+                            My.prototype.isRepeat = function() {
+                                let arr = vueObj.points
+                                let length = arr.length
+                                let start = this.startEle.getAttribute('id')
+                                let end = this.endEle.getAttribute('id')
+                                // let identification = 0 // 判断是否重复的标识
+                                for(let i = 0; i < length; i++) {
+                                    let item = arr[i]
+                                    // this.startEle, this.endEle, this.sJunction, this.eJunction
+                                    console.log(item, 'item')
+                                    console.log(item.start, '===', start ,',', item.end, '===', end , ',', item.sJunction, '===', this.sJunction, ',', item.eJunction, '===', this.eJunction)
+                                    if(item.start === start && item.end === end && item.sJunction === this.sJunction && item.eJunction === this.eJunction) {
+                                        return false
+                                    }
+                                }
+                                return true
                             }
 
                             new My()
