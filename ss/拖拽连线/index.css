@@ -17,6 +17,15 @@ svg .line:hover {
 svg .line:hover polyline {
     stroke: blue;
 }
+
+/* svg .line use {
+    display: none;
+} */
+
+/* svg .line:hover use {
+    display: block;
+} */
+
 body, html {
     position: absolute;
     left: 0;

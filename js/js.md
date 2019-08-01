@@ -631,7 +631,6 @@ console.log(str);
    console.log(my$('two').previousSibling);
    //获取当前li的前一个兄弟元素
    console.log(my$('two').previousElementSibling);
-
    //获取当前li的后一个兄弟节点
    console.log(my$('two').nextSibling);
    //获取当前li的后一个兄弟元素

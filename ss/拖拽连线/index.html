@@ -24,9 +24,9 @@
         <div id="app">
             <svg id="line-box" xmlns="http://www.w3.org/2000/svg" version="1.1" :width="size[0]" :height="size[1]" ref="svg">
                 <template v-for="(item, index) in points">
-                    <g class="line" :identity="item.start + '&' + item.end" :s-junction="item.s_junction" :e-junction="item.e_junction" @mouseenter="handleMouseenter">
-                        <polyline :points="item.coordinate" :key="index" marker-end="url(#arrow)"></polyline>
-                        <use xlink:href="#scissors" width="19" height="16" fill="blue"></use>
+                    <g class="line" :identity="item.start + '&' + item.end" :s-junction="item.s_junction" :e-junction="item.e_junction">
+                        <polyline :points="item.coordinate" :key="index" marker-end="url(#arrow)" @click="deleteLine(index)"></polyline>
+                        <use xlink:href="#scissors" width="19" height="16" fill="blue" style="display: none"></use>
                     </g>
                 </template>
             </svg>
@@ -231,21 +231,25 @@
                             let vueObj = this
 
                             let My = function() {
-                                this.box = document.querySelector('.content')
-                                this.svg = d3.select('#line-box')   // 获取 svg 元素
-                                this.line = null                    // 提示线条
-                                this.startEle = null                // 开始元素
-                                this.endEle = null                  // 结束元素
-                                this.width = 100                    // 盒子的宽
-                                this.height = 100                   // 盒子的高
-                                this.sJunction = 'top'              // 开始元素的方向
-                                this.eJunction = 'top'              // 结束元素的方向
-                                this.isDrag = false                 // 拖动
-                                this.cloneEle = null                // 克隆内容元素
-                                this.parentEle = null               // 盒子元素
-                                this.data = vueObj.polyline         // 连接的数据
-                                this.isPressDown = false            // 按下 默认 false || 抬起的状态
-                                this.init()                         // 初始化
+                                this.box = document.querySelector('.content')       // 最外层的盒子元素
+                                this.svg = d3.select('#line-box')                   // 获取 svg 元素
+                                this.line = null                                    // 提示线条
+                                this.startEle = null                                // 开始元素
+                                this.endEle = null                                  // 结束元素
+                                this.width = 100                                    // 盒子的宽
+                                this.height = 100                                   // 盒子的高
+                                this.sJunction = 'top'                              // 开始元素的方向
+                                this.eJunction = 'top'                              // 结束元素的方向
+                                this.isDrag = false                                 // 拖动
+                                this.cloneEle = null                                // 克隆内容元素
+                                this.parentEle = null                               // 盒子元素
+                                this.data = vueObj.polyline                         // 连接的数据
+                                this.isPressDown = false                            // 按下 默认 false || 抬起的状态
+                                this.end_x = 0                                      // 鼠标 x 轴坐标
+                                this.end_y = 0                                      // 鼠标 y 轴坐标
+                                this.deleteEle = null                               // 剪刀 || 删除的元素
+                                this.polylineEle = null                                // 滑过的线条元素
+                                this.init()                                         // 初始化
                             }
 
                             // 初始化
@@ -298,7 +302,6 @@
                             My.prototype.mousemove = function() {
                                 let that = this
                                 window.onmousemove = function(event) {
-                                    console.log(event, event.target.tagName, '??')
                                     // 利用传参兼容火狐
                                     let e = window.event || event
                                     // 获取目标元素
@@ -306,9 +309,25 @@
                                     // 获取元素标签内容
                                     let tagName = event.target.tagName
 
+                                    // 分别兼容ie和chrome
+                                    let scrollX = document.documentElement.scrollLeft || document.body.scrollLeft
+                                    let scrollY = document.documentElement.scrollTop || document.body.scrollTop
+                                    // 获取 x 和 y
+                                    that.end_x = e.clientX + scrollX
+                                    that.end_y = e.clientY + scrollY
+
                                     // 划过连线时执行
                                     if(tagName === 'polyline') {
-                                        
+                                        that.polylineEle = target
+                                        that.mousemoveConnection()
+                                    }
+
+                                    if(that.deleteEle) {
+                                        let coordinate = that.polylineEle.getAttribute('points')
+                                        if(coordinate.indexOf(that.end_x) === -1 && coordinate.indexOf(that.end_y) === -1 ) {
+                                            // 当鼠标不在线条上时隐藏剪刀
+                                            that.deleteEle.style.display = 'none'
+                                        }
                                     }
 
                                     // 判断按下的状态
@@ -328,14 +347,8 @@
 
                                     // 判断是否需要移动元素
                                     if(that.isDrag) {
-                                        // 分别兼容ie和chrome
-                                        let scrollX = document.documentElement.scrollLeft || document.body.scrollLeft
-                                        let scrollY = document.documentElement.scrollTop || document.body.scrollTop
-                                        // 获取 x 和 y
-                                        let end_x = e.clientX + scrollX
-                                        let end_y = e.clientY + scrollY
-                                        that.cloneEle.style.top = end_y - that.parentEle.offsetTop - that.height / 2 + 'px'
-                                        that.cloneEle.style.left = end_x - that.parentEle.offsetLeft - that.width / 2 + 'px'
+                                        that.cloneEle.style.top = that.end_y - that.parentEle.offsetTop - that.height / 2 + 'px'
+                                        that.cloneEle.style.left = that.end_x - that.parentEle.offsetLeft - that.width / 2 + 'px'
                                         that.cloneEle.style.zIndex = -1
                                     }
                                 }
@@ -354,38 +367,44 @@
                                     let target = e.target ? e.target : e.srcElement
                                     // 获取目标元素的类名
                                     let className = target.className
+                                    // 获取目标元素的标签名
+                                    let tagName = target.tagName
 
-                                    console.log(className, 'className')
-                                    // 判断鼠标抬起时的元素
-                                    if(typeof className === 'object') {
-                                        // svg || 外面
-                                        console.log('error', that.endEle)
+                                    // 点击线条 || 删除线条
+                                    if(tagName === 'polyline') {
 
-                                        
-                                        // return false
-                                    } else if(className.includes('item-content')) {
-                                        // 内容元素
-                                        console.log('内容元素')
-                                        that.endEle = target
-                                    } else if(className.includes('junction')) {
-                                        // 连接点
-                                        console.log(target, target.parentElement, '连接点')
-                                        that.endEle = target.parentElement
-                                        that.eJunction = that.isDirection(className)
-                                        
-                                        // 鼠标抬起时清空提示线条
-                                        that.line.remove()
-                                    } else if(className.includes('item')) {
-                                        // 盒子元素
-                                        console.log('盒子元素')
-                                        that.endEle = target
+                                    } else {
+                                        // 判断鼠标抬起时的元素
+                                        if(typeof className === 'object') {
+                                            // svg || 外面
+                                            console.log('error', that.endEle)
+                                            // return false
+                                        } else if(className.includes('item-content')) {
+                                            // 内容元素
+                                            console.log('内容元素')
+                                            that.endEle = target
+                                        } else if(className.includes('junction')) {
+                                            // 连接点
+                                            console.log(target, target.parentElement, '连接点')
+                                            that.endEle = target.parentElement
+                                            that.eJunction = that.isDirection(className)
+                                            
+                                            // 鼠标抬起时清空提示线条
+                                            that.line.remove()
+                                        } else if(className.includes('item')) {
+                                            // 盒子元素
+                                            console.log('盒子元素')
+                                            that.endEle = target
+                                        }
+
+                                        console.log(tagName, 'tagName')
+
+                                        // 鼠标抬起后的复杂逻辑
+                                        that.mouseupLogic()
+
+                                        // 重置鼠标状态 || 重新开启连线
+                                        that.isDrag = false
                                     }
-
-                                    // 鼠标抬起后的复杂逻辑
-                                    that.mouseupLogic()
-
-                                    // 重置鼠标状态 || 重新开启连线
-                                    that.isDrag = false
                                 }
                             }
 
@@ -1110,17 +1129,9 @@
                             }
 
                             // 移动提示线条
-                            My.prototype.moveTipLine = function(e) {
-                                // 分别兼容ie和chrome
-                                let scrollX = document.documentElement.scrollLeft || document.body.scrollLeft
-                                let scrollY = document.documentElement.scrollTop || document.body.scrollTop
-
-                                // 获取 x 和 y
-                                end_x = e.clientX + scrollX
-                                end_y = e.clientY + scrollY
-
+                            My.prototype.moveTipLine = function() {
                                 // 设置结束坐标
-                                this.line.attr("x2", end_x).attr("y2", end_y)
+                                this.line.attr("x2", this.end_x).attr("y2", this.end_y)
                             }
 
                             // 鼠标抬起后的复杂逻辑
@@ -1141,7 +1152,7 @@
                                         // 判断元素是否存在已有连线
                                         this.isExistentialConnection()
                                     }
-                                } else {
+                                } else if(this.startEle && this.endEle) {
                                     // 提示线条拖动
                                     console.log('提示线条拖动')
                                     // 画线
@@ -1150,7 +1161,7 @@
                                 }
 
                                 // 删除提示线条
-                                this.line.remove()
+                                this.line && this.line.remove()
                             }
 
                             // 判断元素是否存在已有连线
@@ -1244,15 +1255,19 @@
                                 this.initialize(arr)
                             }
 
-                            // 划过连线
+                            // 划过连线: 显示剪刀
                             My.prototype.mousemoveConnection = function() {
-
+                                let target = this.polylineEle.nextElementSibling
+                                target.style.display = 'block'
+                                target.setAttribute('x', this.end_x - 10)
+                                target.setAttribute('y', this.end_y - 10)
+                                this.deleteEle = target
                             }
 
                             new My()
                         },
-                        handleMouseenter() {
-                            console.log('ml')
+                        deleteLine(index) {
+                            this.points.splice(index, 1)
                         }
                     }
                 })
