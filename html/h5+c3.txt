@@ -75,8 +75,8 @@ animation-timing-function: ease  默认速度 ease 先快后慢 linear 匀速
 animation-delay:2s  延迟时间
 animation-iteration-count:infinite  执行次数,infinite(无数次),可以直接设置需要的次数如: 2
 animation-direction: alternate  逆播放
-animation-play-state: paused  播放状态:暂停,默认:
-animation-fill-mode: forwards 最后的状态; forwards保留结束动画,backwards默认回答起始动画状态
+animation-play-state: paused  播放状态:暂停,默认: running
+animation-fill-mode: forwards 最后的状态; forwards保留结束动画,backwards默认回到起始动画状态
 
 
 组合写法:

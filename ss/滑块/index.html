@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <style>
+            .box {
+                width: 1000px;
+                height: 20px;
+                margin-top: 20px;
+                border-radius: 5px;
+                position: relative;
+                background-color: pink;
+            }
+
+            .box .slider {
+                width: 10px;
+                height: 100%;
+                left: 50px;
+                position: absolute;
+                background-color: blue;
+            }
+        </style>
+        <script src="https://www.jscss.cc/static/js/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <label v-for="(item, index) in 10">
+                <input type="radio" :value="item" name="1" id="" @click="clickRadio(item)">{{ item + 1 }}
+            </label>
+            <div class="box">
+                <template v-for="(item, index) in sliderNumber">
+                    <div class="slider" :style="'left:' + item.left + 'px'"></div>
+                </template>
+            </div>
+        </div>
+
+        <script>
+
+            new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        sliderNumber: [
+                            { 'left': 500 }
+                        ],
+                        width: 0,
+                    }
+                },
+                mounted() {
+                    this.slider()
+                },
+                methods: {
+                    slider() {
+                        let vueObj = this
+
+                        My = function() {
+                            this.box = document.querySelector('.box')                                           // 盒子
+                            this.slider = null                                                                  // 滑块
+                            this.isPressDown = false                                                            // 判断鼠标是否抬起
+                            this.width = this.box.getBoundingClientRect().width                                 // 获取盒子的宽度
+                            this.sliderWidth = document.querySelector('.slider').getBoundingClientRect().width  // 获取滑块的宽度
+                            this.limitRange = {}                                                                // 滑块的滑动范围限制
+                            this.init()
+                        }
+
+                        My.prototype.init = function() {
+                            vueObj.width = this.width
+                            this.pressDown()        // 鼠标按下滑块时执行
+                            this.mousemove()        // 鼠标滑动时执行
+                            this.mouseup()          // 鼠标抬起时执行
+                        }
+
+                        // 点击滑块时执行
+                        My.prototype.pressDown = function() {
+                            let that = this
+                            that.box.addEventListener('mousedown', function(event) {
+                                // 利用传参兼容火狐
+                                let e = window.event || event
+                                // 获取目标元素
+                                let target = e.target ? e.target : e.srcElement
+                                // 获取元素标签内容
+                                let className = event.target.className
+
+                                if(className.includes('slider')) {
+                                    console.log('点击滑块了')
+                                    that.isPressDown = true
+                                    that.slider = target
+                                    that.getCoordinate(e)
+                                }
+                            })
+                        }
+
+                        // 鼠标滑动时执行
+                        My.prototype.mousemove = function() {
+                            let that = this
+                            window.onmousemove = function(event) {
+                                // 利用传参兼容火狐
+                                let e = window.event || event
+                                // 获取目标元素
+                                let target = e.target ? e.target : e.srcElement
+                                // 获取元素标签内容
+                                let tagName = event.target.tagName
+
+                                // 分别兼容ie和chrome
+                                let scrollX = document.documentElement.scrollLeft || document.body.scrollLeft
+                                let scrollY = document.documentElement.scrollTop || document.body.scrollTop
+                                // 获取 x 和 y
+                                let end_x = e.clientX + scrollX
+
+                                if(that.isPressDown) {
+                                    if(that.limitRange.left) {
+                                        if(that.limitRange.left + that.sliderWidth < end_x) {
+
+                                        } else {
+                                            return false
+                                        }
+                                    }
+
+                                    if(that.limitRange.right) {
+                                        console.log(that.limitRange.right - that.sliderWidth , end_x)
+                                        if(that.limitRange.right - that.sliderWidth > end_x) {
+                                            console.log(1)
+                                        } else {
+                                            console.log(2)
+                                            return false
+                                        }
+                                    }
+
+                                    that.slider.style.left = end_x - 10 + 'px'
+                                }
+                            }
+                        }
+
+                        // 鼠标抬起事件
+                        My.prototype.mouseup = function() {
+                            let that = this
+                            window.onmouseup = function(event) {
+                                // 修改按下的状态
+                                that.isPressDown = false
+                            }
+                        }
+
+                        // 获取坐标
+                        My.prototype.getCoordinate = function() {
+                            let previous = this.slider.previousElementSibling
+                            let next = this.slider.nextElementSibling
+                            let arr = []
+                            if(previous) {
+                                this.limitRange.left = previous.getBoundingClientRect().left
+                                // arr.push(previous.getBoundingClientRect().left)
+                            }
+                            if(next) {
+                                this.limitRange.right = next.getBoundingClientRect().right
+                                // arr.push(next.getBoundingClientRect().left)                                
+                            }
+                        }
+
+                        new My()
+                    },
+                    clickRadio(num) {
+                        this.sliderNumber = num
+                        let average = this.width / (num + 1)
+                        let tempDistance = 0
+                        let arr = []
+                        for(i = 0; i < num; i++) {
+                            tempDistance += average
+                            let obj = {
+                                left: tempDistance
+                            }
+                            arr.push(obj)
+                        }
+                        console.log(arr, 'arr')
+                        this.sliderNumber = arr
+                    }
+                },
+            })
+            
+        </script>
+    </body>
+</html>
