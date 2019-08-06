@@ -7,6 +7,7 @@
             .box {
                 width: 1000px;
                 height: 20px;
+                margin-left: 50px;
                 margin-top: 20px;
                 border-radius: 5px;
                 position: relative;
@@ -57,11 +58,13 @@
 
                         My = function() {
                             this.box = document.querySelector('.box')                                           // 盒子
+                            this.boxLeft = this.box.getBoundingClientRect().left
                             this.slider = null                                                                  // 滑块
                             this.isPressDown = false                                                            // 判断鼠标是否抬起
                             this.width = this.box.getBoundingClientRect().width                                 // 获取盒子的宽度
                             this.sliderWidth = document.querySelector('.slider').getBoundingClientRect().width  // 获取滑块的宽度
                             this.limitRange = {}                                                                // 滑块的滑动范围限制
+                            this.mouseDistance = this.box.getBoundingClientRect().left + this.sliderWidth / 2   // 鼠标偏移量
                             this.init()
                         }
 
@@ -110,25 +113,25 @@
                                 let end_x = e.clientX + scrollX
 
                                 if(that.isPressDown) {
-                                    if(that.limitRange.left) {
-                                        if(that.limitRange.left + that.sliderWidth < end_x) {
-
-                                        } else {
-                                            return false
+                                    if(that.limitRange.left && that.limitRange.right) {
+                                        if(that.limitRange.left + that.sliderWidth + that.sliderWidth / 2 < end_x && that.limitRange.right - that.sliderWidth - that.sliderWidth / 2 > end_x) {
+                                            that.slider.style.left = end_x - that.sliderWidth / 2 - that.boxLeft + 'px'
+                                        }
+                                    } else if(that.limitRange.left) {
+                                        console.log('最后一个元素')
+                                        if(that.limitRange.left + that.sliderWidth + that.sliderWidth / 2 < end_x && end_x < that.width + that.boxLeft - that.sliderWidth / 2) {
+                                            that.slider.style.left = end_x - that.sliderWidth / 2 - that.boxLeft + 'px'
+                                        }
+                                    } else if(that.limitRange.right) {
+                                        console.log('第一个元素')
+                                        if(that.limitRange.right - that.sliderWidth - that.sliderWidth / 2 > end_x && end_x > that.boxLeft + that.sliderWidth / 2) {
+                                            that.slider.style.left = end_x - that.sliderWidth / 2 - that.boxLeft + 'px'
+                                        }
+                                    } else {
+                                        if(end_x > that.boxLeft + that.sliderWidth / 2 && end_x < that.width + that.boxLeft - that.sliderWidth / 2) {
+                                            that.slider.style.left = end_x - that.sliderWidth / 2 - that.boxLeft + 'px'
                                         }
                                     }
-
-                                    if(that.limitRange.right) {
-                                        console.log(that.limitRange.right - that.sliderWidth , end_x)
-                                        if(that.limitRange.right - that.sliderWidth > end_x) {
-                                            console.log(1)
-                                        } else {
-                                            console.log(2)
-                                            return false
-                                        }
-                                    }
-
-                                    that.slider.style.left = end_x - 10 + 'px'
                                 }
                             }
                         }
@@ -146,7 +149,7 @@
                         My.prototype.getCoordinate = function() {
                             let previous = this.slider.previousElementSibling
                             let next = this.slider.nextElementSibling
-                            let arr = []
+                            this.limitRange = {}
                             if(previous) {
                                 this.limitRange.left = previous.getBoundingClientRect().left
                                 // arr.push(previous.getBoundingClientRect().left)
@@ -155,6 +158,7 @@
                                 this.limitRange.right = next.getBoundingClientRect().right
                                 // arr.push(next.getBoundingClientRect().left)                                
                             }
+                            console.log(this.limitRange)
                         }
 
                         new My()
