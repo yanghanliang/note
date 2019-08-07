@@ -18,6 +18,7 @@
                 width: 10px;
                 height: 100%;
                 left: 50px;
+                user-select: none;
                 position: absolute;
                 background-color: blue;
             }
@@ -61,13 +62,15 @@
     <body>
         <div id="app">
             <label v-for="(item, index) in 10">
-                <input type="radio" :value="item" name="1" id="" @click="clickRadio(item)">{{ item + 1 }}
+                <template v-if="item !== 1">
+                    <input type="radio" :value="item" name="1" id="" @click="clickRadio(item)">{{ item }}
+                </template>
             </label>
             <div class="box">
                 <template v-for="(item, index) in sliderNumber">
                     <div class="slider" :style="'left:' + item.left + 'px'" :key="index">
-                        <span class="left" :style="'left:-' + item.minLeft + 'px'">{{ percentage }}</span>
-                        <span v-if="index === sliderNumber.length - 1" class="right" :style="'left:' + item.minLeft + 'px'">{{ percentage }}</span>
+                        <span class="left" :style="'left:-' + item.minLeft + 'px'">{{ item.leftValue }}%</span>
+                        <span v-if="index === sliderNumber.length - 1" class="right" :style="'left:' + item.minLeft + 'px'">{{ item.rightValue }}%</span>
                     </div>
                 </template>
             </div>
@@ -79,7 +82,8 @@
                 data() {
                     return {
                         sliderNumber: [
-                            { 'left': 500 }
+                            { 'left': 500, leftValue: 50 },
+                            { 'left': 500, leftValue: 50, rightValue: 50 }
                         ],
                         width: 0,
                         percentage: '50%',
@@ -127,7 +131,6 @@
                                 let className = event.target.className
 
                                 if(className.includes('slider')) {
-                                    console.log('点击滑块了')
                                     that.isPressDown = true
                                     that.slider = target
                                     that.getCoordinate(e)
@@ -155,22 +158,22 @@
                                 if(that.isPressDown) {
                                     if(that.limitRange.left && that.limitRange.right) {
                                         // 存在多个滑块,点击中间的某个滑块时执行
-                                        if(that.limitRange.left + that.sliderWidth + that.sliderWidth / 2 < end_x && that.limitRange.right - that.sliderWidth - that.sliderWidth / 2 > end_x) {
+                                        if(that.limitRange.left + that.sliderWidth + that.sliderWidth / 2 <= end_x && that.limitRange.right - that.sliderWidth - that.sliderWidth / 2 >= end_x) {
                                             that.slider.style.left = end_x - that.sliderWidth / 2 - that.boxLeft + 'px'
                                         }
                                     } else if(that.limitRange.left) {
                                         // 存在多个滑块,最后一个元素
-                                        if(that.limitRange.left + that.sliderWidth + that.sliderWidth / 2 < end_x && end_x < that.width + that.boxLeft - that.sliderWidth / 2) {
+                                        if(that.limitRange.left + that.sliderWidth + that.sliderWidth / 2 <= end_x && end_x <= that.width + that.boxLeft - that.sliderWidth / 2) {
                                             that.slider.style.left = end_x - that.sliderWidth / 2 - that.boxLeft + 'px'
                                         }
                                     } else if(that.limitRange.right) {
                                         // 存在多个滑块,第一个元素
-                                        if(that.limitRange.right - that.sliderWidth - that.sliderWidth / 2 > end_x && end_x > that.boxLeft + that.sliderWidth / 2) {
+                                        if(that.limitRange.right - that.sliderWidth - that.sliderWidth / 2 >= end_x && end_x >= that.boxLeft + that.sliderWidth / 2) {
                                             that.slider.style.left = end_x - that.sliderWidth / 2 - that.boxLeft + 'px'
                                         }
                                     } else {
                                         // 只有一个滑块时
-                                        if(end_x > that.boxLeft + that.sliderWidth / 2 && end_x < that.width + that.boxLeft - that.sliderWidth / 2) {
+                                        if(end_x >= that.boxLeft + that.sliderWidth / 2 && end_x <= that.width + that.boxLeft - that.sliderWidth / 2) {
                                             that.slider.style.left = end_x - that.sliderWidth / 2 - that.boxLeft + 'px'
                                         }
                                     }
@@ -187,6 +190,32 @@
                             window.onmouseup = function(event) {
                                 // 修改按下的状态
                                 that.isPressDown = false
+                                let valueEle = that.box.querySelectorAll('.slider span')
+                                let length = valueEle.length
+                                let sum = 0
+                                let lastEle = null
+                                let lastValue = 0
+                                for(let i = 0; i < length; i++) {
+                                    let item = valueEle[i]
+                                    let str = item.innerText
+                                    let value = str.slice(0, str.length - 1)
+                                    sum += Number(value)
+                                    if(i === length - 1) {
+                                        lastEle = item
+                                        lastValue = Number(value)
+                                    }
+                                }
+                                
+                                let difference = Math.abs(100 - sum)
+                                console.log(difference, 'difference', lastValue, sum)
+                                
+                                if(100 > sum) {
+                                    lastValue += difference
+                                    lastEle.innerText = lastValue + '%'
+                                } else if(100 < sum) {
+                                    lastValue -= difference
+                                    lastEle.innerText = lastValue + '%'
+                                }
                             }
                         }
 
@@ -219,17 +248,22 @@
                         // 左边所占的百分比
                         My.prototype.leftPercentage = function() {
                             let previous = 0
+                            let slider = this.slider.getBoundingClientRect().left + this.sliderWidth / 2
+                            let distance = 0
                             if(this.previous) {
-                                previous = this.previous.getBoundingClientRect().left
+                                previous = this.previous.getBoundingClientRect().left + this.sliderWidth / 2
+                                distance = slider - previous
                             } else {
+                                slider = this.slider.getBoundingClientRect().left 
                                 previous = this.boxLeft
+                                distance = slider - previous
                             }
-                            let slider = this.slider.getBoundingClientRect().left
-                            let distance = slider - previous
-                            let value = 100 / this.width * distance
+                            
                             let leftEle = this.slider.querySelector('.left')
 
-                            leftEle.innerText = value.toFixed(2) + '%'
+                            console.log(distance, '左边')
+
+                            leftEle.innerText = Math.floor(100 / this.width * distance) + '%'
                             leftEle.style.left = '-' + (distance - this.sliderWidth) / 2 + 'px'
                         }
 
@@ -238,22 +272,25 @@
                             let next = 0
                             let rightEle = null
                             let direction = ''
+                            let slider = this.slider.getBoundingClientRect().left + this.sliderWidth / 2
+                            let distance = 0
                             if(this.next) {
-                                next = this.next.getBoundingClientRect().left
                                 rightEle = this.next.querySelector('span')
                                 direction = '-'
-                            } else {
-                                console.log('??')
-                                next = this.boxLeft + this.width
-                                rightEle = this.slider.querySelector('.right')
-                            }
-                            let slider = this.slider.getBoundingClientRect().left
-                            let distance = next - slider
-                            let value = 100 / this.width * distance
-                            
-                            console.log(rightEle, this.next)
 
-                            rightEle.innerText = value.toFixed(2) + '%'
+                                next = this.next.getBoundingClientRect().left + this.sliderWidth / 2
+                                distance = next - slider
+                            } else {
+                                rightEle = this.slider.querySelector('.right')
+
+                                slider = this.slider.getBoundingClientRect().left
+                                next = this.boxLeft + this.width
+                                distance = next - slider - this.sliderWidth / 2
+                            }
+                            
+                            console.log(distance, '右边', next, slider, 100 / this.width * distance)
+
+                            rightEle.innerText = Math.ceil(100 / this.width * distance) + '%'
                             rightEle.style.left = direction + (distance + this.sliderWidth) / 2 + 'px'
                         }
 
@@ -265,22 +302,31 @@
                         new My()
                     },
                     clickRadio(num) {
-                        // this.sliderNumber = num
-                        let average = this.width / (num + 1)
+                        // 距离平均值
+                        let average = this.width / num
                         let tempDistance = 0
                         let arr = []
-                        for(let i = 0; i < num; i++) {
+                        let value = Math.floor(100 / num)
+                        let remainder = 
+                        console.log(num, 'num')
+                        for(let i = 0; i < num - 1; i++) {
                             tempDistance += average
                             let obj = {
                                 left: tempDistance,
-                                minLeft: average / 2
+                                minLeft: average / 2,
+                                leftValue: value
+                            }
+
+                            if(i === num - 2) {
+                                obj.rightValue = value + 100 % num
                             }
                             arr.push(obj)
                         }
+
+                        // 必须清空
                         this.sliderNumber = []
                         setTimeout(() => {
                             this.sliderNumber = arr
-                            this.percentage = (100 / (num + 1)).toFixed(2) + '%'
                         }, 0)
                     },
                     init() {
@@ -289,7 +335,9 @@
                         this.sliderNumber = [
                             {
                                 left: average,
-                                minLeft: average / 2
+                                minLeft: average / 2,
+                                leftValue: 100 / this.radioValue,
+                                rightValue: 100 / this.radioValue,
                             }
                         ]
                     }
