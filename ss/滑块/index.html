@@ -8,7 +8,7 @@
                 width: 1000px;
                 height: 20px;
                 margin-left: 50px;
-                margin-top: 20px;
+                margin-top: 100px;
                 border-radius: 5px;
                 position: relative;
                 background-color: pink;
@@ -65,9 +65,9 @@
             </label>
             <div class="box">
                 <template v-for="(item, index) in sliderNumber">
-                    <div class="slider" :style="'left:' + item.left + 'px'">
-                        <span class="left">{{ percentage }}</span>
-                        <span v-if="index === sliderNumber.length - 1" class="right">{{ percentage }}</span>
+                    <div class="slider" :style="'left:' + item.left + 'px'" :key="index">
+                        <span class="left" :style="'left:-' + item.minLeft + 'px'">{{ percentage }}</span>
+                        <span v-if="index === sliderNumber.length - 1" class="right" :style="'left:' + item.minLeft + 'px'">{{ percentage }}</span>
                     </div>
                 </template>
             </div>
@@ -82,12 +82,13 @@
                             { 'left': 500 }
                         ],
                         width: 0,
-                        percentage: 0,
+                        percentage: '50%',
+                        radioValue: 2,
                     }
                 },
                 mounted() {
-                    // this.slider()
-                    this.getBoxWidth()
+                    this.slider()
+                    this.init()
                 },
                 methods: {
                     slider() {
@@ -112,7 +113,6 @@
                             this.pressDown()        // 鼠标按下滑块时执行
                             this.mousemove()        // 鼠标滑动时执行
                             this.mouseup()          // 鼠标抬起时执行
-                            this.percentage()       // 初始化百分比
                         }
 
                         // 点击滑块时执行
@@ -237,10 +237,13 @@
                         My.prototype.rightPercentage = function() {
                             let next = 0
                             let rightEle = null
+                            let direction = ''
                             if(this.next) {
                                 next = this.next.getBoundingClientRect().left
                                 rightEle = this.next.querySelector('span')
+                                direction = '-'
                             } else {
+                                console.log('??')
                                 next = this.boxLeft + this.width
                                 rightEle = this.slider.querySelector('.right')
                             }
@@ -251,7 +254,7 @@
                             console.log(rightEle, this.next)
 
                             rightEle.innerText = value.toFixed(2) + '%'
-                            rightEle.style.left = (distance + this.sliderWidth) / 2 + 'px'
+                            rightEle.style.left = direction + (distance + this.sliderWidth) / 2 + 'px'
                         }
 
                         // 初始化百分比
@@ -262,24 +265,34 @@
                         new My()
                     },
                     clickRadio(num) {
-                        this.sliderNumber = num
+                        // this.sliderNumber = num
                         let average = this.width / (num + 1)
                         let tempDistance = 0
                         let arr = []
-                        for(i = 0; i < num; i++) {
+                        for(let i = 0; i < num; i++) {
                             tempDistance += average
                             let obj = {
-                                left: tempDistance
+                                left: tempDistance,
+                                minLeft: average / 2
                             }
                             arr.push(obj)
                         }
-                        this.sliderNumber = arr
-                        console.log(this.sliderNumber.length, 'length')
-                        this.percentage = 100 / this.sliderNumber.length  
+                        this.sliderNumber = []
+                        setTimeout(() => {
+                            this.sliderNumber = arr
+                            this.percentage = (100 / (num + 1)).toFixed(2) + '%'
+                        }, 0)
                     },
-                    getBoxWidth() {
+                    init() {
                         this.width = document.querySelector('.box').getBoundingClientRect().width
-                    },
+                        let average = this.width / this.radioValue
+                        this.sliderNumber = [
+                            {
+                                left: average,
+                                minLeft: average / 2
+                            }
+                        ]
+                    }
                 },
             })
             
