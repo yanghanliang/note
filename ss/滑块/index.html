@@ -21,6 +21,39 @@
                 position: absolute;
                 background-color: blue;
             }
+
+            .box .slider span {
+                top: -50px;
+                position: absolute;
+            }
+
+            .box .slider .left {
+                transform: translateX(-50%);
+            }
+
+            .box .slider .right {
+                transform: translateX(-50%);
+            }
+
+            /* .box .slider::before {
+                content: attr(left-value);
+                top: -30px;
+                position: absolute;
+            }
+
+            .box .slider::after {
+                content: attr(right-value);
+                top: -30px;
+                position: absolute;
+            }
+
+            .box .slider:nth-last-child(1)::after {
+                content: none;
+            }
+
+            .box .slider:only-child:nth-last-child(1)::after {
+                content: none;
+            } */
         </style>
         <script src="https://www.jscss.cc/static/js/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
@@ -32,13 +65,15 @@
             </label>
             <div class="box">
                 <template v-for="(item, index) in sliderNumber">
-                    <div class="slider" :style="'left:' + item.left + 'px'"></div>
+                    <div class="slider" :style="'left:' + item.left + 'px'">
+                        <span class="left">{{ percentage }}</span>
+                        <span v-if="index === sliderNumber.length - 1" class="right">{{ percentage }}</span>
+                    </div>
                 </template>
             </div>
         </div>
 
         <script>
-
             new Vue({
                 el: '#app',
                 data() {
@@ -47,24 +82,28 @@
                             { 'left': 500 }
                         ],
                         width: 0,
+                        percentage: 0,
                     }
                 },
                 mounted() {
-                    this.slider()
+                    // this.slider()
+                    this.getBoxWidth()
                 },
                 methods: {
                     slider() {
                         let vueObj = this
 
-                        My = function() {
+                        let My = function() {
                             this.box = document.querySelector('.box')                                           // 盒子
-                            this.boxLeft = this.box.getBoundingClientRect().left
-                            this.slider = null                                                                  // 滑块
+                            this.boxLeft = this.box.getBoundingClientRect().left                                // 盒子距离坐标的偏移量
+                            this.slider = this.box.querySelector('.slider')                                     // 滑块
                             this.isPressDown = false                                                            // 判断鼠标是否抬起
                             this.width = this.box.getBoundingClientRect().width                                 // 获取盒子的宽度
                             this.sliderWidth = document.querySelector('.slider').getBoundingClientRect().width  // 获取滑块的宽度
                             this.limitRange = {}                                                                // 滑块的滑动范围限制
                             this.mouseDistance = this.box.getBoundingClientRect().left + this.sliderWidth / 2   // 鼠标偏移量
+                            this.previous = null                                                                // 当前滑块的前一个元素
+                            this.next = null                                                                    // 当前滑块的后一个元素
                             this.init()
                         }
 
@@ -73,6 +112,7 @@
                             this.pressDown()        // 鼠标按下滑块时执行
                             this.mousemove()        // 鼠标滑动时执行
                             this.mouseup()          // 鼠标抬起时执行
+                            this.percentage()       // 初始化百分比
                         }
 
                         // 点击滑块时执行
@@ -114,24 +154,29 @@
 
                                 if(that.isPressDown) {
                                     if(that.limitRange.left && that.limitRange.right) {
+                                        // 存在多个滑块,点击中间的某个滑块时执行
                                         if(that.limitRange.left + that.sliderWidth + that.sliderWidth / 2 < end_x && that.limitRange.right - that.sliderWidth - that.sliderWidth / 2 > end_x) {
                                             that.slider.style.left = end_x - that.sliderWidth / 2 - that.boxLeft + 'px'
                                         }
                                     } else if(that.limitRange.left) {
-                                        console.log('最后一个元素')
+                                        // 存在多个滑块,最后一个元素
                                         if(that.limitRange.left + that.sliderWidth + that.sliderWidth / 2 < end_x && end_x < that.width + that.boxLeft - that.sliderWidth / 2) {
                                             that.slider.style.left = end_x - that.sliderWidth / 2 - that.boxLeft + 'px'
                                         }
                                     } else if(that.limitRange.right) {
-                                        console.log('第一个元素')
+                                        // 存在多个滑块,第一个元素
                                         if(that.limitRange.right - that.sliderWidth - that.sliderWidth / 2 > end_x && end_x > that.boxLeft + that.sliderWidth / 2) {
                                             that.slider.style.left = end_x - that.sliderWidth / 2 - that.boxLeft + 'px'
                                         }
                                     } else {
+                                        // 只有一个滑块时
                                         if(end_x > that.boxLeft + that.sliderWidth / 2 && end_x < that.width + that.boxLeft - that.sliderWidth / 2) {
                                             that.slider.style.left = end_x - that.sliderWidth / 2 - that.boxLeft + 'px'
                                         }
                                     }
+
+                                    // 计算百分比
+                                    that.percentage()
                                 }
                             }
                         }
@@ -147,18 +192,71 @@
 
                         // 获取坐标
                         My.prototype.getCoordinate = function() {
-                            let previous = this.slider.previousElementSibling
-                            let next = this.slider.nextElementSibling
+                            // 重置状态
                             this.limitRange = {}
-                            if(previous) {
-                                this.limitRange.left = previous.getBoundingClientRect().left
+                            this.previous = null
+                            this.next - null
+
+                            this.previous = this.slider.previousElementSibling
+                            this.next = this.slider.nextElementSibling
+                            if(this.previous) {
+                                this.limitRange.left = this.previous.getBoundingClientRect().left
                                 // arr.push(previous.getBoundingClientRect().left)
                             }
-                            if(next) {
-                                this.limitRange.right = next.getBoundingClientRect().right
+                            if(this.next) {
+                                this.limitRange.right = this.next.getBoundingClientRect().right
                                 // arr.push(next.getBoundingClientRect().left)                                
                             }
-                            console.log(this.limitRange)
+                            console.log(this.previous, this.next)
+                        }
+
+                        // 计算百分比
+                        My.prototype.percentage = function() {
+                            this.leftPercentage()
+                            this.rightPercentage()
+                        }
+
+                        // 左边所占的百分比
+                        My.prototype.leftPercentage = function() {
+                            let previous = 0
+                            if(this.previous) {
+                                previous = this.previous.getBoundingClientRect().left
+                            } else {
+                                previous = this.boxLeft
+                            }
+                            let slider = this.slider.getBoundingClientRect().left
+                            let distance = slider - previous
+                            let value = 100 / this.width * distance
+                            let leftEle = this.slider.querySelector('.left')
+
+                            leftEle.innerText = value.toFixed(2) + '%'
+                            leftEle.style.left = '-' + (distance - this.sliderWidth) / 2 + 'px'
+                        }
+
+                        // 右边所占的百分比
+                        My.prototype.rightPercentage = function() {
+                            let next = 0
+                            let rightEle = null
+                            if(this.next) {
+                                next = this.next.getBoundingClientRect().left
+                                rightEle = this.next.querySelector('span')
+                            } else {
+                                next = this.boxLeft + this.width
+                                rightEle = this.slider.querySelector('.right')
+                            }
+                            let slider = this.slider.getBoundingClientRect().left
+                            let distance = next - slider
+                            let value = 100 / this.width * distance
+                            
+                            console.log(rightEle, this.next)
+
+                            rightEle.innerText = value.toFixed(2) + '%'
+                            rightEle.style.left = (distance + this.sliderWidth) / 2 + 'px'
+                        }
+
+                        // 初始化百分比
+                        My.prototype.initializePercentage = function() {
+
                         }
 
                         new My()
@@ -175,9 +273,13 @@
                             }
                             arr.push(obj)
                         }
-                        console.log(arr, 'arr')
                         this.sliderNumber = arr
-                    }
+                        console.log(this.sliderNumber.length, 'length')
+                        this.percentage = 100 / this.sliderNumber.length  
+                    },
+                    getBoxWidth() {
+                        this.width = document.querySelector('.box').getBoundingClientRect().width
+                    },
                 },
             })
             
