@@ -5,7 +5,7 @@
         <title></title>
         <style>
             .box {
-                width: 1000px;
+                width: 660px;
                 height: 20px;
                 margin-left: 50px;
                 margin-top: 100px;
@@ -15,7 +15,7 @@
             }
 
             .box .slider {
-                width: 10px;
+                width: 22px;
                 height: 100%;
                 left: 50px;
                 user-select: none;
@@ -109,6 +109,7 @@
                             this.mouseDistance = this.box.getBoundingClientRect().left + this.sliderWidth / 2   // 鼠标偏移量
                             this.previous = null                                                                // 当前滑块的前一个元素
                             this.next = null                                                                    // 当前滑块的后一个元素
+                            this.range = 0
                             this.init()
                         }
 
@@ -133,6 +134,7 @@
                                 if(className.includes('slider')) {
                                     that.isPressDown = true
                                     that.slider = target
+                                    that.getRange()
                                     that.getCoordinate(e)
                                 }
                             })
@@ -158,22 +160,22 @@
                                 if(that.isPressDown) {
                                     if(that.limitRange.left && that.limitRange.right) {
                                         // 存在多个滑块,点击中间的某个滑块时执行
-                                        if(that.limitRange.left + that.sliderWidth + that.sliderWidth / 2 <= end_x && that.limitRange.right - that.sliderWidth - that.sliderWidth / 2 >= end_x) {
+                                        if(that.limitRange.left + that.sliderWidth + that.sliderWidth / 2 + 2 <= end_x && that.limitRange.right - that.sliderWidth - that.sliderWidth / 2 - 2 >= end_x) {
                                             that.slider.style.left = end_x - that.sliderWidth / 2 - that.boxLeft + 'px'
                                         }
                                     } else if(that.limitRange.left) {
                                         // 存在多个滑块,最后一个元素
-                                        if(that.limitRange.left + that.sliderWidth + that.sliderWidth / 2 <= end_x && end_x <= that.width + that.boxLeft - that.sliderWidth / 2) {
+                                        if(that.limitRange.left + that.sliderWidth + that.sliderWidth / 2 + 2 <= end_x && end_x <= that.width + that.boxLeft - that.sliderWidth / 2 - 2) {
                                             that.slider.style.left = end_x - that.sliderWidth / 2 - that.boxLeft + 'px'
                                         }
                                     } else if(that.limitRange.right) {
                                         // 存在多个滑块,第一个元素
-                                        if(that.limitRange.right - that.sliderWidth - that.sliderWidth / 2 >= end_x && end_x >= that.boxLeft + that.sliderWidth / 2) {
+                                        if(end_x >= that.boxLeft + that.sliderWidth / 2 + 10 &&  end_x < that.limitRange.right - that.sliderWidth - that.sliderWidth / 2 - 2) {
                                             that.slider.style.left = end_x - that.sliderWidth / 2 - that.boxLeft + 'px'
                                         }
                                     } else {
                                         // 只有一个滑块时
-                                        if(end_x >= that.boxLeft + that.sliderWidth / 2 && end_x <= that.width + that.boxLeft - that.sliderWidth / 2) {
+                                        if(end_x > that.boxLeft + that.sliderWidth / 2 + 10 && end_x < that.width + that.boxLeft - that.sliderWidth / 2 - 5) {
                                             that.slider.style.left = end_x - that.sliderWidth / 2 - that.boxLeft + 'px'
                                         }
                                     }
@@ -248,22 +250,25 @@
                         // 左边所占的百分比
                         My.prototype.leftPercentage = function() {
                             let previous = 0
-                            let slider = this.slider.getBoundingClientRect().left + this.sliderWidth / 2
+                            let slider = this.slider.getBoundingClientRect().left
                             let distance = 0
                             if(this.previous) {
-                                previous = this.previous.getBoundingClientRect().left + this.sliderWidth / 2
+                                previous = this.previous.getBoundingClientRect().left + this.sliderWidth
                                 distance = slider - previous
                             } else {
-                                slider = this.slider.getBoundingClientRect().left 
+                                slider = this.slider.getBoundingClientRect().left
                                 previous = this.boxLeft
                                 distance = slider - previous
                             }
                             
                             let leftEle = this.slider.querySelector('.left')
-
-                            console.log(distance, '左边')
-
-                            leftEle.innerText = Math.floor(100 / this.width * distance) + '%'
+                            let value = distance / this.range * 100
+                            if(value > 1) {
+                                value = Math.floor(value) + '%'
+                            } else {
+                                value = Math.ceil(value) + '%'
+                            }
+                            leftEle.innerText = value
                             leftEle.style.left = '-' + (distance - this.sliderWidth) / 2 + 'px'
                         }
 
@@ -272,31 +277,31 @@
                             let next = 0
                             let rightEle = null
                             let direction = ''
-                            let slider = this.slider.getBoundingClientRect().left + this.sliderWidth / 2
+                            let slider = this.slider.getBoundingClientRect().left + this.sliderWidth
                             let distance = 0
                             if(this.next) {
                                 rightEle = this.next.querySelector('span')
                                 direction = '-'
 
-                                next = this.next.getBoundingClientRect().left + this.sliderWidth / 2
+                                next = this.next.getBoundingClientRect().left
                                 distance = next - slider
                             } else {
                                 rightEle = this.slider.querySelector('.right')
 
-                                slider = this.slider.getBoundingClientRect().left
+                                slider = this.slider.getBoundingClientRect().left + this.sliderWidth
                                 next = this.boxLeft + this.width
-                                distance = next - slider - this.sliderWidth / 2
+                                distance = next - slider
                             }
                             
-                            console.log(distance, '右边', next, slider, 100 / this.width * distance)
-
-                            rightEle.innerText = Math.ceil(100 / this.width * distance) + '%'
+                            console.log(distance / this.range * 100, 'kk')
+                            rightEle.innerText = Math.ceil(distance / this.range * 100) + '%'
                             rightEle.style.left = direction + (distance + this.sliderWidth) / 2 + 'px'
                         }
 
-                        // 初始化百分比
-                        My.prototype.initializePercentage = function() {
-
+                        // 获取范围
+                        My.prototype.getRange = function() {
+                            let length = this.box.querySelectorAll('.slider').length
+                            this.range = this.width - this.sliderWidth * length
                         }
 
                         new My()
