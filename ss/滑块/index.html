@@ -303,12 +303,10 @@
                     },
                     clickRadio(num) {
                         // 距离平均值
-                        let average = this.width / num
+                        let average = Math.floor(this.width / num)
                         let tempDistance = 0
                         let arr = []
                         let value = Math.floor(100 / num)
-                        let remainder = 
-                        console.log(num, 'num')
                         for(let i = 0; i < num - 1; i++) {
                             tempDistance += average
                             let obj = {
