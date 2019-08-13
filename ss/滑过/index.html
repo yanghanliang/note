@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../css/animation.css">
+    <style>
+        body {
+            margin: 0;
+        }
+
+        .come-out {
+            height: 200px;
+            background-color: aliceblue;
+        }
+
+        .come-out:nth-child(2) {
+            background-color: aqua;
+        }
+
+        .come-out:nth-child(3) {
+            background-color: darkcyan;
+        }
+
+        .come-out:nth-child(4) {
+            background-color: rebeccapurple;
+        }
+
+        .come-out:nth-child(5) {
+            background-color: lemonchiffon;
+        }
+
+        .come-out:nth-child(6) {
+            background-color: rosybrown;
+        }
+
+        .lateralPush {
+            animation-name: lateralPush;
+            animation-duration: 1s; /* 所用的时间 */
+            animation-timing-function: cubic-bezier(1, 1, 0, 0); /* 执行的速度曲线 ease  默认速度 ease 先快后慢 linear 匀速  cubic-bezier: 值越大就越慢 */
+            animation-delay: 0ms; /* 延迟 */
+            animation-iteration-count: 1; /* 执行次数: infinite(无数次), 可以直接设置需要的次数如: 2 */
+            animation-direction: alternate; /* 反向动画 */
+            animation-fill-mode: forwards; /* 最后的状态 */
+        }
+
+        @keyframes lateralPush {
+            0% { 
+                width: 0;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+
+        .lateralPush2 {
+            animation-name: lateralPush2;
+            animation-duration: 1s; /* 所用的时间 */
+            animation-timing-function: cubic-bezier(1, 1, 0, 0); /* 执行的速度曲线 ease  默认速度 ease 先快后慢 linear 匀速  cubic-bezier: 值越大就越慢 */
+            animation-delay: 0ms; /* 延迟 */
+            animation-iteration-count: 1; /* 执行次数: infinite(无数次), 可以直接设置需要的次数如: 2 */
+            animation-direction: alternate; /* 反向动画 */
+            animation-fill-mode: forwards; /* 最后的状态 */
+        }
+
+        @keyframes lateralPush2 {
+            0% { 
+                width: 100%;
+            }
+            100% {
+                width: 0%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="come-out"></div>
+    <div class="come-out"></div>
+    <div class="come-out"></div>
+    <div class="come-out"></div>
+    <div class="come-out"></div>
+    <div class="come-out"></div>
+    <div class="come-out"></div>
+    <script>
+        (function() {
+            let ele = document.querySelectorAll('.come-out')
+            let length = ele.length
+            let bHeight = document.documentElement.clientHeight
+            let height = ele[0].getBoundingClientRect().height
+            var scrollAction,originalDir
+
+
+            var My = function() {
+                this.ele = document.querySelectorAll('.come-out')
+                this.length = this.ele.length
+                this.bHeight = document.documentElement.clientHeight
+                this.height = this.ele[0].getBoundingClientRect().height
+                this.scrollTop = document.documentElement.scrollTop
+
+                this.init()
+            }
+
+            My.prototype.init = function() {
+                this.scroll()
+            }
+
+            My.prototype.scroll = function() {
+                let that = this
+                window.onscroll = function() {
+                    this.scrollTop = document.documentElement.scrollTop
+
+                    setTimeout(() => {
+
+                    }, 100)
+                }
+            }
+
+            new My()
+
+            // window.onscroll = function() {
+            //     var direction = scrollFunc()
+            //     if (direction == 'down') {
+            //         for(let i = 0; i < length; i++) {
+            //             let item = ele[i]
+            //             let top = item.getBoundingClientRect().top
+            //             let distance = bHeight - top
+            //             if(distance > 0 && distance < 200) {
+            //                 let className = item.getAttribute('class')
+            //                 if(className.includes('lateralPush2')) {
+            //                     item.setAttribute('class', 'come-out lateralPush animated')
+            //                 } else {
+            //                     item.setAttribute('class', 'come-out lateralPush2 animated')
+            //                 }
+            //             }
+            //         }
+            //     } else {
+            //         for(let i = 0; i < length; i++) {
+            //             let item = ele[i]
+            //             let top = item.getBoundingClientRect().top
+            //             if(top > -200 && top < 0) {
+            //                 let className = item.getAttribute('class')
+            //                 if(className.includes('lateralPush2')) {
+            //                     item.setAttribute('class', 'come-out lateralPush animated')
+            //                 } else {
+            //                     item.setAttribute('class', 'come-out lateralPush2 animated')
+            //                 }
+            //             }
+            //         }
+            //     }
+
+            //     //判断页面滚动方向
+            //     function scrollFunc() {
+            //         var scrollDirection;
+            //         if (!scrollAction) {
+            //             scrollAction = window.pageYOffset;
+            //         }
+            //         var diff = scrollAction - window.pageYOffset;
+            //         if (diff < 0) {
+            //             // Scroll down
+            //             scrollDirection = 'down';
+            //         } else if (diff > 0) {
+            //             // Scroll up
+            //             scrollDirection = 'up';
+            //         } else {
+            //             // First scroll event
+            //         }
+            //         scrollAction = window.pageYOffset;
+            //         return scrollDirection;
+            //     }
+            // }            
+        })()
+    </script>
+</body>
+</html>

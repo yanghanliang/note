@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .box {
+            height: 1500px;
+        }
+    </style>
+</head>
+<body>
+    <div class="box"></div>
+    <script>
+        let m1 = 0;     // 滚动的值
+let m2 = 0;     // 对比时间的值
+let timer = null;
+
+
+document.onscroll = function(){
+    clearTimeout(timer) // 每次滚动前 清除一次
+    timer = setTimeout(function() {
+        m2 = document.documentElement.scrollTop || document.body.scrollTop;
+        if(m2 == m1){
+            console.log('滚动结束了')
+        }
+    }, 100);
+    m1 = document.documentElement.scrollTop || document.body.scrollTop;
+
+}
+function Data(){
+   m2 = document.documentElement.scrollTop || document.body.scrollTop;
+   if(m2 == m1){
+    console.log('滚动结束了')
+   }
+}
+    </script>
+</body>
+</html>
