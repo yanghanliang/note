@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>父元素被子元素撑开且不换行</title>
+    <style>
+        .box {
+            display: inline-block; /* 可有可无 */
+            border: 1px solid red;
+            white-space: nowrap;
+        }
+
+        .minbox {
+            width: 600px;
+            height: 300px;
+            display: inline-block;
+            background-color: azure;
+        }
+
+        /* Html代码中的标签换行造成间距问题 */
+        /*
+        
+        方法一: 不换行
+        方法二: .minbox { margin-left: -4px; } .minbox:nth-child(1) { margin-left: 0; }
+        方法三: .box { font-size: 0; }
+        方法四: .minbox { float: left } 在这里不适用, 用的话, 父元素不会自动撑开
+
+        */
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="minbox"></div>
+        <div class="minbox"></div>
+        <div class="minbox"></div>
+        <div class="minbox"></div>
+    </div>
+</body>
+</html>
