@@ -1,41 +1,16 @@
 <template>
-  <div class="container">
-    <div>
-      <logo />
-      <nuxt-link to="/abc">首页</nuxt-link>
-      <h1 class="title">
-        demo
-      </h1>
-      <h2 class="subtitle">
-        My priceless Nuxt.js project123
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
+    <div class="container">
+        <header />
+        <nuxt-link to="/abc">首页</nuxt-link>
     </div>
-  </div>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
+import header from '~/components/header.vue'
 
 export default {
-  layout: 'blog',
   components: {
-    Logo
+    header
   }
 }
 </script>

@@ -15,6 +15,19 @@
 
 <script>
 export default {
-    
+    layout: 'blog',
+    created() {
+        this.$message.error('hh')
+    }
 }
 </script>
+
+<style lang="scss" scoped>
+    div {
+        ul {
+            li {
+                color: red;
+            }
+        }
+    }
+</style>
