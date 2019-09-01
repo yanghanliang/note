@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .box {
+            width: 600px;
+            height: 600px;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <canvas id="canvas"></canvas>
+    </div>
+    <script>
+        var My = function() {
+            this.canvas = document.querySelector('#canvas')
+            this.ctx = this.canvas.getContext('2d')
+            this.time = 10
+            this.startAngle = -(1 / 2 * Math.PI) // 开始的角度
+            this.circularX = 100 // 圆心的 x 轴坐标
+            this.circularY = 400 // 圆心的 y 轴坐标
+            this.radius = 100 // 半径
+
+
+            this.init()
+        }
+
+        // 初始化
+        My.prototype.init = function() {
+            this.setBoxSize() // 设置盒子大小
+            this.arcDrawing({
+                endAngle: 180
+            }) // 画弧
+            console.log(this.getCoordinate())
+        }
+
+        // 设置盒子大小
+        My.prototype.setBoxSize = function() {
+            let parentEle = this.canvas.parentElement
+            let parentInfo = parentEle.getBoundingClientRect()
+            this.canvas.width = parentInfo.width
+            this.canvas.height = parentInfo.height
+        }
+
+        /**
+         * 画弧
+         * @param {number} endAngle      结束的角度
+         *
+         */
+        My.prototype.arcDrawing = function(params) {
+            // this.ctx.strokeStyle = 'red'
+            // this.ctx.lineWidth = 6
+            let temp = 0
+
+            var clearId = setInterval(() => {
+                if(temp >= params.endAngle) {
+                    clearInterval(clearId)
+                    return false
+                }
+
+                let eAngle = this.getArcValue(temp) // 结束的弧度
+                this.ctx.beginPath() // 开始新的一条路径
+                this.ctx.arc(this.circularX, this.circularY, this.radius, this.startAngle, eAngle)
+                this.ctx.stroke()
+                temp++
+                
+               
+            }, 10)
+        }
+
+        /**
+         *  计算弧度
+         *  @param  {number}        angle 角度
+         *  @return {number}        弧度
+         *
+         */
+        My.prototype.getArcValue = function(angle) {
+            return angle * Math.PI / 180
+        }
+
+        /*
+         * 获取圆上的坐标
+         * @param   {number} angle
+         * @return  {object} coordinate 坐标
+         */
+        My.prototype.getCoordinate = function(angle) {
+            return {
+                x: this.circularX + this.radius * Math.cos(this.getArcValue(180 * 3.14 / 180)),
+                y: this.circularY + Math.cos(2*Math.PI / 10) * this.radius
+            }
+        }
+
+        new My()
+    </script>
+</body>
+</html>
