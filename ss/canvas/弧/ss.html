@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,16 +21,17 @@
         }
     </style>
 </head>
+
 <body>
     <div class="box">
-        <div class="min-box"></div>
+        <div class="min-box slider"></div>
         <canvas id="canvas"></canvas>
     </div>
     <script>
-        var My = function() {
+        var My = function () {
             this.canvas = document.querySelector('#canvas')
             this.box = this.canvas.parentElement
-            this.slider = this.box.querySelector('.min-box')
+            this.slider = this.box.querySelector('.min-box') // 滑块
             this.sliderInfo = this.slider.getBoundingClientRect()
             this.boxInfo = this.box.getBoundingClientRect()
             this.ctx = this.canvas.getContext('2d')
@@ -38,19 +40,25 @@
             this.circularX = 100 // 圆心的 x 轴坐标
             this.circularY = 400 // 圆心的 y 轴坐标
             this.radius = 100 // 半径
+            this.isPressDow = false // 鼠标默认是抬起的状态
 
             this.init()
         }
 
         // 初始化
-        My.prototype.init = function() {
+        My.prototype.init = function () {
             this.setBoxSize() // 设置盒子大小
-            this.arcDrawing({ endAngle: 360 }) // 画弧
+            this.pressDown() // 鼠标按下滑块的事件
+            this.mousemove() // 鼠标按下并且移动滑块的事件
+            this.mouseup() // 鼠标抬起时执行的方法
+            this.arcDrawing({
+                endAngle: 360
+            }) // 画弧
             this.setSpotCoordinate() // 设置点的位置
         }
 
         // 设置盒子大小
-        My.prototype.setBoxSize = function() {
+        My.prototype.setBoxSize = function () {
             this.canvas.width = this.boxInfo.width
             this.canvas.height = this.boxInfo.height
         }
@@ -60,13 +68,13 @@
          * @param {number} endAngle      结束的角度
          *
          */
-        My.prototype.arcDrawing = function(params) {
+        My.prototype.arcDrawing = function (params) {
             // this.ctx.strokeStyle = 'red'
             // this.ctx.lineWidth = 6
             let temp = 0
 
             var clearId = setInterval(() => {
-                if(temp >= params.endAngle) {
+                if (temp >= params.endAngle) {
                     clearInterval(clearId)
                     return false
                 }
@@ -77,8 +85,6 @@
                 this.ctx.arc(this.circularX, this.circularY, this.radius, this.startAngle, eAngle)
                 this.ctx.stroke()
                 temp++
-                
-               
             }, 10)
         }
 
@@ -88,7 +94,7 @@
          *  @return {number}        弧度
          *
          */
-        My.prototype.getArcValue = function(angle) {
+        My.prototype.getArcValue = function (angle) {
             return angle * Math.PI / 180
         }
 
@@ -97,33 +103,41 @@
          * @param   {number} angle
          * @return  {object} coordinate 坐标
          */
-        My.prototype.getCoordinate = function(angle) {
+        My.prototype.getCoordinate = function (angle) {
             let sAngle = 0
             let rightAngle = this.radius / Math.sin(2 * Math.PI / 360 * 90) // 直角
 
-            if(angle <= 90) {
+            if (angle <= 90) {
                 sAngle = 90 - angle
                 return {
-                    x: this.circularX + Math.sin(2 * Math.PI / 360 * sAngle) * rightAngle - this.sliderInfo.width / 2,
-                    y: this.circularY + Math.sin(2 * Math.PI / 360 * angle) * rightAngle - this.sliderInfo.height / 2
+                    x: this.circularX + Math.sin(2 * Math.PI / 360 * sAngle) * rightAngle - this.sliderInfo.width /
+                        2,
+                    y: this.circularY + Math.sin(2 * Math.PI / 360 * angle) * rightAngle - this.sliderInfo.height /
+                        2
                 }
-            } else if(angle <= 180) {
+            } else if (angle <= 180) {
                 sAngle = 90 - (180 - angle)
                 return {
-                    x: this.circularX - Math.sin(2 * Math.PI / 360 * sAngle) * rightAngle  - this.sliderInfo.width / 2,
-                    y: this.circularY + Math.sin(2 * Math.PI / 360 * (180 - angle)) * rightAngle  - this.sliderInfo.height / 2
+                    x: this.circularX - Math.sin(2 * Math.PI / 360 * sAngle) * rightAngle - this.sliderInfo.width /
+                        2,
+                    y: this.circularY + Math.sin(2 * Math.PI / 360 * (180 - angle)) * rightAngle - this.sliderInfo
+                        .height / 2
                 }
-            } else if(angle <= 270) {
+            } else if (angle <= 270) {
                 sAngle = 90 - (270 - angle)
                 return {
-                    x: this.circularX - Math.sin(2 * Math.PI / 360 * sAngle) * rightAngle  - this.sliderInfo.width / 2,
-                    y: this.circularY - Math.sin(2 * Math.PI / 360 * (270 - angle)) * rightAngle  - this.sliderInfo.height / 2
+                    x: this.circularX - Math.sin(2 * Math.PI / 360 * sAngle) * rightAngle - this.sliderInfo.width /
+                        2,
+                    y: this.circularY - Math.sin(2 * Math.PI / 360 * (270 - angle)) * rightAngle - this.sliderInfo
+                        .height / 2
                 }
-            } else if(angle <= 360) {
+            } else if (angle <= 360) {
                 sAngle = 90 - (360 - angle)
                 return {
-                    x: this.circularX + Math.sin(2 * Math.PI / 360 * sAngle) * rightAngle  - this.sliderInfo.width / 2,
-                    y: this.circularY - Math.sin(2 * Math.PI / 360 * (360 - angle)) * rightAngle  - this.sliderInfo.height / 2
+                    x: this.circularX + Math.sin(2 * Math.PI / 360 * sAngle) * rightAngle - this.sliderInfo.width /
+                        2,
+                    y: this.circularY - Math.sin(2 * Math.PI / 360 * (360 - angle)) * rightAngle - this.sliderInfo
+                        .height / 2
                 }
             }
         }
@@ -131,14 +145,125 @@
         /*
          * 设置点的位置
          */
-        My.prototype.setSpotCoordinate = function() {
+        My.prototype.setSpotCoordinate = function () {
             let spot = this.box.querySelector('.min-box')
             let coordinate = this.getCoordinate(70)
+            console.log(coordinate, 'coordinate')
             spot.style.left = coordinate.x + 'px'
             spot.style.top = coordinate.y + 'px'
+        }
+
+        /**
+         * 已知一个点求角度
+         * 获取角度
+         * @param {Object} params.x x 轴坐标
+         * @param {Object} params.y y 轴坐标
+         * @return {number} 角度
+         */
+        My.prototype.getAngle = function (params) {
+            let sinA = Math.sin(2 * Math.PI / 360 * 90)
+            // let ab = 129 488
+            let ab = params.y - this.circularY
+            let oa = params.x - this.circularX
+            let sino = sinA * ab / Math.sqrt(Math.pow(oa, 2) + Math.pow(ab, 2))
+            console.log(sino)
+            console.log(Math.asin(sino) / (Math.PI / 180))
+            return this.getSinAngle(sino)
+        }
+
+        /**
+         * 获取 sin 角度
+         * @param {number} sin 传入一个 sin 值
+         * @return {number} angle
+         * 正切 || 正弦 || 余弦也可用同理求出
+         */
+        My.prototype.getSinAngle = function (sin) {
+            return Math.asin(sin) / (Math.PI / 180)
+        }
+
+        /**
+         * 给滑块注册鼠标按下事件
+         */
+        My.prototype.pressDown = function () {
+            let that = this
+            console.log('>????')
+            that.slider.addEventListener('mousedown', function (event) {
+                // 利用传参兼容火狐
+                let e = window.event || event
+                // 获取目标元素
+                let target = e.target ? e.target : e.srcElement
+                // 获取元素标签内容
+                let className = event.target.className
+                console.log(className)
+                if (className.includes('slider')) {
+                    that.isPressDown = true // 开启
+                    // that.slider.style.position = 'fixed' // 设置固定定位，以便移动
+                }
+            })
+        }
+
+        // 鼠标滑动时执行
+        My.prototype.mousemove = function () {
+            let that = this
+            console.log('滑着走')
+            window.onmousemove = function (event) {
+                // 利用传参兼容火狐
+                let e = window.event || event
+                // 获取目标元素
+                let target = e.target ? e.target : e.srcElement
+                // 获取元素标签内容
+                let tagName = event.target.tagName
+
+                // 分别兼容ie和chrome
+                let scrollX = document.documentElement.scrollLeft || document.body.scrollLeft
+                let scrollY = document.documentElement.scrollTop || document.body.scrollTop
+                // 获取 x 和 y
+                let x = e.clientX + scrollX - that.sliderInfo.width
+                let y = e.clientY + scrollY - that.sliderInfo.height
+
+                if (that.isPressDown) {
+                    that.slider.style.left = x + 'px'
+                    that.slider.style.top = y + 'px'
+                }
+            }
+        }
+
+        // 鼠标抬起事件
+        My.prototype.mouseup = function () {
+            let that = this
+            window.onmouseup = function (event) {
+                // 修改按下的状态
+                that.isPressDown = false
+                // 利用传参兼容火狐
+                let e = window.event || event
+                // 获取目标元素
+                let target = e.target ? e.target : e.srcElement
+                // 获取元素标签内容
+                let className = target.getAttribute('class')
+                // 分别兼容ie和chrome
+                let scrollX = document.documentElement.scrollLeft || document.body.scrollLeft
+                let scrollY = document.documentElement.scrollTop || document.body.scrollTop
+                // 获取 x 和 y
+                let x = e.clientX + scrollX - that.sliderInfo.width
+                let y = e.clientY + scrollY - that.sliderInfo.height
+
+                console.log('鼠标抬起了')
+
+                if (className.includes('slider')) {
+                    console.log(x, y)
+                    let angle = that.getAngle({
+                        x: x,
+                        y: y
+                    })
+
+                    console.log(angle, 'pppppp')
+                }
+
+            }
         }
 
         new My()
     </script>
 </body>
+
 </html>
