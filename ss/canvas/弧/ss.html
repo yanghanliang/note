@@ -9,16 +9,29 @@
         .box {
             width: 600px;
             height: 600px;
+            position: relative;
+        }
+
+        .min-box {
+            width: 10px;
+            height: 10px;
+            position: absolute;
+            background-color: pink;
         }
     </style>
 </head>
 <body>
     <div class="box">
+        <div class="min-box"></div>
         <canvas id="canvas"></canvas>
     </div>
     <script>
         var My = function() {
             this.canvas = document.querySelector('#canvas')
+            this.box = this.canvas.parentElement
+            this.slider = this.box.querySelector('.min-box')
+            this.sliderInfo = this.slider.getBoundingClientRect()
+            this.boxInfo = this.box.getBoundingClientRect()
             this.ctx = this.canvas.getContext('2d')
             this.time = 10
             this.startAngle = -(1 / 2 * Math.PI) // 开始的角度
@@ -26,25 +39,20 @@
             this.circularY = 400 // 圆心的 y 轴坐标
             this.radius = 100 // 半径
 
-
             this.init()
         }
 
         // 初始化
         My.prototype.init = function() {
             this.setBoxSize() // 设置盒子大小
-            this.arcDrawing({
-                endAngle: 180
-            }) // 画弧
-            console.log(this.getCoordinate())
+            this.arcDrawing({ endAngle: 360 }) // 画弧
+            this.setSpotCoordinate() // 设置点的位置
         }
 
         // 设置盒子大小
         My.prototype.setBoxSize = function() {
-            let parentEle = this.canvas.parentElement
-            let parentInfo = parentEle.getBoundingClientRect()
-            this.canvas.width = parentInfo.width
-            this.canvas.height = parentInfo.height
+            this.canvas.width = this.boxInfo.width
+            this.canvas.height = this.boxInfo.height
         }
 
         /**
@@ -64,6 +72,7 @@
                 }
 
                 let eAngle = this.getArcValue(temp) // 结束的弧度
+                this.ctx.clearRect(0, 0, this.boxInfo.width, this.boxInfo.height) // 在给定的矩形内清除指定的像素
                 this.ctx.beginPath() // 开始新的一条路径
                 this.ctx.arc(this.circularX, this.circularY, this.radius, this.startAngle, eAngle)
                 this.ctx.stroke()
@@ -89,10 +98,44 @@
          * @return  {object} coordinate 坐标
          */
         My.prototype.getCoordinate = function(angle) {
-            return {
-                x: this.circularX + this.radius * Math.cos(this.getArcValue(180 * 3.14 / 180)),
-                y: this.circularY + Math.cos(2*Math.PI / 10) * this.radius
+            let sAngle = 0
+            let rightAngle = this.radius / Math.sin(2 * Math.PI / 360 * 90) // 直角
+
+            if(angle <= 90) {
+                sAngle = 90 - angle
+                return {
+                    x: this.circularX + Math.sin(2 * Math.PI / 360 * sAngle) * rightAngle - this.sliderInfo.width / 2,
+                    y: this.circularY + Math.sin(2 * Math.PI / 360 * angle) * rightAngle - this.sliderInfo.height / 2
+                }
+            } else if(angle <= 180) {
+                sAngle = 90 - (180 - angle)
+                return {
+                    x: this.circularX - Math.sin(2 * Math.PI / 360 * sAngle) * rightAngle  - this.sliderInfo.width / 2,
+                    y: this.circularY + Math.sin(2 * Math.PI / 360 * (180 - angle)) * rightAngle  - this.sliderInfo.height / 2
+                }
+            } else if(angle <= 270) {
+                sAngle = 90 - (270 - angle)
+                return {
+                    x: this.circularX - Math.sin(2 * Math.PI / 360 * sAngle) * rightAngle  - this.sliderInfo.width / 2,
+                    y: this.circularY - Math.sin(2 * Math.PI / 360 * (270 - angle)) * rightAngle  - this.sliderInfo.height / 2
+                }
+            } else if(angle <= 360) {
+                sAngle = 90 - (360 - angle)
+                return {
+                    x: this.circularX + Math.sin(2 * Math.PI / 360 * sAngle) * rightAngle  - this.sliderInfo.width / 2,
+                    y: this.circularY - Math.sin(2 * Math.PI / 360 * (360 - angle)) * rightAngle  - this.sliderInfo.height / 2
+                }
             }
+        }
+
+        /*
+         * 设置点的位置
+         */
+        My.prototype.setSpotCoordinate = function() {
+            let spot = this.box.querySelector('.min-box')
+            let coordinate = this.getCoordinate(70)
+            spot.style.left = coordinate.x + 'px'
+            spot.style.top = coordinate.y + 'px'
         }
 
         new My()
