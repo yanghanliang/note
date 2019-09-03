@@ -95,10 +95,10 @@
                     return false
                 }
 
-                let eAngle = this.getArcValue(temp) // 结束的弧度
+                let eAngle = this.getArcValue(360 - temp) // 结束的弧度
                 this.ctx.clearRect(0, 0, this.boxInfo.width, this.boxInfo.height) // 在给定的矩形内清除指定的像素
                 this.ctx.beginPath() // 开始新的一条路径
-                this.ctx.arc(this.circularX, this.circularY, this.radius, startArc, eAngle)
+                this.ctx.arc(this.circularX, this.circularY, this.radius, startArc, eAngle, true)
                 this.ctx.stroke()
                 temp++
 
@@ -134,7 +134,7 @@
             let startArc = this.getArcValue(params.startAngle) // 开始的弧度
             let endArc = this.getArcValue(params.endAngle) // 结束的弧度
             this.ctx.beginPath() // 开始新的一条路径
-            this.ctx.arc(this.circularX, this.circularY, this.radius, startArc, endArc)
+            this.ctx.arc(this.circularX, this.circularY, this.radius, startArc, endArc, true)
             this.ctx.stroke()
 
             // 写字
@@ -306,6 +306,8 @@
                     if(angle > 270) {
                         angle = angle - 360
                     }
+
+                    // angle = 360 - angle
 
                     // 获取当前元素在圆上的位置
                     let coordinate = that.getCoordinate(angle)
