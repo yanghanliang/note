@@ -101,7 +101,7 @@
         /*
          * 获取圆上的坐标
          * @param   {number} angle
-         * @return  {object} coordinate 坐标
+         * @return  {object} coordinate 坐标 { x: value, y: value }
          */
         My.prototype.getCoordinate = function (angle) {
             let sAngle = 0
@@ -124,12 +124,10 @@
                         .height / 2
                 }
             } else if (angle <= 270) {
-                sAngle = 90 - (270 - angle)
+                sAngle = 270 - angle
                 return {
-                    x: this.circularX - Math.sin(2 * Math.PI / 360 * sAngle) * rightAngle - this.sliderInfo.width /
-                        2,
-                    y: this.circularY - Math.sin(2 * Math.PI / 360 * (270 - angle)) * rightAngle - this.sliderInfo
-                        .height / 2
+                    x: this.circularX - Math.sin(2 * Math.PI / 360 * sAngle) * rightAngle - this.sliderInfo.width / 2,
+                    y: this.circularY - Math.sin(2 * Math.PI / 360 * (180 - sAngle - 90)) * rightAngle - this.sliderInfo.height / 2
                 }
             } else if (angle <= 360) {
                 sAngle = 90 - (360 - angle)
@@ -166,19 +164,33 @@
             let ab = params.y - this.circularY
             let oa = params.x - this.circularX
             let sino = sinA * ab / Math.sqrt(Math.pow(oa, 2) + Math.pow(ab, 2))
-            console.log(sino)
-            console.log(Math.asin(sino) / (Math.PI / 180))
-            return this.getSinAngle(sino)
+            params.sin = sino
+            return this.getSinAngle(params)
         }
 
         /**
          * 获取 sin 角度
-         * @param {number} sin 传入一个 sin 值
+         * @param {object} params.sin   传入一个 sin 值
+         * @param {object} params.x     传入一个元素所在的 x 轴坐标
+         * @param {object} params.y     传入一个元素所在的 y 轴坐标
          * @return {number} angle
          * 正切 || 正弦 || 余弦也可用同理求出
          */
-        My.prototype.getSinAngle = function (sin) {
-            return Math.asin(sin) / (Math.PI / 180)
+        My.prototype.getSinAngle = function (params) {
+            console.log(params, this.circularX, this.circularY)
+            if(params.x > this.circularX && params.y > this.circularY) {
+                console.log('0-90')
+                return Math.asin(params.sin) / (Math.PI / 180)
+            } else if(params.x > this.circularX && params.y < this.circularY) {
+                console.log('270-360')
+                return 360 + Math.asin(params.sin) / (Math.PI / 180)
+            } else if(params.x < this.circularX && params.y < this.circularY) {
+                console.log('180-270')
+                return 180 - Math.asin(params.sin) / (Math.PI / 180)
+            } else if(params.x < this.circularX && params.y > this.circularY) {
+                console.log('90-180')
+                return 180 - Math.asin(params.sin) / (Math.PI / 180)
+            }
         }
 
         /**
@@ -222,8 +234,15 @@
                 let y = e.clientY + scrollY - that.sliderInfo.height
 
                 if (that.isPressDown) {
-                    that.slider.style.left = x + 'px'
-                    that.slider.style.top = y + 'px'
+                    // that.slider.style.left = x + 'px'
+                    // that.slider.style.top = y + 'px'
+                    let angle = that.getAngle({
+                        x: x,
+                        y: y
+                    })
+                    let coordinate = that.getCoordinate(angle)
+                    that.slider.style.left = coordinate.x + 'px'
+                    that.slider.style.top = coordinate.y + 'px'
                 }
             }
         }
@@ -247,16 +266,14 @@
                 let x = e.clientX + scrollX - that.sliderInfo.width
                 let y = e.clientY + scrollY - that.sliderInfo.height
 
-                console.log('鼠标抬起了')
-
                 if (className.includes('slider')) {
-                    console.log(x, y)
                     let angle = that.getAngle({
                         x: x,
                         y: y
                     })
-
-                    console.log(angle, 'pppppp')
+                    let coordinate = that.getCoordinate(angle)
+                    that.slider.style.left = coordinate.x + 'px'
+                    that.slider.style.top = coordinate.y + 'px'
                 }
 
             }
