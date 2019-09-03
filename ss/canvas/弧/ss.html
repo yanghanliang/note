@@ -38,8 +38,8 @@
             this.time = 10
             // this.startAngle = -(this.getArcValue(90)) // 开始的角度
             this.endAngle = 0 // 结束的角度
-            this.circularX = 200 // 圆心的 x 轴坐标
-            this.circularY = 400 // 圆心的 y 轴坐标
+            this.circularX = 200 // 圆心的 x 轴坐标 - 不能设置动态的值,会影响到渐变色
+            this.circularY = this.boxInfo.height / 2 // 圆心的 y 轴坐标
             this.radius = 100 // 半径
             this.isPressDow = false // 鼠标默认是抬起的状态
             this.percentage = 0 // 百分比
@@ -120,7 +120,7 @@
         My.prototype.number = function(angle) {
             let percentage = Math.round((angle + 90) / 360 * 100)
             this.percentage = percentage
-            return percentage
+            return percentage + '%'
         }
 
         /**
