@@ -13,11 +13,46 @@
             position: relative;
         }
 
-        .min-box {
-            width: 10px;
-            height: 10px;
+        .box .slider {
+            width: 14px;
+            height: 14px;
+            z-index: 1;
+            cursor: pointer;
             position: absolute;
-            background-color: pink;
+            border-radius: 50%;
+            background: -webkit-linear-gradient(40deg, red, pink); /* Safari 5.1 - 6.0 */
+            background: -o-linear-gradient(40deg, red, pink); /* Opera 11.1 - 12.0 */
+            background: -moz-linear-gradient(40deg, red, pink); /* Firefox 3.6 - 15 */
+            background: linear-gradient(40deg, red, pink); /* 标准的语法 */
+        }
+
+        .box .slider::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            top: 50%;
+            left: 50%;
+            border-radius: 50%;
+            position: absolute;
+            background-color: #fff;
+            transform: translate(-50%, -50%);
+        }
+
+        .box .content {
+            top: 50%;
+            left: 50%;
+            z-index: -1;
+            border-radius: 50%;
+            position: absolute;
+            border: 6px solid #ddd;
+            transform: translate(-50%, -50%);
+        }
+
+        .box .content ul {
+            top: 50px;
+            left: 50%;
+            position: absolute;
+            transform: translateX(-50%);
         }
     </style>
 </head>
@@ -26,6 +61,12 @@
     <div class="box">
         <div class="min-box slider"></div>
         <canvas id="canvas"></canvas>
+        <div class="content">
+            <ul>
+                <li>aaa</li>
+                <li>bbb</li>
+            </ul>
+        </div>
     </div>
     <script>
         var My = function () {
@@ -38,13 +79,15 @@
             this.time = 10
             this.startAngle = -90 // 开始的角度  正值走的是顺时针
             this.endAngle = -360 // 结束的角度 负值走的是逆时针
-            this.circularX = 200 // 圆心的 x 轴坐标 - 不能设置动态的值,会影响到渐变色
+            this.circularX = this.boxInfo.width / 2 // 圆心的 x 轴坐标 - 不能设置动态的值,会影响到渐变色
             this.circularY = this.boxInfo.height / 2 // 圆心的 y 轴坐标
             this.radius = 100 // 半径
             this.isPressDow = false // 鼠标默认是抬起的状态
             this.percentage = 0 // 百分比
             this.textTop = 40 // 文字距离上边的距离 可以为负数
+            this.textSize = 20 // 字体大小
             this.direction = this.startAngle > 0 ? false : true // 旋转的方向 true - 逆时针 | false - 顺时针
+            this.lineWidth = 6 // 线条宽度
 
             this.init()
         }
@@ -65,6 +108,10 @@
         My.prototype.setBoxSize = function () {
             this.canvas.width = this.boxInfo.width
             this.canvas.height = this.boxInfo.height
+            let content = this.box.querySelector('.content')
+            let width = this.radius * 2 - this.lineWidth
+            content.style.width = width + 'px'
+            content.style.height = width + 'px'
         }
 
         /**
@@ -75,19 +122,18 @@
          */
         My.prototype.arcDrawing = function (params) {
             // 设置渐变
-            let grd = this.ctx.createLinearGradient(0,0,170,0)
+            let grd = this.ctx.createLinearGradient(0, 0, this.circularX, this.circularY)
             grd.addColorStop(0, "#f54f29")
             grd.addColorStop(0.7, "#43ffe1")
             grd.addColorStop(1, "#ff4343")
-    
+
             this.ctx.strokeStyle = grd
-            this.ctx.lineWidth = 6
+            this.ctx.lineWidth = this.lineWidth
 
             let startArc = this.getArcValue(params.startAngle)
             let temp = params.startAngle
 
             var clearId = setInterval(() => {
-                // console.log(temp)
                 let eAngle = this.getArcValue(temp) // 结束的弧度
                 this.ctx.clearRect(0, 0, this.boxInfo.width, this.boxInfo.height) // 在给定的矩形内清除指定的像素
                 this.ctx.beginPath() // 开始新的一条路径
@@ -96,14 +142,13 @@
 
                 // 写字
                 this.ctx.fillStyle = '#1d89d5'
-                this.ctx.font= 80 + 'px Microsoft Yahei'
-                this.ctx.textAlign='center'
-                // console.log(this.number(temp))
+                this.ctx.font = this.textSize + 'px Microsoft Yahei'
+                this.ctx.textAlign = 'center'
                 this.ctx.fillText(this.number(temp), this.circularX, this.circularY + this.textTop)
 
-                if(this.startAngle < 0) {
+                if (this.startAngle < 0) {
                     // 逆时针旋转, 角度为负值
-                    if(temp <= this.endAngle) {
+                    if (temp <= this.endAngle) {
                         clearInterval(clearId)
                         // 设置点的位置
                         this.setSpotCoordinate({
@@ -126,9 +171,30 @@
 
                     temp++
                 }
+
             }, 10)
 
+            // this.ctx.globalCompositeOperation = 'source-atop'
+
             this.endAngle = params.endAngle // 更新最后的角度
+        }
+
+        /**
+         * 补全-画弧 
+         * @param {object} params 
+         * @param {number} params.startAngle    开始的角度
+         * @param {number} params.endAngle      结束的角度
+         */
+        My.prototype.ad = function (params) {
+            this.ctx.clearRect(0, 0, this.boxInfo.width, this.boxInfo.height) // 在给定的矩形内清除指定的像素
+            let startArc = this.getArcValue(params.startAngle) // 开始的弧度
+            let endArc = this.getArcValue(params.endAngle) // 结束的弧度
+            this.ctx.beginPath() // 开始新的一条路径
+            this.ctx.arc(this.circularX, this.circularY, this.radius, startArc, endArc, this.direction)
+            this.ctx.stroke()
+
+            // 写字
+            this.ctx.fillText(this.number(params.endAngle), this.circularX, this.circularY + 40)
         }
 
         /**
@@ -136,14 +202,14 @@
          * @param {number} angle 角度
          * @param {number} number 百分比
          */
-        My.prototype.number = function(angle) {
+        My.prototype.number = function (angle) {
             // console.log(angle, this.startAngle)
             let value = 0
 
-            if(this.direction) {
+            if (this.direction) {
                 let sa = 360 + this.startAngle // 获取开始的实际角度
-                if(angle > 0) {
-                    if(sa > angle) {
+                if (angle > 0) {
+                    if (sa > angle) {
                         value = sa - angle
                     } else {
                         value = sa + 360 - angle
@@ -153,7 +219,7 @@
                     value = sa - temp
                 }
             } else {
-                if(angle > this.startAngle) {
+                if (angle > this.startAngle) {
                     value = angle - this.startAngle
                 } else {
                     value = 360 - this.startAngle + angle
@@ -163,27 +229,6 @@
             let percentage = Math.round(value / 360 * 100)
             this.percentage = percentage
             return percentage + '%'
-        }
-
-        /**
-         * 补全-画弧 
-         * @param {object} params 
-         * @param {number} params.startAngle    开始的角度
-         * @param {number} params.endAngle      结束的角度
-         */
-        My.prototype.ad = function(params) {
-            this.ctx.clearRect(0, 0, this.boxInfo.width, this.boxInfo.height) // 在给定的矩形内清除指定的像素
-            let startArc = this.getArcValue(params.startAngle) // 开始的弧度
-            let endArc = this.getArcValue(params.endAngle) // 结束的弧度
-            this.ctx.beginPath() // 开始新的一条路径
-            this.ctx.arc(this.circularX, this.circularY, this.radius, startArc, endArc, this.direction)
-            this.ctx.stroke()
-
-            // 写字
-            this.ctx.fillStyle = '#1d89d5'
-            this.ctx.font= 80 + 'px Microsoft Yahei'
-            this.ctx.textAlign='center'
-            this.ctx.fillText(this.number(params.endAngle), this.circularX, this.circularY + 40)
         }
 
         /**
@@ -280,16 +325,16 @@
          * 正切 || 正弦 || 余弦也可用同理求出
          */
         My.prototype.getSinAngle = function (params) {
-            if(params.x >= this.circularX && params.y >= this.circularY) {
+            if (params.x >= this.circularX && params.y >= this.circularY) {
                 // console.log('0-90')
                 return Math.asin(params.sin) / (Math.PI / 180)
-            } else if(params.x >= this.circularX && params.y <= this.circularY) {
+            } else if (params.x >= this.circularX && params.y <= this.circularY) {
                 // console.log('270-360', Math.asin(params.sin) / (Math.PI / 180))
                 return 360 + Math.asin(params.sin) / (Math.PI / 180)
-            } else if(params.x <= this.circularX && params.y <= this.circularY) {
+            } else if (params.x <= this.circularX && params.y <= this.circularY) {
                 // console.log('180-270', Math.asin(params.sin) / (Math.PI / 180))
                 return 180 - Math.asin(params.sin) / (Math.PI / 180)
-            } else if(params.x <= this.circularX && params.y >= this.circularY) {
+            } else if (params.x <= this.circularX && params.y >= this.circularY) {
                 // console.log('90-180')
                 return 180 - Math.asin(params.sin) / (Math.PI / 180)
             }
@@ -357,7 +402,7 @@
                     //     // 经过0度时 coordinate 为 undefind
                     //     return false
                     // }
-                    
+
                     // 设置位置
                     that.slider.style.left = coordinate.x + 'px'
                     that.slider.style.top = coordinate.y + 'px'
@@ -409,7 +454,6 @@
                 }
             }
         }
-
 
         new My()
     </script>

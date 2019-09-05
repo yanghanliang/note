@@ -12,3 +12,11 @@
         - 在Math提供的方法中**sin、cos等都使用的弧度**
 
 ```
+
+---
+
+### 清除锯齿的方法
+
++ `this.ctx.globalCompositeOperation = 'source-atop'`
++ `this.ctx.clearRect(0, 0, this.boxInfo.width, this.boxInfo.height)`
+    + `在给定的矩形内清除指定的像素`
