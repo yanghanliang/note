@@ -17,9 +17,9 @@ svg .line {
     position: absolute;
     z-index: 1;
 }
-svg .line:hover {
+/* svg .line:hover {
     z-index: 2;
-}
+} */
 svg .line:hover polyline {
     stroke: blue;
 }

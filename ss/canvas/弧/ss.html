@@ -36,14 +36,15 @@
             this.boxInfo = this.box.getBoundingClientRect()
             this.ctx = this.canvas.getContext('2d')
             this.time = 10
-            // this.startAngle = -(this.getArcValue(90)) // 开始的角度
-            this.endAngle = 0 // 结束的角度
+            this.startAngle = -90 // 开始的角度  正值走的是顺时针
+            this.endAngle = -360 // 结束的角度 负值走的是逆时针
             this.circularX = 200 // 圆心的 x 轴坐标 - 不能设置动态的值,会影响到渐变色
             this.circularY = this.boxInfo.height / 2 // 圆心的 y 轴坐标
             this.radius = 100 // 半径
             this.isPressDow = false // 鼠标默认是抬起的状态
             this.percentage = 0 // 百分比
             this.textTop = 40 // 文字距离上边的距离 可以为负数
+            this.direction = this.startAngle > 0 ? false : true // 旋转的方向 true - 逆时针 | false - 顺时针
 
             this.init()
         }
@@ -55,8 +56,8 @@
             this.mousemove() // 鼠标按下并且移动滑块的事件
             this.mouseup() // 鼠标抬起时执行的方法
             this.arcDrawing({
-                startAngle: -90,
-                endAngle: 180,
+                startAngle: this.startAngle,
+                endAngle: this.endAngle,
             }) // 画弧
         }
 
@@ -86,27 +87,45 @@
             let temp = params.startAngle
 
             var clearId = setInterval(() => {
-                if (temp >= params.endAngle) {
-                    clearInterval(clearId)
-                    // 设置点的位置
-                    this.setSpotCoordinate({
-                        angle: 180
-                    })
-                    return false
-                }
-
-                let eAngle = this.getArcValue(360 - temp) // 结束的弧度
+                // console.log(temp)
+                let eAngle = this.getArcValue(temp) // 结束的弧度
                 this.ctx.clearRect(0, 0, this.boxInfo.width, this.boxInfo.height) // 在给定的矩形内清除指定的像素
                 this.ctx.beginPath() // 开始新的一条路径
-                this.ctx.arc(this.circularX, this.circularY, this.radius, startArc, eAngle, true)
+                this.ctx.arc(this.circularX, this.circularY, this.radius, startArc, eAngle, this.direction)
                 this.ctx.stroke()
-                temp++
 
                 // 写字
                 this.ctx.fillStyle = '#1d89d5'
                 this.ctx.font= 80 + 'px Microsoft Yahei'
                 this.ctx.textAlign='center'
+                // console.log(this.number(temp))
                 this.ctx.fillText(this.number(temp), this.circularX, this.circularY + this.textTop)
+
+                if(this.startAngle < 0) {
+                    // 逆时针旋转, 角度为负值
+                    if(temp <= this.endAngle) {
+                        clearInterval(clearId)
+                        // 设置点的位置
+                        this.setSpotCoordinate({
+                            angle: 360 + this.endAngle
+                        })
+                        return false
+                    }
+
+                    temp--
+                } else {
+                    // 顺时针旋转, 角度为正值
+                    if (temp >= params.endAngle) {
+                        clearInterval(clearId)
+                        // 设置点的位置
+                        this.setSpotCoordinate({
+                            angle: this.endAngle
+                        })
+                        return false
+                    }
+
+                    temp++
+                }
             }, 10)
 
             this.endAngle = params.endAngle // 更新最后的角度
@@ -118,7 +137,30 @@
          * @param {number} number 百分比
          */
         My.prototype.number = function(angle) {
-            let percentage = Math.round((angle + 90) / 360 * 100)
+            // console.log(angle, this.startAngle)
+            let value = 0
+
+            if(this.direction) {
+                let sa = 360 + this.startAngle // 获取开始的实际角度
+                if(angle > 0) {
+                    if(sa > angle) {
+                        value = sa - angle
+                    } else {
+                        value = sa + 360 - angle
+                    }
+                } else {
+                    let temp = 360 + angle
+                    value = sa - temp
+                }
+            } else {
+                if(angle > this.startAngle) {
+                    value = angle - this.startAngle
+                } else {
+                    value = 360 - this.startAngle + angle
+                }
+            }
+
+            let percentage = Math.round(value / 360 * 100)
             this.percentage = percentage
             return percentage + '%'
         }
@@ -134,7 +176,7 @@
             let startArc = this.getArcValue(params.startAngle) // 开始的弧度
             let endArc = this.getArcValue(params.endAngle) // 结束的弧度
             this.ctx.beginPath() // 开始新的一条路径
-            this.ctx.arc(this.circularX, this.circularY, this.radius, startArc, endArc, true)
+            this.ctx.arc(this.circularX, this.circularY, this.radius, startArc, endArc, this.direction)
             this.ctx.stroke()
 
             // 写字
@@ -146,7 +188,7 @@
 
         /**
          *  计算弧度
-         *  @param  {number}        angle 角度
+         *  @param  {number}        angle 角度 可传负值
          *  @return {number}        弧度
          *
          */
@@ -238,18 +280,17 @@
          * 正切 || 正弦 || 余弦也可用同理求出
          */
         My.prototype.getSinAngle = function (params) {
-            console.log(params, this.circularX, this.circularY)
-            if(params.x > this.circularX && params.y > this.circularY) {
-                console.log('0-90')
+            if(params.x >= this.circularX && params.y >= this.circularY) {
+                // console.log('0-90')
                 return Math.asin(params.sin) / (Math.PI / 180)
-            } else if(params.x > this.circularX && params.y < this.circularY) {
-                console.log('270-360', Math.asin(params.sin) / (Math.PI / 180))
+            } else if(params.x >= this.circularX && params.y <= this.circularY) {
+                // console.log('270-360', Math.asin(params.sin) / (Math.PI / 180))
                 return 360 + Math.asin(params.sin) / (Math.PI / 180)
-            } else if(params.x < this.circularX && params.y < this.circularY) {
-                console.log('180-270')
+            } else if(params.x <= this.circularX && params.y <= this.circularY) {
+                // console.log('180-270', Math.asin(params.sin) / (Math.PI / 180))
                 return 180 - Math.asin(params.sin) / (Math.PI / 180)
-            } else if(params.x < this.circularX && params.y > this.circularY) {
-                console.log('90-180')
+            } else if(params.x <= this.circularX && params.y >= this.circularY) {
+                // console.log('90-180')
                 return 180 - Math.asin(params.sin) / (Math.PI / 180)
             }
         }
@@ -259,7 +300,6 @@
          */
         My.prototype.pressDown = function () {
             let that = this
-            console.log('>????')
             that.slider.addEventListener('mousedown', function (event) {
                 // 利用传参兼容火狐
                 let e = window.event || event
@@ -302,26 +342,33 @@
                         y: y
                     })
 
+
                     // 为了让起始点从 270 开始而特殊处理
-                    if(angle > 270) {
-                        angle = angle - 360
-                    }
+                    // if(angle > 270) {
+                    //     angle = angle - 360
+                    // }
 
                     // angle = 360 - angle
 
                     // 获取当前元素在圆上的位置
                     let coordinate = that.getCoordinate(angle)
+
+                    // if(!coordinate) {
+                    //     // 经过0度时 coordinate 为 undefind
+                    //     return false
+                    // }
+                    
                     // 设置位置
                     that.slider.style.left = coordinate.x + 'px'
                     that.slider.style.top = coordinate.y + 'px'
 
                     that.ad({
-                        startAngle: -90,
+                        startAngle: that.startAngle,
                         endAngle: angle
                     })
 
-                    console.log(angle, '当前的角度')
-                    console.log((angle + 90) / 360 * 100, '百分比')
+                    // console.log(angle, '当前的角度')
+                    // console.log((angle + 90) / 360 * 100, '百分比')
                 }
             }
         }
