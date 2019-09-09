@@ -1990,6 +1990,8 @@ a:hover
 
 漏斗 cursor:wait
 
+默认 cursor:default
+
 光标图案(IE6) p {cursor:url("光标文件名.cur"),text;}
 
 六、CSS框线一览表：
