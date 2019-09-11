@@ -7,16 +7,17 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
-        .box {
+        .progress-bar {
             width: 600px;
             height: 600px;
             position: relative;
         }
 
-        .box .slider {
+        .progress-bar .slider {
             width: 14px;
             height: 14px;
             z-index: 1;
+            opacity: 0;
             cursor: pointer;
             position: absolute;
             border-radius: 50%;
@@ -26,7 +27,7 @@
             background: linear-gradient(40deg, red, pink); /* 标准的语法 */
         }
 
-        .box .slider::before {
+        .progress-bar .slider::before {
             content: "";
             width: 6px;
             height: 6px;
@@ -38,7 +39,7 @@
             transform: translate(-50%, -50%);
         }
 
-        .box .content {
+        .progress-bar .content {
             top: 50%;
             left: 50%;
             z-index: -1;
@@ -48,7 +49,7 @@
             transform: translate(-50%, -50%);
         }
 
-        .box .content ul {
+        .progress-bar .content ul {
             top: 50px;
             left: 50%;
             position: absolute;
@@ -58,7 +59,7 @@
 </head>
 
 <body>
-    <div class="box">
+    <div class="progress-bar">
         <div class="min-box slider"></div>
         <canvas id="canvas"></canvas>
         <div class="content">
@@ -69,7 +70,12 @@
         </div>
     </div>
     <script>
-        var My = function () {
+        /**
+         * @param {number} startAngle   - 开始的角度, 正值走的是顺时针
+         * @param {number} endAngle     - 结束的角度, 负值走的是逆时针
+         * 
+        */
+        var My = function (params) {
             this.canvas = document.querySelector('#canvas')
             this.box = this.canvas.parentElement
             this.slider = this.box.querySelector('.slider') // 滑块
@@ -77,8 +83,8 @@
             this.boxInfo = this.box.getBoundingClientRect()
             this.ctx = this.canvas.getContext('2d')
             this.time = 10
-            this.startAngle = -90 // 开始的角度  正值走的是顺时针
-            this.endAngle = -360 // 结束的角度 负值走的是逆时针
+            this.startAngle = params.startAngle ? params.startAngle : 90
+            this.endAngle = params.endAngle ? params.endAngle : 0
             this.circularX = this.boxInfo.width / 2 // 圆心的 x 轴坐标 - 不能设置动态的值,会影响到渐变色
             this.circularY = this.boxInfo.height / 2 // 圆心的 y 轴坐标
             this.radius = 100 // 半径
@@ -297,6 +303,7 @@
             let coordinate = this.getCoordinate(params.angle)
             this.slider.style.left = coordinate.x + 'px'
             this.slider.style.top = coordinate.y + 'px'
+            this.slider.style.opacity = 1
         }
 
         /**
@@ -455,7 +462,28 @@
             }
         }
 
-        new My()
+        /**
+         * 获取角度
+         * @param {number} 百分比
+         * @return {number} 角度
+         * 
+         */
+        My.prototype.getPercentage = function(percentage) {
+            let value = percentage * 360 / 100 + Math.abs(this.startAngle)
+            if(this.direction) {
+                // 逆时针
+                return -value
+            } else {
+                // 顺时针
+                return value
+            }
+        }
+
+        let my = new My({
+            
+        })
+        
+        console.log(my.getPercentage(25))
     </script>
 </body>
 
