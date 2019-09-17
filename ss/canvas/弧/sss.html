@@ -7,13 +7,13 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
-        .progress-bar {
+        .box {
             width: 600px;
             height: 600px;
             position: relative;
         }
 
-        .progress-bar .slider {
+        .box .slider {
             width: 14px;
             height: 14px;
             z-index: 1;
@@ -27,7 +27,7 @@
             background: linear-gradient(40deg, red, pink); /* 标准的语法 */
         }
 
-        .progress-bar .slider::before {
+        .box .slider::before {
             content: "";
             width: 6px;
             height: 6px;
@@ -39,7 +39,7 @@
             transform: translate(-50%, -50%);
         }
 
-        .progress-bar .content {
+        .box .content {
             top: 50%;
             left: 50%;
             z-index: -1;
@@ -49,7 +49,7 @@
             transform: translate(-50%, -50%);
         }
 
-        .progress-bar .content ul {
+        .box .content ul {
             top: 50px;
             left: 50%;
             position: absolute;
@@ -59,7 +59,7 @@
 </head>
 
 <body>
-    <div class="progress-bar">
+    <div class="box">
         <div class="min-box slider"></div>
         <canvas id="canvas"></canvas>
         <div class="content">
@@ -70,11 +70,6 @@
         </div>
     </div>
     <script>
-        /**
-         * @param {number} startAngle   - 开始的角度, 正值走的是顺时针
-         * @param {number} endAngle     - 结束的角度, 负值走的是逆时针
-         * 
-        */
         var My = function (params) {
             this.canvas = document.querySelector('#canvas')
             this.box = this.canvas.parentElement
@@ -83,8 +78,8 @@
             this.boxInfo = this.box.getBoundingClientRect()
             this.ctx = this.canvas.getContext('2d')
             this.time = 10
-            this.startAngle = params.startAngle ? params.startAngle : 90
-            this.endAngle = params.endAngle ? params.endAngle : 0
+            this.startAngle = -90 // 开始的角度  正值走的是顺时针
+            this.endAngle = 0 // 结束的角度 负值走的是逆时针
             this.circularX = this.boxInfo.width / 2 // 圆心的 x 轴坐标 - 不能设置动态的值,会影响到渐变色
             this.circularY = this.boxInfo.height / 2 // 圆心的 y 轴坐标
             this.radius = 100 // 半径
@@ -127,6 +122,7 @@
          *
          */
         My.prototype.arcDrawing = function (params) {
+            console.log(params, '??')
             // 设置渐变
             let grd = this.ctx.createLinearGradient(0, 0, this.circularX, this.circularY)
             grd.addColorStop(0, "#f54f29")
@@ -301,6 +297,7 @@
          */
         My.prototype.setSpotCoordinate = function (params) {
             let coordinate = this.getCoordinate(params.angle)
+            console.log(params.angle)
             this.slider.style.left = coordinate.x + 'px'
             this.slider.style.top = coordinate.y + 'px'
             this.slider.style.opacity = 1
@@ -359,7 +356,6 @@
                 let target = e.target ? e.target : e.srcElement
                 // 获取元素标签内容
                 let className = event.target.className
-                console.log(className)
                 if (className.includes('slider')) {
                     that.isPressDown = true // 开启
                     // that.slider.style.position = 'fixed' // 设置固定定位，以便移动
@@ -463,27 +459,22 @@
         }
 
         /**
-         * 获取角度
-         * @param {number} 百分比
-         * @return {number} 角度
-         * 
+         * 值转换为角
+         * @param {number} params.value
+         * @return {number} angle
          */
-        My.prototype.getPercentage = function(percentage) {
-            let value = percentage * 360 / 100 + Math.abs(this.startAngle)
-            if(this.direction) {
-                // 逆时针
-                return -value
+        My.prototype.valueTangle = function(params) {
+            let angle = 360 / 100 * params.value
+            console.log(angle)
+            if(angle <= 270) {
+                return -(360 - Math.abs(270 - angle))
             } else {
-                // 顺时针
-                return value
+                return -(360 - angle)
             }
         }
 
-        let my = new My({
-            
-        })
-        
-        console.log(my.getPercentage(25))
+        let my = new My({ value: 100 })
+
     </script>
 </body>
 
