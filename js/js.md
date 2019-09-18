@@ -1133,29 +1133,52 @@ onmouseenter 事件在鼠标指针移动到元素上时触发。(移入)
 
 ----------------鼠标滚轮事件----------------
 document.onmousewheel = function(){
-  console.log(11);
+	console.log(11);
 };
 
 
 例子:
 
- function mousePos(e){
-    e=e||window.event;
-    var scrollX=document.documentElement.scrollLeft||document.body.scrollLeft;//分别兼容ie和chrome
-    var scrollY=document.documentElement.scrollTop||document.body.scrollTop;
-    var x=e.pageX||(e.clientX+scrollX);//兼容火狐和其他浏览器
-    var y=e.pageY||(e.clientY+scrollY);
-    console.log(x,y);
-    return {x:x,y:y};
-  }
+```js
+
+// 获取滚动时所在位置
+function mousePos(e){
+	e=e||window.event;
+	var scrollX=document.documentElement.scrollLeft||document.body.scrollLeft;//分别兼容ie和chrome
+	var scrollY=document.documentElement.scrollTop||document.body.scrollTop;
+	var x=e.pageX||(e.clientX+scrollX);//兼容火狐和其他浏览器
+	var y=e.pageY||(e.clientY+scrollY);
+	console.log(x,y);
+	return {x:x,y:y};
+}
 
 
 var box =  document.getElementsByClassName('box');
 
 box[0].onmousewheel = function(e){
-     mousePos(e);
-  };
+    mousePos(e);
+};
 
+```
+
+```js
+
+// 
+roller() {
+	let that = this
+	var scrollFunc = function() {
+		that.moveTipLine()
+	}
+	/*注册事件*/
+	if(document.addEventListener){
+		document.addEventListener('DOMMouseScroll',scrollFunc,false)
+	}// W3C
+
+	document.onmousewheel = scrollFunc // IE/Opera/Chrome/Safari
+	window.onmousewheel = scrollFunc
+},
+
+```
 
 
 ---------------------------removeAttribute-----------------------------
