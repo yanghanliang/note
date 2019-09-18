@@ -1,17 +1,18 @@
 <template>
     <div class="container">
-        <header />
+		<my-header></my-header>
         <nuxt-link to="/abc">首页</nuxt-link>
     </div>
 </template>
 
 <script>
-import header from '~/components/header.vue'
+import myHeader from '~/components/myHeader.vue'
 
 export default {
-  components: {
-    header
-  }
+	layout: 'blog',
+	components: {
+		myHeader
+	}
 }
 </script>
 
