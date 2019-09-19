@@ -1,0 +1,23 @@
+.page-enter-active, .page-leave-active {
+    transition: opacity .5s;
+}
+
+.page-enter, .page-leave-active {
+    opacity: 0;
+}
+
+body {
+    font-family: '微软雅黑', 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+}
+
+.clearfix {
+    &::after {
+        content: '';
+        height: 0;
+        line-height: 0;
+        display: block;
+        clear: both;
+        visibility: hidden;
+        zoom: 1; // (兼容IE)
+    }
+}
