@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        canvas {
+            background-color: aquamarine;
+            position: relative;
+        }
+
+        .box {
+            width: 10px;
+            height: 10px;
+            position: absolute;
+            background-color: beige;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="box"></div>
+    <script>
+        let My = function () {
+            this.canvas = document.querySelector('#canvas')
+            this.ctx = this.canvas.getContext('2d')
+            this.width = 1000
+            this.height = 1000
+            this.canvasInfo = this.canvas.getBoundingClientRect()
+            this.x = null
+            this.y = null
+
+            this.init()
+        }
+
+        My.prototype.init = function () {
+            // 设置盒子大小
+            this.setBoxSize()
+            this.start()
+        }
+
+        My.prototype.start = function () {
+            this.x = this.canvasInfo.x + this.width / 2
+            this.y = this.canvasInfo.y + this.height / 2
+            let temp = 10
+
+            let endX = this.x + temp
+            let endY = this.y + temp
+            this.ctx.moveTo(this.x, this.y)
+            let bsr = this.getBessel({
+                x1: this.x,
+                y1: this.y,
+                x2: endX,
+                y2: endY
+            })
+            this.ctx.quadraticCurveTo(bsr.x, bsr.y, endX, endY)
+            temp += 20
+            this.ctx.quadraticCurveTo(endX, endY + temp, endX - temp, endY + temp)
+            temp += 20
+            this.ctx.quadraticCurveTo(this.x - temp, endY + temp, this.x - temp, endY)
+            // temp += 20
+            // this.ctx.quadraticCurveTo(this.x - temp, this.y, this.x, this.y)
+            this.ctx.stroke()
+
+
+            let data = [
+                this.getCoordinate({ angle: 0, radius: 10 }),
+                this.getCoordinate({ angle: 25, radius: 20 }),
+            ]
+
+            console.log(data)
+
+            for (let i = 0; i < data.length; i++) {
+                if (data[i + 1]) {
+                    this.drawCurvePath(this.ctx, data[i], data[i + 1], 0.5)
+                }
+            }
+            this.ctx.stroke()
+        }
+
+        // 设置盒子大小
+        My.prototype.setBoxSize = function () {
+            this.canvas.setAttribute('width', this.width)
+            this.canvas.setAttribute('height', this.height)
+        }
+
+        /**
+         * 获取贝塞尔曲线的控制点坐标
+         * param {object} params
+         * param {number} params.x1 开始位置的 x 轴坐标
+         * param {number} params.y1 开始位置的 y 轴坐标
+         * param {number} params.x2 结束位置的 x 轴坐标
+         * param {number} params.y2 结束位置的 y 轴坐标
+         */
+        My.prototype.getBessel = function (params) {
+            return {
+                x: params.x2,
+                y: params.y1
+            }
+            return {
+                x: params.x1,
+                y: params.y2
+            }
+        }
+
+        /**
+         * 绘制一条曲线路径
+         * @param  {Object} ctx canvas渲染上下文
+         * @param  {Array<number>} start 起点
+         * @param  {Array<number>} end 终点
+         * @param  {number} curveness 曲度(0-1)
+         */
+        My.prototype.drawCurvePath = function (ctx, start, end, curveness) {
+            console.log(start)
+            // 计算中间控制点
+            var cp = [
+                (start.x + end.x) / 2 - (start.y - end.y) * curveness,
+                (start.y + end.y) / 2 - (end.x - start.x) * curveness
+            ];
+            ctx.moveTo(start.x, start.y);
+            ctx.quadraticCurveTo(
+                cp[0], cp[1],
+                end[0], end[1]
+            );
+        }
+
+        /*
+         * 获取圆上的坐标
+         * @param   {object}    params
+         * @param   {number}    params.angle   - 角度
+         * @param   {number}    params.radius  - 半径
+         * @param   {number}    params.x       - 圆心坐标
+         * @param   {number}    params.y       - 圆心坐标
+         * @return  {object} coordinate 坐标 { x: value, y: value }
+         */
+        My.prototype.getCoordinate = function (params) {
+            params.x = params.x ? params.x : 200
+            params.y = params.y ? params.y : 200
+
+            let sAngle = 0
+            let rightAngle = params.radius / Math.sin(2 * Math.PI / 360 * 90) // 直角
+
+            if (params.angle <= 90) {
+                sAngle = 90 - params.angle
+                return {
+                    x: params.x + Math.sin(2 * Math.PI / 360 * sAngle) * rightAngle,
+                    y: params.y + Math.sin(2 * Math.PI / 360 * params.angle) * rightAngle
+                }
+            } else if (params.angle <= 180) {
+                sAngle = 90 - (180 - params.angle)
+                return {
+                    x: params.x - Math.sin(2 * Math.PI / 360 * sAngle) * rightAngle,
+                    y: params.y + Math.sin(2 * Math.PI / 360 * (180 - params.angle)) * rightAngle
+                }
+            } else if (params.angle <= 270) {
+                sAngle = 270 - params.angle
+                return {
+                    x: params.x - Math.sin(2 * Math.PI / 360 * sAngle) * rightAngle,
+                    y: params.y - Math.sin(2 * Math.PI / 360 * (180 - sAngle - 90)) * rightAngle
+                }
+            } else if (params.angle <= 360) {
+                sAngle = 90 - (360 - params.angle)
+                return {
+                    x: params.x + Math.sin(2 * Math.PI / 360 * sAngle) * rightAngle,
+                    y: params.y - Math.sin(2 * Math.PI / 360 * (360 - params.angle)) * rightAngle
+                }
+            }
+        }
+
+
+        new My()
+
+        // 确定开始坐标
+        // 已知圆心坐标,半径,角度,求圆上一点
+        // 圆心坐标即开始坐标
+        // 半径是个变量
+        // 角度是从 0 开始的变量
+        // 已知圆上一点,和开始坐标,求控制点坐标
+        // 控制点的坐标: 
+        // x: 开始点的横坐标和圆上一点的横坐标的中间位置
+        // 开始使用贝塞尔曲线
+        // 假设开始角度为 0
+    </script>
+</body>
+
+</html>
