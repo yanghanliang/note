@@ -8,22 +8,14 @@
     <title>Document</title>
     <style>
         canvas {
-            background-color: aquamarine;
+            background-color: #3d5f53; /* #21a579 #105d43 #3d5f53 */
             position: relative;
-        }
-
-        .box {
-            width: 10px;
-            height: 10px;
-            position: absolute;
-            background-color: beige;
         }
     </style>
 </head>
 
 <body>
     <canvas id="canvas"></canvas>
-    <div class="box"></div>
     <script>
         let My = function () {
             this.canvas = document.querySelector('#canvas')
@@ -44,36 +36,20 @@
         }
 
         My.prototype.start = function () {
-            // this.x = this.canvasInfo.x + this.width / 2
-            // this.y = this.canvasInfo.y + this.height / 2
-            // let temp = 10
-
-            // let endX = this.x + temp
-            // let endY = this.y + temp
-            // this.ctx.moveTo(this.x, this.y)
-            // let bsr = this.getBessel({
-            //     x1: this.x,
-            //     y1: this.y,
-            //     x2: endX,
-            //     y2: endY
-            // })
-            // this.ctx.quadraticCurveTo(bsr.x, bsr.y, endX, endY)
-            // temp += 20
-            // this.ctx.quadraticCurveTo(endX, endY + temp, endX - temp, endY + temp)
-            // temp += 20
-            // this.ctx.quadraticCurveTo(this.x - temp, endY + temp, this.x - temp, endY)
-            // temp += 20
-            // this.ctx.quadraticCurveTo(this.x - temp, this.y, this.x, this.y)
-            // this.ctx.stroke()
-
             // 设置渐变
-            let grd = this.ctx.createLinearGradient(0, 0, 200, 200)
-            grd.addColorStop(0, "#53caa2")
-            grd.addColorStop(0.7, "#3ab98e")
-            grd.addColorStop(1, "#138e65")
+            // let grd = this.ctx.createLinearGradient(0, 0, 200, 200)
+            // grd.addColorStop(0, "#53caa2")
+            // grd.addColorStop(0.7, "#3ab98e")
+            // grd.addColorStop(1, "#138e65")
 
-            this.ctx.strokeStyle = grd
-            this.ctx.lineWidth = 2
+            // this.ctx.strokeStyle = grd
+            // this.ctx.lineWidth = 2
+
+            this.ctx.fillStyle = '#30a27c'; 
+            this.ctx.shadowOffsetX = 10; // 阴影Y轴偏移
+            this.ctx.shadowOffsetY = 10; // 阴影X轴偏移
+            this.ctx.shadowBlur = 14; // 模糊尺寸
+            this.ctx.shadowColor = 'rgba(0, 0, 0, 0.5)'; // 颜色
 
             let data = [
                 this.getCoordinate({ angle: 0, radius: 2 }),
@@ -165,7 +141,7 @@
                 curveness: -0.2
             })
 
-            this.ctx.stroke()
+            this.ctx.fill()
         }
 
         // 设置盒子大小
