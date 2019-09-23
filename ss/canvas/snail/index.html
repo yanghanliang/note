@@ -43,7 +43,7 @@
          *  @return {number}        弧度
          *
          */
-         Snail.prototype.getArcValue = function (angle) {
+        Snail.prototype.getArcValue = function (angle) {
             return Math.abs(angle) * Math.PI / 180
         }
 
@@ -67,7 +67,7 @@
 
             var clearId = setInterval(() => {
                 let eAngle = this.getArcValue(temp) // 结束的弧度
-                // this.ctx.clearRect(0, 0, this.width, this.height) // 在给定的矩形内清除指定的像素
+                this.ctx.clearRect(0, 0, this.width, this.height) // 在给定的矩形内清除指定的像素
                 this.ctx.beginPath() // 开始新的一条路径
                 console.log(this.radius, 'this.radius')
                 this.ctx.arc(circularX, circularY, temp, startArc, eAngle)
