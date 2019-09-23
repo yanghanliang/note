@@ -44,41 +44,127 @@
         }
 
         My.prototype.start = function () {
-            this.x = this.canvasInfo.x + this.width / 2
-            this.y = this.canvasInfo.y + this.height / 2
-            let temp = 10
+            // this.x = this.canvasInfo.x + this.width / 2
+            // this.y = this.canvasInfo.y + this.height / 2
+            // let temp = 10
 
-            let endX = this.x + temp
-            let endY = this.y + temp
-            this.ctx.moveTo(this.x, this.y)
-            let bsr = this.getBessel({
-                x1: this.x,
-                y1: this.y,
-                x2: endX,
-                y2: endY
-            })
-            this.ctx.quadraticCurveTo(bsr.x, bsr.y, endX, endY)
-            temp += 20
-            this.ctx.quadraticCurveTo(endX, endY + temp, endX - temp, endY + temp)
-            temp += 20
-            this.ctx.quadraticCurveTo(this.x - temp, endY + temp, this.x - temp, endY)
+            // let endX = this.x + temp
+            // let endY = this.y + temp
+            // this.ctx.moveTo(this.x, this.y)
+            // let bsr = this.getBessel({
+            //     x1: this.x,
+            //     y1: this.y,
+            //     x2: endX,
+            //     y2: endY
+            // })
+            // this.ctx.quadraticCurveTo(bsr.x, bsr.y, endX, endY)
+            // temp += 20
+            // this.ctx.quadraticCurveTo(endX, endY + temp, endX - temp, endY + temp)
+            // temp += 20
+            // this.ctx.quadraticCurveTo(this.x - temp, endY + temp, this.x - temp, endY)
             // temp += 20
             // this.ctx.quadraticCurveTo(this.x - temp, this.y, this.x, this.y)
-            this.ctx.stroke()
+            // this.ctx.stroke()
 
+            // 设置渐变
+            let grd = this.ctx.createLinearGradient(0, 0, 200, 200)
+            grd.addColorStop(0, "#53caa2")
+            grd.addColorStop(0.7, "#3ab98e")
+            grd.addColorStop(1, "#138e65")
+
+            this.ctx.strokeStyle = grd
+            this.ctx.lineWidth = 2
 
             let data = [
+                this.getCoordinate({ angle: 0, radius: 2 }),
+                this.getCoordinate({ angle: 90, radius: 4 }),
+                this.getCoordinate({ angle: 180, radius: 6 }),
+                this.getCoordinate({ angle: 270, radius: 8 }),
+                this.getCoordinate({ angle: 360, radius: 10 }),
                 this.getCoordinate({ angle: 0, radius: 10 }),
-                this.getCoordinate({ angle: 25, radius: 20 }),
+                this.getCoordinate({ angle: 90, radius: 12 }),
+                this.getCoordinate({ angle: 180, radius: 14 }),
+                this.getCoordinate({ angle: 270, radius: 16 }),
+                this.getCoordinate({ angle: 360, radius: 18 }),
+                this.getCoordinate({ angle: 0, radius: 18 }),
+                this.getCoordinate({ angle: 90, radius: 22 }),
+                this.getCoordinate({ angle: 180, radius: 26 }),
+                this.getCoordinate({ angle: 270, radius: 30 }),
+                this.getCoordinate({ angle: 360, radius: 34 }),
+                this.getCoordinate({ angle: 0, radius: 34 }),
+                this.getCoordinate({ angle: 90, radius: 38 }),
+                this.getCoordinate({ angle: 180, radius: 50 }),
             ]
 
-            console.log(data)
-
-            for (let i = 0; i < data.length; i++) {
-                if (data[i + 1]) {
-                    this.drawCurvePath(this.ctx, data[i], data[i + 1], 0.5)
+            for (let i = 0, length = data.length; i < length; i++) {
+                let next = data[i + 1]
+                if (next) {
+                    this.drawCurvePath({
+                        start: data[i],
+                        end: next,
+                        curveness: 0.5
+                    })
                 }
             }
+
+            this.ctx.fill()
+
+            this.drawCurvePath({
+                start: this.getCoordinate({ angle: 180, radius: 50 }),
+                end: this.getCoordinate({ angle: 200, radius: 70 }),
+                curveness: -0.2
+            })
+
+            this.drawCurvePath({
+                start: this.getCoordinate({ angle: 200, radius: 70 }),
+                end: this.getCoordinate({ angle: 210, radius: 60 }),
+                curveness: 0.6
+            })
+
+            this.drawCurvePath({
+                start: this.getCoordinate({ angle: 210, radius: 60 }),
+                end: this.getCoordinate({ angle: 185, radius: 35 }),
+                curveness: 0.2
+            })
+
+            this.drawCurvePath({
+                start: this.getCoordinate({ angle: 185, radius: 35 }),
+                end: this.getCoordinate({ angle: 90, radius: 25 }),
+                curveness: -0.3
+            })
+
+            this.drawCurvePath({
+                start: this.getCoordinate({ angle: 90, radius: 25 }),
+                end: this.getCoordinate({ angle: 20, radius: 65 }),
+                curveness: -0.2
+            })
+
+            // 弯
+            this.drawCurvePath({
+                start: this.getCoordinate({ angle: 20, radius: 65 }),
+                end: this.getCoordinate({ angle: 30, radius: 70 }),
+                curveness: 0.2
+            })
+
+            this.drawCurvePath({
+                start: this.getCoordinate({ angle: 30, radius: 70 }),
+                end: this.getCoordinate({ angle: 125, radius: 45 }),
+                curveness: 0.2
+            })
+
+            // 触角
+            this.drawCurvePath({
+                start: this.getCoordinate({ angle: 210, radius: 65 }),
+                end: this.getCoordinate({ angle: 250, radius: 70 }),
+                curveness: -0.1
+            })
+
+            this.drawCurvePath({
+                start: this.getCoordinate({ angle: 210, radius: 65 }),
+                end: this.getCoordinate({ angle: 230, radius: 70 }),
+                curveness: -0.2
+            })
+
             this.ctx.stroke()
         }
 
@@ -109,23 +195,40 @@
 
         /**
          * 绘制一条曲线路径
-         * @param  {Object} ctx canvas渲染上下文
-         * @param  {Array<number>} start 起点
-         * @param  {Array<number>} end 终点
-         * @param  {number} curveness 曲度(0-1)
+         * @param  {object} params
+         * @param  {object} params.start 起点
+         * @param  {object} params.end 终点
+         * @param  {number} params.curveness 曲度(0-1)
          */
-        My.prototype.drawCurvePath = function (ctx, start, end, curveness) {
-            console.log(start)
+        My.prototype.drawCurvePath = function (params) {
             // 计算中间控制点
-            var cp = [
-                (start.x + end.x) / 2 - (start.y - end.y) * curveness,
-                (start.y + end.y) / 2 - (end.x - start.x) * curveness
-            ];
-            ctx.moveTo(start.x, start.y);
-            ctx.quadraticCurveTo(
-                cp[0], cp[1],
-                end[0], end[1]
-            );
+            let cp = {
+                x: (params.start.x + params.end.x) / 2 - (params.start.y - params.end.y) * params.curveness,
+                y: (params.start.y + params.end.y) / 2 - (params.end.x - params.start.x) * params.curveness
+            }
+            this.ctx.moveTo(params.start.x, params.start.y)
+            this.ctx.quadraticCurveTo(
+                cp.x, cp.y,
+                params.end.x, params.end.y
+            )
+        }
+
+        /*
+         * param {object}   params
+         * params {object}  params.start
+         * params {object}  params.end
+         */
+        My.prototype.drawCurvePaths = function(params) {
+            let middle = {
+                x: (params.start.x + params.end.x) / 2,
+                y:  params.end.y
+            }
+
+            this.ctx.moveTo(params.start.x, params.start.y)
+            this.ctx.quadraticCurveTo(
+                middle.x, middle.y,
+                params.end.x, params.end.y
+            )
         }
 
         /*
@@ -170,7 +273,6 @@
                 }
             }
         }
-
 
         new My()
 
