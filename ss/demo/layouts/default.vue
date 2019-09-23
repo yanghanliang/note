@@ -12,4 +12,13 @@
 	</div>
 </template>
 
-<style src="../assets/scss/index.scss" lang="scss"></style>
+<style lang="scss">
+	html, body {
+		height: 100%;
+	}
+
+	body {
+		background: url("../assets/images/banner/banner.jpg") no-repeat center cover;
+	}
+</style>
+<style src="../assets/scss/index.scss" lang="scss" scoped></style>
