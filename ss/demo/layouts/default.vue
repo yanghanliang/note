@@ -1,24 +1,19 @@
 <template>
-	<div class="index">
-		<!-- <header>
-			<ul class="clearfix">
-				<li>多试</li>
-				<li>2</li>
-				<li>3</li>
-				<li>4</li>
-			</ul>
-		</header> -->
-		<section class="content">
-			<canvas id="logo"></canvas>
+	<div class="index w1">
+		<my-heaader></my-heaader>
+		<section class="content clearfix">
+			<logo class="logo"></logo>
 			<div class="search">
-				<logo></logo>
+				<el-input v-model="input" clearable placeholder="请输入内容">
+					<i slot="suffix" class="el-icon-search cursor"></i>
+				</el-input>
 			</div>
-			<el-input v-model="input" placeholder="请输入内容"></el-input>
 		</section>
 	</div>
 </template>
 
 <script>
+import myHeaader from '~/components/public/myHeader/index.vue'
 import logo from '~/components/public/logo/index.vue'
 
 export default {
@@ -28,7 +23,8 @@ export default {
 		}
 	},
 	components: {
-		logo
+		logo,
+		myHeaader
 	},
 	methods: {
 
@@ -36,13 +32,16 @@ export default {
 }
 </script>
 
+<style src="../assets/scss/index.scss" lang="scss" scoped></style>
 <style lang="scss">
 	html, body {
 		height: 100%;
 	}
 
 	body {
-		background: url("../assets/images/banner/banner.jpg") no-repeat center cover;
+		background-image: url("../assets/images/banner/banner.jpg");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: cover;
 	}
 </style>
-<style src="../assets/scss/index.scss" lang="scss" scoped></style>

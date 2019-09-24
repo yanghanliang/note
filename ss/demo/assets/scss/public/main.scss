@@ -1,13 +1,13 @@
+@import '../color/index.scss';
+@import '../layout.scss';
+@import '../resetUi/resetElement.scss';
+
 .page-enter-active, .page-leave-active {
     transition: opacity .5s;
 }
 
 .page-enter, .page-leave-active {
     opacity: 0;
-}
-
-body {
-    font-family: '微软雅黑', 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
 }
 
 .clearfix {
@@ -20,4 +20,18 @@ body {
         visibility: hidden;
         zoom: 1; // (兼容IE)
     }
+}
+
+a[href] {
+    color: $link;
+}
+
+// 特殊字体
+.special-font {
+    font-family: 'RGag', Arial;
+}
+
+// 鼠标样式
+.cursor {
+    cursor: pointer;
 }

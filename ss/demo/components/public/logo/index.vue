@@ -1,7 +1,5 @@
 <template>
-    <div>
-        <canvas id="canvas"></canvas>
-    </div>
+    <canvas id="canvas"></canvas>
 </template>
 
 <script>
@@ -13,7 +11,6 @@ export default {
         init() {
             let My = function () {
                 this.canvas = document.querySelector('#canvas')
-                this.box = this.canvas.previousElementSibling
                 this.ctx = this.canvas.getContext('2d')
                 this.width = 200
                 this.height = 200
@@ -44,7 +41,7 @@ export default {
                 this.ctx.shadowOffsetX = 10; // 阴影Y轴偏移
                 this.ctx.shadowOffsetY = 10; // 阴影X轴偏移
                 this.ctx.shadowBlur = 14; // 模糊尺寸
-                this.ctx.shadowColor = 'rgba(0, 0, 0, 0.5)'; // 颜色
+                this.ctx.shadowColor = 'rgba(0, 0, 0, 0.5)'; // 颜色 rgba(0, 0, 0, 0.5)
 
                 let data = [
                     this.getCoordinate({ angle: 0, radius: 2 }),
@@ -212,14 +209,10 @@ export default {
             * @return  {object} coordinate 坐标 { x: value, y: value }
             */
             My.prototype.getCoordinate = function (params) {
+                // 没有设置圆心时， 居中显示
                 if(!params.x || !params.y) {
-                    let box = this.canvas.previousElementSibling
-                    console.log(this.canvas, this.box)
-                    let boxInfo = box.getBoundingClientRect()
-
-                    params.x = boxInfo.x + boxInfo.width / 2
-                    params.y = boxInfo.y + boxInfo.height / 2
-                    console.log(params.x, params.y)
+                    params.x = this.width / 2
+                    params.y = this.height / 2
                 }
 
                 let sAngle = 0
@@ -260,7 +253,7 @@ export default {
 
 <style lang="scss" scoped>
     canvas {
-        background-color: #3d5f53; /* #21a579 #105d43 #3d5f53 */
+        // background-color: #3d5f53; /* #21a579 #105d43 #3d5f53 */
         position: relative;
     }
 </style>
