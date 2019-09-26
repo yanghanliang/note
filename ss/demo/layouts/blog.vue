@@ -1,6 +1,7 @@
 <template>
     <div>
-        <div>我的博客导航栏在这里</div>
+        <div>eezz</div>
+		<nuxt-link to="/ss">首页</nuxt-link>
         <nuxt/>
   </div>
 </template>

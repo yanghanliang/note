@@ -6,9 +6,14 @@
 </template>
 
 <script>
+/*
+ * 入口文件
+ * @author      yanghanliang
+ * @created     2019-09-24
+ */
 // import myHeader from '~/components/myHeader.vue'
-
 export default {
+	layout: 'blog',
 	components: {
 		// myHeader
 	}

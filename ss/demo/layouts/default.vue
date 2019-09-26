@@ -9,6 +9,8 @@
 				</el-input>
 			</div>
 		</section>
+		<nuxt-link to="/abc">首页</nuxt-link>
+		<nuxt/>
 	</div>
 </template>
 

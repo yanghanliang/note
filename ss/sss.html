@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        var My = function(params) {
+            this.data = params.data
+
+            this.init()
+        }
+
+        My.prototype.init = function() {
+            console.log(this.forEach(this.data))
+        }
+
+        My.prototype.forEach = function(data) {
+            let type = this.isType(data)
+            if(type === 'array') {
+                let arr = []
+                for(let i = 0, length = data.length; i < length; i++) {
+                    let item = data[i]
+                    let itemType = this.isType(item)
+                    if(itemType === 'object' || itemType === 'array') {
+                        this.forEach(item)
+                    } else {
+                        arr.push(item)
+                    }
+                }
+                return arr
+            } else if(type === 'object') {
+                let obj = {}
+                for(let key in data) {
+                    let item = data[key]
+                    let itemType = this.isType(item)
+                    if(itemType === 'object' || itemType === 'array') {
+                        this.forEach(item)
+                    } else {
+                        obj[key] = item
+                    }
+                }
+                return obj
+            }
+        }
+
+        My.prototype.isType = function(value) {
+            var type = typeof value
+            if(type === 'object') {
+                if(value.length) {
+                    return 'array'
+                } else {
+                    return 'object'
+                }
+            } else {
+                // 不考虑 null, undefined
+                return 'string'
+            }
+        }
+
+
+
+        new My({
+            data: [
+                {
+                    name: {
+                        age: 10
+                    }
+                }
+            ]
+        })
+    </script>
+</body>
+
+</html>
