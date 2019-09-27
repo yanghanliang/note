@@ -11,15 +11,19 @@
 <body>
     <script>
         var My = function(params) {
-            this.data = params.data
-
-            this.init()
         }
 
         My.prototype.init = function() {
-            console.log(this.forEach(this.data))
         }
 
+        /*
+         * 深拷贝
+         * @author                  yanghanliang
+         * @created                 2019-09-27
+         * @lastEditDate            2019-09-27
+         * @param {object,array}    data
+         * @return {object,array}   dataCopy
+         */
         My.prototype.forEach = function(data) {
             let type = this.isType(data)
             if(type === 'array') {
@@ -27,8 +31,10 @@
                 for(let i = 0, length = data.length; i < length; i++) {
                     let item = data[i]
                     let itemType = this.isType(item)
+                    console.log(itemType, 'itemType')
                     if(itemType === 'object' || itemType === 'array') {
-                        this.forEach(item)
+                        let value = this.forEach(item)
+                        arr.push(value)
                     } else {
                         arr.push(item)
                     }
@@ -40,7 +46,8 @@
                     let item = data[key]
                     let itemType = this.isType(item)
                     if(itemType === 'object' || itemType === 'array') {
-                        this.forEach(item)
+                        let value = this.forEach(item)
+                        obj[key] = value
                     } else {
                         obj[key] = item
                     }
@@ -49,7 +56,16 @@
             }
         }
 
+        /*
+         * 判断数据类型
+         * @author          yanghanliang
+         * @created         2019-09-27
+         * @lastEditDate    2019-09-27
+         * @param {*}       value
+         * @return {string} type    DataType
+         */
         My.prototype.isType = function(value) {
+            // number boolean string array undefined null
             var type = typeof value
             if(type === 'object') {
                 if(value.length) {
@@ -63,17 +79,20 @@
             }
         }
 
-
-
-        new My({
-            data: [
+        let arr = [
                 {
                     name: {
                         age: 10
                     }
                 }
             ]
-        })
+
+        let my = new My()
+
+        let copyArr = my.forEach(arr)
+        console.log(arr, copyArr, 'copyArr')
+        copyArr[0].name.age = 20
+        console.log(arr, copyArr, 'copyArr')
     </script>
 </body>
 

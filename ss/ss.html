@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        //1.创建父类构造函数
+        function Person(name, age, sex) {
+            this.name = name;
+            this.age = age;
+            this.sex = sex;   
+        }
+        let p = Person('', 'age:1238')
+        console.log(p)
+
+        //2.创建父类原型方法
+        Person.prototype.eat = function () {
+            console.log('丫丫丫丫');
+        };
+
+        let ext = new Person()
+        //3.创建子类构造方法(函数)
+        function Student(name, age, sex, score) {
+            Person.call(this, name, age, sex)
+            // [].slice.call(arguments, 1)
+            console.log(arguments)
+            this.score = score;
+            // console.log(typeof arguments, arguments)
+            console.log(Array.isArray(arguments), Array.isArray([]), Array.isArray([12, {name: 123}]))
+        }
+
+        // var person = typeof {} [] === arguments
+        // var a = [{}, 'sdsf'] = 123
+
+        // //4.实现继承
+        // Student.prototype = person
+        //5.创建子类原型方法
+        Student.prototype.stud = function () {
+            console.log('我去');
+        };
+        //6.创建子类对象(实例化对象
+        // var str = new Student(66);
+        var str = new Student('name', '33', 'nv','score')
+        console.log(str)
+
+
+        var sss = {0:'1', 1:'2', 2:'3', length: 3}
+        // console.log(Array.prototype.slice.call(sss, 1))
+        let a = [].slice.call(sss, 1)
+        // console.log(a)
+        // console.log(sss)
+        // [].forEach(element => {
+            
+        // });
+
+
+    </script>
+</body>
+
+</html>
