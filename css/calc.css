@@ -1,0 +1,6 @@
+.content {
+    height: calc(100% - 30px);
+}
+
+/* 可以使用加减乘除 */
+/* 单位可以使用px rem em % */
