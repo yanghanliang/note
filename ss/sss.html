@@ -6,9 +6,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <style>
+        .octagon {
+            width: 100px;
+            height: 100px;
+            background: #ac60ec;
+            position: relative;
+        }
+        
+        .octagon:before {
+            content: "";
+            width: 42px;
+            height: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-bottom: 29px solid #ac60ec;
+            border-left: 29px solid #fff;
+            border-right: 29px solid #fff;
+        }
+        
+        .octagon:after {
+            content: "";
+            width: 42px;
+            height: 0;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            border-top: 29px solid #ac60ec;
+            border-left: 29px solid #fff;
+            border-right: 29px solid #fff;
+        } 
+
+        .octagon2 {
+            top: 50%;
+            left: 50%;
+            width: 80px;
+            height: 80px;
+            background: red;
+            position: absolute;
+            transform: translate(-50%, -50%);
+        }
+        
+        .octagon2:before {
+            content: "";
+            width: 22px;
+            height: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-bottom: 16px solid red;
+            border-left: 29px solid #ac60ec;
+            border-right: 29px solid #ac60ec;
+        }
+        
+        .octagon2:after {
+            content: "";
+            width: 22px;
+            height: 0;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            border-top: 29px solid red;
+            border-left: 29px solid #ac60ec;
+            border-right: 29px solid #ac60ec;
+        }  
+    </style>
 </head>
 
 <body>
+    <div class="octagon">
+        <div class="octagon2"></div>
+    </div>
     <script>
         var My = function(params) {
         }

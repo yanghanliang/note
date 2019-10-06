@@ -1,7 +1,8 @@
 <template>
    <nav>
-        <a href="#">文章</a>
+        <nuxt-link to="/">首页</nuxt-link>
         <a href="#">目录</a>
+		<nuxt-link to="/view/category">文章</nuxt-link>
    </nav>
 </template>
 
@@ -17,13 +18,11 @@ export default {
     @import '~/assets/scss/color/index.scss';
     nav {
         padding-top: 20px;
-
         a {
             color: $main-font;
             opacity: 0.8;
             margin-right: 30px;
         }
-
         a:hover {
             opacity: 1;
         }
