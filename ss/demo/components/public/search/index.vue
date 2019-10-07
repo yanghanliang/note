@@ -8,11 +8,15 @@
 </template>
 
 <script>
+import logo from '~/components/public/logo/index.vue'
+
 export default {
-    components: {},
+    components: {
+        logo
+    },
     data() {
         return {
-            
+            input: ''
         }
     },
     computed: {},

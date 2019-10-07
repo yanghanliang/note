@@ -35,9 +35,32 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '@/plugins/element-ui',
     {
-      src: "@/assets/js/iconfont.js",
+      src: '@/plugins/element-ui',
+      ssr: true
+    },
+    {
+      src: "@/assets/js/iconfont",
+      ssr: false
+    },
+    {
+      src: '@/plugins/myAxios',
+      ssr: true
+    },
+    {
+      src: '@/plugins/filter',
+      ssr: false
+    },
+    {
+      src: '@/plugins/publicComponents',
+      ssr: true
+    },
+    {
+      src: '@/plugins/mavonEditor',
+      ssr: false
+    },
+    {
+      src: '@/plugins/global',
       ssr: false
     }
   ],

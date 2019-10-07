@@ -27,14 +27,12 @@
  * @author      yanghanliang
  * @created     2019-09-24
  */
-import logo from '~/components/public/logo/index.vue'
 import myEcharts from '~/components/public/echarts/index.vue'
 import search from '~/components/public/search/index.vue'
 
 export default {
 	// layout: 'blog',
 	components: {
-		logo,
 		myEcharts,
 		search
 	},

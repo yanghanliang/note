@@ -2,7 +2,7 @@
    <nav>
         <nuxt-link to="/">首页</nuxt-link>
         <a href="#">目录</a>
-		<nuxt-link to="/view/category">文章</nuxt-link>
+		<nuxt-link to="/view/article">文章</nuxt-link>
    </nav>
 </template>
 
