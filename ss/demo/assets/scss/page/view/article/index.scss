@@ -1,17 +1,4 @@
-/* search-start */
-.search {
-    left: 50%;
-    width: 4rem;
-    height: 0.4rem;
-    margin: 0.2rem auto;
-    transform: translateX(-50%);
-}
-
-.search>>>input {
-    border-radius: 1.2rem;
-}
-
-/* search-end */
+@import '~/assets/scss/color/index.scss';
 
 /* content-start */
 .content {
@@ -60,10 +47,14 @@
     float: right;
     width: 5rem;
     height: 100%;
+
+    h2 {
+        color: $main-font;
+    }
 }
 
 .clb_top .clbt_right p {
-    color: #888;
+    color: $secondary;
     margin-bottom: 0.1rem;
 }
 
@@ -74,8 +65,11 @@
     float: left;
 }
 
-.cl_box .clb_bottom .clbb_left span {
-    color: #096;
+.cl_box .clb_bottom .clbb_left {
+    a, span {
+        color: $theme-color2;
+        vertical-align: middle;
+    }
 }
 
 /* .cl_box .clb_bottom>a {
@@ -83,7 +77,7 @@
   } */
 .cl_box .clb_bottom>span {
     float: right;
-    color: #096;
+    color: $theme-color2;
     cursor: pointer;
 }
 
@@ -91,7 +85,7 @@
 /* cl_box-end */
 .content_left .tips {
     padding: 0.1rem;
-    color: #26b3ae;
+    color: $tips;
     text-align: center;
     border-radius: 0.05rem;
     background-color: #e6e6e6;
@@ -122,11 +116,15 @@
     height: 1.03rem;
     border-radius: 50%;
     position: absolute;
-    transform: translate(-50%, -92%);
+    transform: translate(-50%, -50%);
 }
 
 .content_right .synopsis .s_content {
     text-align: center;
+
+    h2 {
+        color: $main-font;
+    }
 }
 
 .synopsis .s_content h3 {
@@ -135,7 +133,7 @@
 }
 
 .synopsis .s_content p {
-    color: #888;
+    color: $secondary;
     line-height: 0.26rem;
     padding: 0.1rem 0.3rem;
 }

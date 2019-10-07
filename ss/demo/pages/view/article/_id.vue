@@ -8,7 +8,7 @@
 				</form> -->
 				<el-form ref="form" label-width="80px">
 					<el-input placeholder="请输入内容" clearable></el-input>
-					<el-button icon="el-icon-search" circle></el-button>
+					<el-button class="search-button" icon="el-icon-search" circle></el-button>
 				</el-form>
 			</div>
 
@@ -28,7 +28,7 @@
 						<li>阅读数： {{ articleData.read }}</li>
 						<li>点赞数： {{ articleData.praise }}</li>
 					</ul>
-					<no-ssr>
+					<no-ssr class="mavon-content">
 						<mavon-editor v-model="articleData.content" :subfield="false" defaultOpen="preview" :toolbarsFlag="false" :boxShadow="false" />
 					</no-ssr>
 					<div class="subscript">
@@ -45,12 +45,11 @@
 							<i class="iconfont">&#xe638;</i>
 						</div>
 					</div>
-					<div class="line"></div>
 					<div class="comment">
 						<my-icon identification="pinglun1"></my-icon>
 					</div>
 					<!-- 发布评论-start -->
-					<el-form :model="commentForm" status-icon :rules="rules" ref="commentForm" label-width="100px" class="demo-ruleForm">
+					<el-form :model="commentForm" status-icon :rules="rules" ref="commentForm" label-width="100px" class="demo-ruleForm ">
 						<el-form-item label="昵称" prop="alias">
 							<!-- <el-input v-model="commentForm.alias" v-bind:disabled="Boolean(alias)"></el-input> -->
 							<el-input v-model="commentForm.alias" @input="aliasLock=true"></el-input>
@@ -519,3 +518,22 @@ export default {
 </script>
 
 <style scoped lang="scss" src="~/assets/scss/page/view/article/_id.scss"></style>
+
+<style lang="scss">
+    body {
+        background-color: #c7d1dc4a;
+    }
+
+    .v-note-wrapper {
+        border-radius: 10px;
+    }
+
+    .v-note-wrapper .v-note-panel .v-note-show .v-show-content {
+        background-color: #adadad33 !important;
+        color: #0a0a0a99;
+    }
+
+    .hljs {
+        font-size: 16px;
+    }
+</style>

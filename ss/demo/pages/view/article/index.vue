@@ -1,6 +1,6 @@
 <template>
     <div class="common">
-        <el-input
+        <!-- <el-input
             placeholder="请输入您要搜索的内容"
             v-model="pageData.searchData"
             :autofocus="true"
@@ -8,7 +8,8 @@
             @keyup.enter.native="searchEnter"
             clearable
             class="search">
-        </el-input>
+        </el-input> -->
+		<search></search>
 
         <div class="content clearfix">
             <div class="content_right">
@@ -64,11 +65,13 @@
 <script>
 // 导入 category
 import category from '@/components/public/category'
+import search from '~/components/public/search/index.vue'
 
 export default {
 	name: 'common',
 	components: {
-		category
+		category,
+		search
 	},
 	data() {
 		return {
