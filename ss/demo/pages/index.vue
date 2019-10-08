@@ -13,7 +13,7 @@
  */
 // import myHeader from '~/components/myHeader.vue'
 export default {
-	layout: 'blog',
+	// layout: 'blog',
 	components: {
 		// myHeader
 	}

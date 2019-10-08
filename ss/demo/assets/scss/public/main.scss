@@ -1,7 +1,9 @@
-@import '../color/index.scss';
-@import '../layout.scss';
-@import '../resetUi/resetElement.scss';
+@import '~/assets/scss/public/rem.scss';
+@import '~/assets/scss/color/index.scss';
+@import '~/assets/scss/layout.scss';
+@import '~/assets/scss/resetUi/resetElement.scss';
 
+// 可以随意修改-start
 .page-enter-active, .page-leave-active {
     transition: opacity .5s;
 }
@@ -9,6 +11,7 @@
 .page-enter, .page-leave-active {
     opacity: 0;
 }
+// 可以随意修改-end
 
 .clearfix {
     &::after {
@@ -26,12 +29,28 @@ a[href] {
     color: $link;
 }
 
-// 特殊字体
+/* 特殊字体 */
 .special-font {
     font-family: 'RGag', Arial;
 }
 
-// 鼠标样式
+/* 鼠标样式 */
 .cursor {
     cursor: pointer;
 }
+
+/* 左浮动 */
+.fl {
+    float: left;
+}
+
+/* 右浮动 */
+.fr {
+    float: right;
+}
+
+/* color-start */
+.link {
+    color: $link;
+}
+/* color-end */

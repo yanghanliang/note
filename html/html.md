@@ -36,7 +36,7 @@ grayscale
 需注意: :hover 后面只能写一个类名
 
 all:默认
-transition:all 1s 1s linear;   //一秒过度时间,延迟1s才开始过度(复合类型)
+transition: all 1s 1s linear;   //一秒过度时间,延迟1s才开始过度(复合类型)
 后面的是延迟时间
 
 transition:margin-left: ;  //可以这麽写

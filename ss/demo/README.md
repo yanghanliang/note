@@ -20,3 +20,20 @@ $ yarn generate
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+
+
+---
+
+### echarts 按需引入
+
+```js
+
+// 引入 ECharts 主模块
+import echarts from '~/node_modules/echarts/lib/echarts'
+// 引入柱状图
+import '~/node_modules/echarts/lib/chart/bar'
+// 引入提示框和标题组件
+import '~/node_modules/echarts/lib/component/tooltip'
+import '~/node_modules/echarts/lib/component/title'
+
+```
