@@ -42,29 +42,30 @@
 						</div>
 						<div v-if="nextArticle.status === 200" @click="clickDuring(nextArticle.data.id)" class="page_next">
 							{{ nextArticle.data.title }}
-							<i class="iconfont">&#xe638;</i>
+							<i class="iconfont iconpagedown"></i>
 						</div>
 					</div>
+                    <div class="smiling-face"></div>
 					<div class="comment">
-						<my-icon identification="pinglun1"></my-icon>
+						<i class="iconfont iconpinglun1"></i>
 					</div>
 					<!-- 发布评论-start -->
 					<el-form :model="commentForm" status-icon :rules="rules" ref="commentForm" label-width="100px" class="demo-ruleForm ">
 						<el-form-item label="昵称" prop="alias">
 							<!-- <el-input v-model="commentForm.alias" v-bind:disabled="Boolean(alias)"></el-input> -->
-							<el-input v-model="commentForm.alias" @input="aliasLock=true"></el-input>
+							<el-input v-model="commentForm.alias" @input="aliasLock=true" placeholder="请输入昵称"></el-input>
 						</el-form-item>
 						<el-form-item label="邮箱" prop="mailbox">
-							<el-input v-model="commentForm.mailbox" placeholder="请输入密码"></el-input>
+							<el-input v-model="commentForm.mailbox" placeholder="请输入邮箱"></el-input>
 						</el-form-item>
 						<el-form-item label="密码" prop="password">
-							<el-input type="password" v-model="commentForm.password"></el-input>
+							<el-input type="password" v-model="commentForm.password" placeholder="请输入密码"></el-input>
 						</el-form-item>
 						<el-form-item label="确认密码" prop="checkPass">
-							<el-input type="password" v-model="commentForm.checkPass" autocomplete="off"></el-input>
+							<el-input type="password" v-model="commentForm.checkPass" autocomplete="off" placeholder="请确认密码"></el-input>
 						</el-form-item>
 						<el-form-item label="评论" prop="comment_content">
-							<el-input type="textarea" placeholder="畅所欲言~" v-model="commentForm.comment_content"></el-input>
+							<el-input type="textarea" :autosize="{ minRows: 4, maxRows: 8}" placeholder="畅所欲言~" v-model="commentForm.comment_content"></el-input>
 						</el-form-item>
 						<el-form-item>
 							<el-button type="primary" @click="submitForm('commentForm', '/addComment', commentForm)">走你~</el-button>
@@ -325,7 +326,7 @@ export default {
             aliasLock: true, // 决定评论昵称的验证是否开启
             rules: { // 公共表单验证规则
                 alias: [ // 昵称
-                    { required: true, message: '请输入活动名称', trigger: 'change' },
+                    { required: true, message: '请输入昵称', trigger: 'change' },
                     { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'change' },
                     { validator: aliasValidation, trigger: 'change' }
                 ],

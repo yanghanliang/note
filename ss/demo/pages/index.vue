@@ -1,16 +1,6 @@
 <template>
     <div class="index">
 		<search></search>
-		<section class="nav">
-			<div class="nav-item">
-				<div class="top">
-					<div class="octagon">
-						<div class="octagon2"></div>
-					</div>
-				</div>
-				<div class="bottom"></div>
-			</div>
-		</section>
 		<section class="multiple clearfix">
 			<my-echarts></my-echarts>
 			<my-echarts :option="option"></my-echarts>
@@ -155,70 +145,3 @@ export default {
 
 }
 </script>
-
-<style lang="scss">
-	.octagon {
-		width: 120px;
-		height: 120px;
-		position: relative;
-		background-color: aquamarine;
-
-		&::before {
-			top: 0;
-			width: 100%;
-			content: "";
-			display: block;
-			position: absolute;
-			box-sizing: border-box;
-			border-bottom: 30px solid #7fffd4;
-			border-left: 30px solid whitesmoke;
-			border-right: 30px solid whitesmoke;
-		}
-		
-		&::after {
-			bottom: 0;
-			width: 100%;
-			content: "";
-			display: block;
-			position: absolute;
-			box-sizing: border-box;
-			border-top: 30px solid #7fffd4;
-			border-left: 30px solid whitesmoke;
-			border-right: 30px solid whitesmoke;
-		}
-
-		.octagon2 {
-			width: 60%;
-			height: 60%;
-			background-color: red;
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-
-			&::before {
-				top: 0;
-				width: 100%;
-				content: "";
-				display: block;
-				position: absolute;
-				box-sizing: border-box;
-				border-bottom: 30px solid red;
-				border-left: 30px solid whitesmoke;
-				border-right: 30px solid whitesmoke;
-			}
-			
-			&::after {
-				bottom: 0;
-				width: 100%;
-				content: "";
-				display: block;
-				position: absolute;
-				box-sizing: border-box;
-				border-top: 30px solid red;
-				border-left: 30px solid whitesmoke;
-				border-right: 30px solid whitesmoke;
-			}
-		}
-	}
-</style>

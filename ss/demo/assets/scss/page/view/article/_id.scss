@@ -1,3 +1,5 @@
+@import '~/assets/scss/color/index.scss';
+
 .body {
     height: 100%;
 }
@@ -20,6 +22,7 @@
     float: left;
     width: 3.1rem;
 }
+
 /* search-end */
 
 /* content-start */
@@ -41,7 +44,13 @@
 }
 
 .content .left .no_data {
+    text-align: center;
     margin-top: 0.6rem;
+
+    svg {
+        width: 50px;
+        height: 50px;
+    }
 }
 
 .content .left .no_data .icon {
@@ -153,17 +162,45 @@
 
 /* reset-markdown-style-end */
 
-.content .left .comment {
-    width: 0.7rem;
-    height: 0.7rem;
-    border-radius: 50%;
-    box-shadow: -0.03rem 0.03rem 0.09rem black;
+.content .left {
+    .comment {
+        width: 0.7rem;
+        height: 0.7rem;
+        border-radius: 50%;
+        box-shadow: -0.03rem 0.03rem 0.09rem black;
+
+        i {
+            color: $theme-color;
+            font-size: 30px;
+            margin-left: 3px;
+            line-height: 55px;
+        }
+    }
+
+    .smiling-face {
+        width: 400px;
+        height: 400px;
+        border-radius: 50%;
+        position: relative;
+        margin: -200px auto 0;
+        border-bottom: 6px solid #ddd;
+
+        &::after {
+            content: "";
+            display: block;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            position: absolute;
+            top: 300px;
+            right: 19px;
+            border-radius: 50%;
+            z-index: 2;
+            box-shadow: -3px 2px 4px 0px black;
+        }
+    }
 }
 
-.comment .icon {
-    font-size: 0.5rem;
-    line-height: 0.7rem;
-}
 
 /* show_comment-start */
 .show_comment {
