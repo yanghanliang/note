@@ -26,6 +26,14 @@ export default {
 		myEcharts,
 		search
 	},
+	head () {
+		return {
+			title: this.title,
+			meta: [
+				{ hid: 'descriptiona', name: 'description', content: '????' }
+			]
+		}
+	},
 	data() {
 		return {
 			input: '',

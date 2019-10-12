@@ -5055,3 +5055,13 @@ $("input[name$='code']");//name属性以code结束的所有input标签
 $("input[name*='code']");//name属性包含code的所有input标签
 
 ```
+
+```js
+
+Math.pow(3,2);   // 3的平方
+
+Math.sqrt(9);   9 // 开方，返回结果3
+
+```
+
+

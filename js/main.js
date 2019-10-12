@@ -97,6 +97,42 @@ My.prototype.isType = function (value) {
     }
 }
 
+/**
+ * 获取最大值
+ * @param {object} params
+ * @param {array} params.data
+ * @param {string} params.field
+ * @return {number} 最大值
+ */
+My.prototype.getMaxValue = function (params) {
+    // [1, 2]
+    // [{val: 1}, {val: 2}]
+    let data = params.data
+    let one = data[0]
+    let type = typeof one
+    let template = null
+    let length = data.length
+    console.log(type, 'type')
+
+    if (type === 'object') {
+        for (let i = 1; i < length; i++) {
+            let item = data[i]
+            if (item[field] > template[field]) {
+                template = item
+            }
+        }
+        return template[field]
+    } else {
+        for (let i = 1; i < length; i++) {
+            let item = data[i]
+            if (item > template) {
+                template = item
+            }
+        }
+        return template
+    }
+}
+
 
 /**
  * 实例化
