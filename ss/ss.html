@@ -8,86 +8,31 @@
     <title>Document</title>
     <style>
         .box {
-            width: 500px;
+            width: 400px;
             height: 400px;
-            display: table-cell;
-            /* line-height: 400px; */
-            vertical-align: middle;
-            border: 1px solid red;
-        }
-
-        .min-box {
-            width: 200px;;
-            height: 200px;
-            vertical-align: middle;
-            line-height: 400px;
-            background-color: aqua
-        }
-
-        .min-box:nth-child(1) {
-            display: inline-block;
+            margin: 70px auto;
         }
     </style>
 </head>
 
 <body>
     <div class="box">
-        <div class="min-box"></div>
-        <div class="min-box"></div>
+        <div class="min"></div>
     </div>
 
-
     <script>
-        //1.创建父类构造函数
-        function Person(name, age, sex) {
-            this.name = name;
-            this.age = age;
-            this.sex = sex;   
-        }
-        let p = Person('', 'age:1238')
-        console.log(p)
-
-        //2.创建父类原型方法
-        Person.prototype.eat = function () {
-            console.log('丫丫丫丫');
-        };
-
-        let ext = new Person()
-        //3.创建子类构造方法(函数)
-        function Student(name, age, sex, score) {
-            Person.call(this, name, age, sex)
-            // [].slice.call(arguments, 1)
-            console.log(arguments)
-            this.score = score;
-            // console.log(typeof arguments, arguments)
-            console.log(Array.isArray(arguments), Array.isArray([]), Array.isArray([12, {name: 123}]))
+        function getStyle(ele, attrs) {
+            if (window.getComputedStyle) {
+                let value = window.getComputedStyle(ele, null)[attrs]
+                let index = value.indexOf('px')
+                return Number(value.slice(0, index))
+            } else {
+                return ele.currentStyle
+            }
         }
 
-        // var person = typeof {} [] === arguments
-        // var a = [{}, 'sdsf'] = 123
-
-        // //4.实现继承
-        // Student.prototype = person
-        //5.创建子类原型方法
-        Student.prototype.stud = function () {
-            console.log('我去');
-        };
-        //6.创建子类对象(实例化对象
-        // var str = new Student(66);
-        var str = new Student('name', '33', 'nv','score')
-        console.log(str)
-
-
-        var sss = {0:'1', 1:'2', 2:'3', length: 3}
-        // console.log(Array.prototype.slice.call(sss, 1))
-        let a = [].slice.call(sss, 1)
-        // console.log(a)
-        // console.log(sss)
-        // [].forEach(element => {
-            
-        // });
-
-
+        var width = getStyle(document.querySelector('.min'), 'width')
+        console.log(width)
     </script>
 </body>
 
