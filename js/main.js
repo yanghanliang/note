@@ -140,27 +140,32 @@ My.prototype.getMaxValue = function (params) {
  * @lastEditDate    2019-10-15
  * @param {object}  params
  * @param {object}  params.range    范围
+ * @param {array}  params.range.width    范围
+ * @param {array}  params.range.height    范围
  * @param {number}  params.number   个数
- * @param {number}  params.width    宽
- * @param {number}  params.height   高
+ * @param {number}  params.width    小圆的宽
+ * @param {number}  params.height   小圆的高
  * @return {array}  坐标 [{x: 12, y: 20}]
  */
 My.prototype.randomCoordinate = function(params) {
-    let data = []
+    const that = this
+    let xArr = params.range.width // [[0, 200]]
+    let yArr = [params.range.height]
     let coordinate = []
-    let width = params.range.width
-    let height = params.range.height
-    let x = this.random(width[0], width[1])
-    let y = this.random(height[0], height[1])
-    let obj = {
-        x: x,
-        y: y
+    let average = Math.floor((xArr[1] - xArr[0]) / params.number)
+    let temp = 0
+    for(let i = 0; i < params.number; i++) {
+        let value = temp + average
+        coordinate.push({
+            x: this.random(temp, value)
+        })
+        temp = value
     }
-    coordinate.push(obj)
-    
-    data.push()
-
+    console.log(coordinate, 'arr')
 }
+
+
+
 
 
 /**
