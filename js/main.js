@@ -28,7 +28,7 @@ My.prototype.getStyle = function (ele, attr) {
  * 获取某个范围的随机数
  * @param {number} min 最小值
  * @param {number} max 最大值
- * @returns {number} value - min 到 max 之间的值
+ * @returns {number} value - min 到 max 之间的值 - [] 包含最大值和最小值
  */
 My.prototype.random = function (min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min)
@@ -131,6 +131,35 @@ My.prototype.getMaxValue = function (params) {
         }
         return template
     }
+}
+
+/*
+ * 去某段范围内的随机不重复数据（坐标）
+ * @author          yanghanliang
+ * @created         2019-10-15
+ * @lastEditDate    2019-10-15
+ * @param {object}  params
+ * @param {object}  params.range    范围
+ * @param {number}  params.number   个数
+ * @param {number}  params.width    宽
+ * @param {number}  params.height   高
+ * @return {array}  坐标 [{x: 12, y: 20}]
+ */
+My.prototype.randomCoordinate = function(params) {
+    let data = []
+    let coordinate = []
+    let width = params.range.width
+    let height = params.range.height
+    let x = this.random(width[0], width[1])
+    let y = this.random(height[0], height[1])
+    let obj = {
+        x: x,
+        y: y
+    }
+    coordinate.push(obj)
+    
+    data.push()
+
 }
 
 
