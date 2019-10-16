@@ -134,41 +134,121 @@ My.prototype.getMaxValue = function (params) {
 }
 
 /*
- * 去某段范围内的随机不重复数据（坐标）
+ * 获取某段范围内的随机不重复数据（坐标）
  * @author          yanghanliang
  * @created         2019-10-15
  * @lastEditDate    2019-10-15
  * @param {object}  params
- * @param {object}  params.range    范围
- * @param {array}  params.range.width    范围
- * @param {array}  params.range.height    范围
- * @param {number}  params.number   个数
- * @param {number}  params.width    小圆的宽
- * @param {number}  params.height   小圆的高
- * @return {array}  坐标 [{x: 12, y: 20}]
+ * @param {object}  params.range            范围
+ * @param {array}  params.range.min         最小值
+ * @param {array}  params.range.max         最大值
+ * @param {number}  params.number           个数
+ * @return {array}  随机值
  */
 My.prototype.randomCoordinate = function(params) {
-    const that = this
-    let xArr = params.range.width // [[0, 200]]
-    let yArr = [params.range.height]
-    let coordinate = []
-    let average = Math.floor((xArr[1] - xArr[0]) / params.number)
-    let temp = 0
+    let range = params.range.max - params.range.min
+    let average = Math.floor(range / params.number)
+    let temp = params.range.min
+    let data = [] // 从小到大的值
     for(let i = 0; i < params.number; i++) {
         let value = temp + average
-        coordinate.push({
-            x: this.random(temp, value)
-        })
+        let random = this.random(temp, value)
+        data.push(random)
         temp = value
     }
-    console.log(coordinate, 'arr')
+    return data
 }
 
+/*
+ * 去掉数组中差距小于或大于某值的数
+ * @param {object}      params
+ * @param {array}       params.data 排序好的数字数组
+ * @param {number}      params.difference 差额（小圆的 width
+ * @param {string}      params.symbol 符号 > < = 运算符
+ */
+My.prototype.arrExclude = function(params) {
+    let data = params.data
 
+    for(let i = 0; i < data.length - 1; i++) {
+        let previous = data[i] // 1
+        let latter = data[i + 1] // 2
+        let value = Math.round(Math.abs(previous - latter)) // 1
+        let str = value + params.symbol + params.difference // 1 > 3
 
+        if(!eval(str)) { // true
+            data.splice(i + 1, 1) // [1, 3, 4, 5, 6]
+            --i
+        }
+    }
+
+    return data
+    // {
+    //     data: [1, 2, 3, 4, 5, 6],
+    //     difference: 2,
+    //     symbol: '>'
+    // }
+    // 去掉这个数组中 差距大于 2 的数据
+}
+
+/*
+ * 打乱数组
+ * @param {object}           params
+ * @param {array}            params.data
+ * @return {array}           打乱后的数组
+ */
+My.prototype.disruptedArr = function(params) {
+    return params.data.sort(function() {
+        return Math.random() > 0.5 ? -1 : 1
+    })
+}
+
+/*
+ * 数组排序
+ * @param {object}           params
+ * @param {array}            params.data
+ * @param {string}           params.symbol 符号 > < = 运算符
+ * @return {array}           排序好之后的数组
+ */
+My.prototype.sort = function(params) {
+    return params.data.sort(function(a, b) {
+        return eval(a + params.symbol + b) ? 1 : -1
+    })
+}
+
+/*
+ * 传如两个数组合成一个数组对象
+ * @param {object}           params
+ * @param {array}            params.arr
+ * @param {array}            params.arrs
+ * @param {number}           params.number
+ */
+// My.prototype.concatArr = function(params) {
+//     let arr = params.arr
+//     let arrs = params.arrs
+//     let length = arr.length
+//     let leng = arrs.length
+//     let data = []
+
+//     for(let i = 0; i < length; i++) {
+//         for(let j = 0; j < leng; j++) {
+//             let obj = {
+//                 x: arr[i],
+//                 y: arrs[j]
+//             }
+
+//             if(data.length < params.number) {
+//                 data.push(obj)
+//             } else {
+//                 break
+//             }
+//         }
+//     }
+
+//     return data
+// }
 
 
 /**
  * 实例化
  */
-var my = new My()
+// var my = new My()

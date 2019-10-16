@@ -5,20 +5,183 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        .box {
+            width: 500px;
+            height: 300px;
+            margin: 100px auto;
+            border-radius: 5px;
+            position: relative;
+            border: 1px solid #ddd;
+        }
+
+        .circular {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            background-color: aquamarine;
+        }
+    </style>
 </head>
 <body>
+    <div class="box" id="circular">
+
+    </div>
     <script src="./main.js"></script>
     <script>
-        console.log(my.randomCoordinate({
-            range: {
-                width: [0, 200],
-                height: [0, 300]
-            },
-            number: 5,
-            width: 20,
-            height: 20,
+        function Circular() {
+            this.box = document.querySelector('#circular')
+            this.width = this.getStyle(this.box, 'width')
+            this.height = this.getStyle(this.box, 'height')
+            this.number = 10
+            this.xCoordinate = []
+            this.yCoordinate = []
+            this.coordinate = []
+            this.circularWidth = 20
+
+            this.init()
+        }
+
+        Circular.prototype = new My()
+
+        Circular.prototype.init = function() {
+            this.getRangeCoo()
+            this.differenceValue()
+            this.xCoordinate = this.disruptedArr({
+                data: this.xCoordinate
+            })
+            this.yCoordinate = this.disruptedArr({
+                data: this.yCoordinate
+            })
+            this.getCooValue()
+            this.forCreatedEle()
+        }
+
+        Circular.prototype.createdEle = function(params) {
+            let ele = document.createElement('div')
+
+            ele.className = 'circular'
+            ele.style.top = params.y + 'px'
+            ele.style.left = params.x + 'px'
             
-        }))
+            this.box.appendChild(ele)
+        }
+
+        // 获取一定范围内随机不重复的数
+        Circular.prototype.getRangeCoo = function() {
+            let xParams = {
+                range: {
+                    min: 0,
+                    max: this.width - this.circularWidth
+                },
+                number: this.number,
+                difference: 20
+            }
+            let yParams = {
+                range: {
+                    min: 0,
+                    max: this.height - this.circularWidth
+                },
+                number: this.number,
+                difference: 20
+            }
+            this.xCoordinate = this.randomCoordinate(xParams)
+            this.yCoordinate = this.randomCoordinate(yParams)
+        }
+
+        // 去掉相邻之间一定范围内差值的数
+        Circular.prototype.differenceValue = function() {
+            let x = {
+                data: this.xCoordinate,
+                difference: 20,
+                symbol: '>'
+            }
+            let y = {
+                data: this.yCoordinate,
+                difference: 20,
+                symbol: '>'
+            }
+            this.xCoordinate = this.arrExclude(x)
+            this.yCoordinate = this.arrExclude(y)
+        }
+
+        // 获取坐标 | 合并数组
+        Circular.prototype.getCooValue = function() {
+            for(let i = 0; i < this.number; i++) {
+                let obj = {
+                    x: this.xCoordinate[i],
+                    y: this.yCoordinate[i]
+                }
+
+                if(this.xCoordinate[i] && this.yCoordinate[i]) {
+                    this.coordinate.push(obj)
+                }
+            }
+
+            let length = this.coordinate.length
+            if(length < this.number) {
+                let number = this.number - length
+                let range = 0
+
+                if(this.xCoordinate.length > this.yCoordinate.length) {
+                    range = this.yCoordinate.length - 1
+                } else {
+                    range = this.xCoordinate.length - 1
+                }
+
+                let arr = this.randomCoordinate({
+                    range: {
+                        min: 0,
+                        max: range
+                    },
+                    number: number
+                })
+                console.log(arr, 'arr随机序号')
+
+                for(let i = 0; i < arr.length; i++) {
+                    let index = arr[i]
+                    let obj = {
+                        x: this.xCoordinate[index],
+                        y: this.yCoordinate[index]
+                    }
+                    this.coordinate.push(obj)
+                }
+            }
+
+            console.log(this.coordinate, 'this.coordinate')
+        }
+
+        // 创建元素
+        Circular.prototype.forCreatedEle = function() {
+            for(let i = 0; i < this.number; i++) {
+                this.createdEle(this.coordinate[i])
+            }
+        }
+
+        const circular = new Circular()
+
+        // console.log(circular)
+
+        // let data = my.randomCoordinate({
+        //     range: {
+        //         min: 50,
+        //         max: 200
+        //     },
+        //     number: 5,
+        //     difference: 20
+        // })
+
+        // data = my.arrExclude({
+        //     data: data,
+        //     difference: 20,
+        //     symbol: '>'
+        // })
+
+        // console.log(data)
+
     </script>
 </body>
 </html>
