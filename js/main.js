@@ -148,6 +148,7 @@ My.prototype.getMaxValue = function (params) {
 My.prototype.randomCoordinate = function(params) {
     let range = params.range.max - params.range.min
     let average = Math.floor(range / params.number)
+    console.log(average)
     let temp = params.range.min
     let data = [] // 从小到大的值
     for(let i = 0; i < params.number; i++) {

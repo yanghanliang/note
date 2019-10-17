@@ -36,11 +36,19 @@
             this.box = document.querySelector('#circular')
             this.width = this.getStyle(this.box, 'width')
             this.height = this.getStyle(this.box, 'height')
-            this.number = 10
+            this.number = 15
             this.xCoordinate = []
             this.yCoordinate = []
             this.coordinate = []
             this.circularWidth = 20
+
+            console.log(this.randomCoordinate({
+                    range: {
+                        min: 0,
+                        max: 10
+                    },
+                    number: 5
+                }))
 
             this.init()
         }
@@ -50,6 +58,8 @@
         Circular.prototype.init = function() {
             this.getRangeCoo()
             this.differenceValue()
+            console.log(this.xCoordinate, '1')
+            console.log(this.yCoordinate, '1')
             this.xCoordinate = this.disruptedArr({
                 data: this.xCoordinate
             })
@@ -78,7 +88,7 @@
                     max: this.width - this.circularWidth
                 },
                 number: this.number,
-                difference: 20
+                difference: this.circularWidth
             }
             let yParams = {
                 range: {
@@ -86,22 +96,23 @@
                     max: this.height - this.circularWidth
                 },
                 number: this.number,
-                difference: 20
+                difference: this.circularWidth
             }
             this.xCoordinate = this.randomCoordinate(xParams)
             this.yCoordinate = this.randomCoordinate(yParams)
+            console.log(this.xCoordinate, this.yCoordinate)
         }
 
         // 去掉相邻之间一定范围内差值的数
         Circular.prototype.differenceValue = function() {
             let x = {
                 data: this.xCoordinate,
-                difference: 20,
+                difference: this.circularWidth,
                 symbol: '>'
             }
             let y = {
                 data: this.yCoordinate,
-                difference: 20,
+                difference: this.circularWidth,
                 symbol: '>'
             }
             this.xCoordinate = this.arrExclude(x)
@@ -127,8 +138,10 @@
                 let range = 0
 
                 if(this.xCoordinate.length > this.yCoordinate.length) {
+                    console.log(this.yCoordinate.length)
                     range = this.yCoordinate.length - 1
                 } else {
+                    console.log(this.yCoordinate.length)
                     range = this.xCoordinate.length - 1
                 }
 
