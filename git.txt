@@ -38,8 +38,12 @@
 
 + clone 克隆一个项目(下载)
 	+ git clone https://github.com/yanghanliang/douban-demo.git
+	+ 克隆指定分支
+		+ git clone -b 分支名 地址
 + pull 更新代码
 	+ git pull https://github.com/yanghanliang/douban-demo.git
++ 获取最新分支
+	+ git remote update
 
 + 修改git commit之后的描述信息
 	+ git rebase -i HEAD~3  // 3代表倒数第3次提交的内容

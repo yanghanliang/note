@@ -703,6 +703,11 @@
   resolved "https://registry.npm.taobao.org/@csstools/convert-colors/download/@csstools/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
   integrity sha1-rUldxBsS511YjG24uYNPCPoTHrc=
 
+"@dll/front_dll_upload_file@^1.0.1":
+  version "1.0.1"
+  resolved "http://npm.svon.org/@dll%2ffront_dll_upload_file/-/front_dll_upload_file-1.0.1.tgz#02473daa8c5fba2843a0636576b2c645af4220b5"
+  integrity sha512-Fa3BtBbCXFzopmGavJV7zvAFfYvFQLjOfIqZDkPGYwHu+OPTXWb5l+WwhuaiKpcqiRwKB3wp4Ew555w63vifNA==
+
 "@kazupon/vue-i18n-loader@^0.4.0":
   version "0.4.1"
   resolved "https://registry.npm.taobao.org/@kazupon/vue-i18n-loader/download/@kazupon/vue-i18n-loader-0.4.1.tgz#71730a821ff15754eb004629d673b47f8d80fdd1"

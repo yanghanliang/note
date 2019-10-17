@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        /**
+         * 获取属性值
+         * @param {string} ele          盒子元素
+         * @param {number} diameter     圆的直径
+         * @param {number} x            在 x 轴能出现圆的个数
+         * @param {number} y            在 y 轴能出现圆的个数
+         * @param {number} data         数据
+         * @param {number} proportion   比例
+         *
+         */
+        let _this = this
+        var My = function (param) {
+            if (param.data.length === 0) {
+                return false
+            }
+            this.box = document.querySelector(param.ele) // 盒子元素
+            this.width = this.getStyle(this.box, 'width')
+            this.r = this.width / 2
+            this.middle_limit = 100
+            this.min_box = document.querySelector(param.offset)
+            this.offsetDirection = param.offsetDirection ? param.offsetDirection : 0
+            this.min_box_width = this.getStyle(this.min_box, 'width')
+            this.proportion = param.proportion, // 比例
+                // this.b_height = this.getStyle(this.box, 'height')
+                // this.x = param.x ? param.x : 3
+                // this.y = param.y ? param.y : 2
+                this.diameter = 50 // 小圆的直径
+            this.data = param.data
+            this.margin = 10 // 边距
+            this.number = this.data.length // 需要位置的个数
+            this.coordinate = [] // 存储坐标
+            this.init()
+        }
+
+        /**
+         * 获取属性值
+         * @return {number} value 属性值
+         *
+         */
+        My.prototype.getStyle = function (ele, attrs) {
+            if (window.getComputedStyle) {
+                let value = window.getComputedStyle(ele, null)[attrs]
+                let index = value.indexOf('px')
+                return Number(value.slice(0, index))
+            } else {
+                return ele.currentStyle
+            }
+        }
+
+        // 创建元素
+        My.prototype.createElement = function (top, left, data) {
+            var div = document.createElement('div')
+            var whValue = data.person * this.proportion
+            div.style.width = whValue + 'px'
+            div.style.height = whValue + 'px'
+            div.style.top = top + 'px'
+            div.style.left = left + 'px'
+            div.className = 'min-circular'
+            this.box.appendChild(div)
+            var content = document.createElement('div')
+            content.className = 'mc-title'
+
+            div.appendChild(content)
+            var spanTitle = document.createElement('span')
+            var spanValue = document.createElement('span')
+            var rule = /[\u4e00-\u9fa5]/.test(data.name) // 判断title 是否是英文
+            if (!rule) {
+                spanValue.className = 'title-english'
+            }
+            spanTitle.innerText = data.name + ' : '
+            spanValue.innerText = _this.$formatNumber(data.person)
+            content.appendChild(spanTitle)
+            content.appendChild(spanValue)
+        }
+
+        // 设置元素位置
+        My.prototype.init = function () {
+            this.myFor()
+            var coordinate = this.coordinate
+            for (var i = 0, length = coordinate.length; i < length; i++) {
+                var item = coordinate[i]
+                var data = this.data[i]
+                this.createElement(item.y, item.x, data)
+            }
+        }
+
+        // 获取范围内不重叠的随机数
+        My.prototype.myFor = function () {
+            var y_arr = [this.random(this.diameter / 2, this.r - this.middle_limit / 2 - this.diameter - this
+                .margin), this.random(this.r + this.middle_limit / 2, this.width - this.diameter - this
+                .diameter / 2)]
+            // var y = this.random(this.diameter / 2, this.width - this.diameter - this.diameter / 2) // 获取随机的 y 轴坐标
+            var y = y_arr[this.random(0, 1)]
+            var start_x, end_x
+
+            if (y < this.r) {
+                start_x = this.r - Math.sqrt(Math.pow(this.r, 2) - Math.pow(this.r - y, 2)) + this.diameter
+                end_x = this.r + Math.sqrt(Math.pow(this.r, 2) - Math.pow(this.r - y, 2)) - this.diameter - this
+                    .diameter
+            } else {
+                start_x = this.r - Math.sqrt(Math.pow(this.r, 2) - Math.pow(y - this.r, 2)) + this.diameter
+                end_x = this.r + Math.sqrt(Math.pow(this.r, 2) - Math.pow(y - this.r, 2)) - this.diameter - this
+                    .diameter
+            }
+
+            if (this.offsetDirection === 'right') {
+                end_x = end_x - this.min_box_width / 2
+            } else if (this.offsetDirection === 'left') {
+                start_x = start_x + this.min_box_width / 2
+            }
+
+            var x = this.random(start_x, end_x) // 获取随机的 x 轴坐标
+            // var end_x = x + this.diameter + this.margin
+            // var end_y = y + this.diameter + this.margin
+            var lock = 0 // 判断是否存在重叠的位置
+            var length = this.coordinate.length
+            // this.createElement(y, x)
+            for (var i = 0; i < length; i++) {
+                // console.log('?')
+                var item = this.coordinate[i]
+                // var start_x = item.x - this.diameter - this.margin
+                // var end_x = item.x + this.diameter + this.margin
+                // var start_y = item.y - this.diameter - this.margin
+                // var end_y = item.y + this.diameter + this.margin
+                var is_x = x > item.x + this.diameter + this.margin || x < item.x - this.diameter - this.margin
+                var is_y = y > item.y + this.diameter + this.margin || y < item.y - this.diameter - this.margin
+
+                // console.log(length, 'bie', is_x && is_y)
+                if (is_x || is_y) {
+                    lock += 1
+                }
+
+                // console.log(lock)
+            }
+
+            // console.log(lock, length)
+            if (lock === length) {
+                // console.log('jl')
+                this.coordinate.push({
+                    x: x,
+                    y: y
+                })
+            }
+
+            if (this.coordinate.length < this.number) {
+                return this.myFor()
+            }
+        }
+
+        // 获取某个范围的随机数
+        My.prototype.random = function (min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min)
+        }
+
+        new My({
+            ele: '#c-left',
+            data: attr,
+            offset: '.c-box',
+            offsetDirection: 'right',
+            proportion: this.proportion
+        })
+    </script>
+</body>
+
+</html>

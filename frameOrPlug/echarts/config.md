@@ -25,3 +25,41 @@ myChart.setOption(option, true)
 
 
 ###
+
+```js
+
+/**
+ * 数据格式处理
+ * 时间
+ * 转化率: 0%
+ * 点击数: 0%
+ * 阅读率: 0%
+ */
+formatProcessing(option) {
+    if (!option.tooltip) {
+        option.tooltip = {
+            show: true,
+            trigger: 'item'
+        };
+    }
+    option.tooltip.formatter = function(params){
+        let returnValue = ''
+        for(let i = 0, length = params.length; i < length; i++) {
+            let obj = params[i]
+            let name = obj.seriesName
+            let content = obj.seriesName + ': '
+
+            if(name === '点击率' || name === '转化率' || name === '阅读率') {
+                returnValue += content  + money(obj.value, 1) + '%</br>'
+            } else {
+                returnValue += content  + money(obj.value, 1) + '</br>'
+            }
+        }
+        // 返回值是：  html代码||字符串
+        return returnValue
+    };
+    return option
+},
+
+```
+

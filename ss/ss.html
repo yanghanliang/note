@@ -8,6 +8,7 @@
     <title>Document</title>
     <style>
         .box {
+<<<<<<< HEAD
             width: 800px;
             height: 500px;
             display: table;
@@ -40,12 +41,18 @@
             height: 60px;
             background-color: forestgreen;
             display: inline-block;
+=======
+            width: 400px;
+            height: 400px;
+            margin: 70px auto;
+>>>>>>> d76f0a5d3651bf0292aafb995ea9e81d1333bf73
         }
     </style>
 </head>
 
 <body>
     <div class="box">
+<<<<<<< HEAD
         <div class="box-left">
         </div>
         <div class="box-right"></div>
@@ -304,6 +311,24 @@
             data: data,
             filed: 'val'
         })
+=======
+        <div class="min"></div>
+    </div>
+
+    <script>
+        function getStyle(ele, attrs) {
+            if (window.getComputedStyle) {
+                let value = window.getComputedStyle(ele, null)[attrs]
+                let index = value.indexOf('px')
+                return Number(value.slice(0, index))
+            } else {
+                return ele.currentStyle
+            }
+        }
+
+        var width = getStyle(document.querySelector('.min'), 'width')
+        console.log(width)
+>>>>>>> d76f0a5d3651bf0292aafb995ea9e81d1333bf73
     </script>
 </body>
 
