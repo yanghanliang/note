@@ -26,12 +26,78 @@ My.prototype.getStyle = function (ele, attr) {
 
 /**
  * 获取某个范围的随机数
- * @param {number} min 最小值
- * @param {number} max 最大值
- * @returns {number} value - min 到 max 之间的值 - [] 包含最大值和最小值
+ * @param {object}      params
+ * @param {object}      params.symbol 
+ * @param {string}      params.symbol.min 默认: 'contain' - 'contain' 标识包含 'not' 标识不包含
+ * @param {string}      params.symbol.max 默认: 'contain' - 'contain' 标识包含 'not' 标识不包含
+ * @param {number}      params.min 最小值
+ * @param {number}      params.max 最大值
+ * @returns {number} value 默认情况下: min 到 max 之间的值 - 包含最大值和最小值
  */
-My.prototype.random = function (min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min)
+My.prototype.random = function (params) {
+    // 需要传递的参数
+    let postData = {
+        params: params,
+        defaultValue: {
+            symbol: {
+                min: 'contain',
+                max: 'contain'
+            }
+        }
+    }
+    params = this.paramsInherit(postData)
+    let symbol = params.symbol
+    let random = Math.random()
+    let max = params.max
+    let min = params.min
+
+    if(symbol.min === 'contain' && symbol.max === 'contain') {
+        // console.log('[0-5]')
+        return Math.floor(random * (max - min + 1)) + min
+    } else if(symbol.min === 'not' && symbol.max === 'contain') {
+        // console.log('(0-5]')
+        return Math.ceil(random * (max - min) + 1) + min - 1
+    } else if(symbol.min === 'contain' && symbol.max === 'not') {
+        // console.log('[0-5)')
+        return Math.floor(random * (max - min)) + min
+    } else if(symbol.min === 'not' && symbol.max === 'not') {
+        // console.log('(0-5)')
+        let temp = Math.floor(random * (max - min) + 1) + min
+        return temp >= max ? temp - 1 : temp
+    }
+}
+
+/*
+ * 参数继承-如果传入的参数存在则替换掉默认值
+ * 现在只支持对象的参数
+ * @param {object}          params
+ * @param {object}          params.params - 传入的参数
+ * @param {object}          params.defaultValue - 默认值 不存在默认值时，默认为 0
+ * @return {object}         param 继承默认值后的参数
+ */
+My.prototype.paramsInherit = function(params) {
+    let recursion = function (param, defaultValue) {
+        // 循环默认值
+        for(let key in defaultValue) {
+            // 判断参数中是否存在默认值
+            let type = typeof param[key]
+            if(type === 'object') {
+                recursion(param[key], defaultValue[key])
+            } else { 
+                if(!param[key]) {
+                    if(type === 'object') {
+                        recursion(param[key], defaultValue[key])
+                    } else {
+                        // 不存在，则给参数补充上
+                        param[key] = defaultValue[key]
+                    }
+                }
+            }
+        }
+    }
+
+    recursion(params.params, params.defaultValue)
+    return params.params
 }
 
 /*
@@ -49,7 +115,6 @@ My.prototype.forEach = function (data) {
         for (let i = 0, length = data.length; i < length; i++) {
             let item = data[i]
             let itemType = this.isType(item)
-            console.log(itemType, 'itemType')
             if (itemType === 'object' || itemType === 'array') {
                 let value = this.forEach(item)
                 arr.push(value)
@@ -112,7 +177,6 @@ My.prototype.getMaxValue = function (params) {
     let type = typeof one
     let template = null
     let length = data.length
-    console.log(type, 'type')
 
     if (type === 'object') {
         for (let i = 1; i < length; i++) {
@@ -135,28 +199,81 @@ My.prototype.getMaxValue = function (params) {
 
 /*
  * 获取某段范围内的随机不重复数据（坐标）
+ * 适用范围是 number 比较大，且 range 比较大 例如 - number 10 range 300
  * @author          yanghanliang
  * @created         2019-10-15
  * @lastEditDate    2019-10-15
  * @param {object}  params
  * @param {object}  params.range            范围
- * @param {array}  params.range.min         最小值
+ * @param {array}  params.range.min         最小值 - 默认为 0
  * @param {array}  params.range.max         最大值
- * @param {number}  params.number           个数
- * @return {array}  随机值
+ * @param {number}  params.number           个数 - 有默认值： 可用范围内的 2%
+ * @return {array}  较为均匀的随机值
  */
 My.prototype.randomCoordinate = function(params) {
+    params.range.min = params.range.min ? params.range.min : 0
+
+    let random = Math.ceil((params.range.max - params.range.min) * 0.02)
+    random = random < 0 ? 1 : random
+
+    let defaultValue = {
+        number: random,
+    }
+    params = this.paramsInherit({
+        params: params,
+        defaultValue: defaultValue
+    })
+
     let range = params.range.max - params.range.min
     let average = Math.floor(range / params.number)
-    console.log(average)
     let temp = params.range.min
     let data = [] // 从小到大的值
+    
     for(let i = 0; i < params.number; i++) {
         let value = temp + average
-        let random = this.random(temp, value)
+        let random = this.random({
+            min: temp,
+            max: value,
+        })
         data.push(random)
         temp = value
     }
+    return data
+}
+
+/*
+ * 获取某段范围内的随机不重复数据（坐标）
+ * 适用范围是 number 比较大，且 range 比较小 例如 - number: 10 range: 10
+ * @author          yanghanliang
+ * @created         2019-10-17
+ * @lastEditDate    2019-10-17
+ * @param {object}  params
+ * @param {object}  params.range            范围
+ * @param {array}  params.range.min         最小值
+ * @param {array}  params.range.max         最大值
+ * @param {number}  params.number           个数
+ * @return {array}  完全随机的随机值
+ */
+My.prototype.randomCoordinates = function(params) {
+    let that = this
+    let data = []
+    let recursion = function() {
+        let item = that.random({
+            min: params.range.min,
+            max: params.range.max
+        })
+
+        if(!data.includes(item)) {
+            data.push(item)
+        }
+
+        if(data.length < params.number) {
+            recursion()
+        }
+    }
+
+    recursion()
+
     return data
 }
 
@@ -223,31 +340,36 @@ My.prototype.sort = function(params) {
  * @param {array}            params.arrs
  * @param {number}           params.number
  */
-// My.prototype.concatArr = function(params) {
-//     let arr = params.arr
-//     let arrs = params.arrs
-//     let length = arr.length
-//     let leng = arrs.length
-//     let data = []
+My.prototype.concatArr = function(params) {
+    let arr = params.arr
+    let arrs = params.arrs
+    let length = arr.length
+    let leng = arrs.length
+    let arrIndex = this.randomCoordinates({
+        range: {
+            min: 0,
+            max: length - 1,
+        },
+        number: length - 1
+    })
+    let data = []
 
-//     for(let i = 0; i < length; i++) {
-//         for(let j = 0; j < leng; j++) {
-//             let obj = {
-//                 x: arr[i],
-//                 y: arrs[j]
-//             }
+    for(let i = 0; i < params.number; i++) {
+        
+    }
 
-//             if(data.length < params.number) {
-//                 data.push(obj)
-//             } else {
-//                 break
-//             }
-//         }
-//     }
+    return data
+}
 
-//     return data
-// }
-
+/*
+ * 获取元素
+ * 和 jQuery 获取元素一致
+ * @param {object}           params
+ * @param {string}           params.select
+ */
+My.prototype.$ = function(select) {
+    return document.querySelector(select)
+}
 
 /**
  * 实例化

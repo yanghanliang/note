@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        .box {
+            width: 500px;
+            height: 300px;
+            margin: 100px auto;
+            border-radius: 5px;
+            position: relative;
+            border: 1px solid #ddd;
+        }
+
+        .circular {
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            background-color: aquamarine;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box" id="circular">
+
+    </div>
+    <script src="../../js/main.js"></script>
+    <script>
+        function Circular() {
+            this.box = document.querySelector('#circular')
+            this.width = this.getStyle(this.box, 'width')
+            this.height = this.getStyle(this.box, 'height')
+            this.number = 30
+            this.xCoordinate = []
+            this.yCoordinate = []
+            this.coordinate = []
+            this.circularWidth = 30
+
+            this.init()
+        }
+
+        Circular.prototype = new My()
+
+        Circular.prototype.init = function () {
+            // 获取一定范围内随机不重复的 x 轴和 y 轴的数据
+            this.getRangeCoo()
+            // 去除相隔一点范围内的数据（防止重叠
+            this.differenceValue()
+            // 将两个坐标合在一起
+            this.coordinate = this.concatArr({
+                arr: this.xCoordinate,
+                arrs: this.yCoordinate
+            })
+            console.log('数据最多能放' + this.coordinate.length + '个')
+            // 打乱数组
+            this.coordinate = this.disruptedArr({
+                data: this.coordinate
+            })
+            // 创建元素
+            this.forCreatedEle()
+        }
+
+        Circular.prototype.createdEle = function (params) {
+            let ele = document.createElement('div')
+
+            ele.className = 'circular'
+            ele.style.top = params.y + 'px'
+            ele.style.left = params.x + 'px'
+
+            this.box.appendChild(ele)
+        }
+
+        // 获取一定范围内随机不重复的数
+        Circular.prototype.getRangeCoo = function () {
+            let xParams = {
+                range: {
+                    min: 0,
+                    max: this.width - this.circularWidth
+                },
+                number: this.number,
+            }
+            let yParams = {
+                range: {
+                    min: 0,
+                    max: this.height - this.circularWidth
+                },
+                number: this.number,
+            }
+            this.xCoordinate = this.randomCoordinate(xParams)
+            this.yCoordinate = this.randomCoordinate(yParams)
+        }
+
+        // 去掉相邻之间一定范围内差值的数
+        Circular.prototype.differenceValue = function () {
+            let x = {
+                data: this.xCoordinate,
+                difference: this.circularWidth,
+                symbol: '>'
+            }
+            let y = {
+                data: this.yCoordinate,
+                difference: this.circularWidth,
+                symbol: '>'
+            }
+            this.xCoordinate = this.arrExclude(x)
+            this.yCoordinate = this.arrExclude(y)
+        }
+
+        // 创建元素
+        Circular.prototype.forCreatedEle = function () {
+            for (let i = 0; i < this.number; i++) {
+                this.createdEle(this.coordinate[i])
+            }
+        }
+
+        /*
+         * 传如两个数组合成一个数组对象
+         * @param {object}           params
+         * @param {array}            params.arr
+         * @param {array}            params.arrs
+         */
+        Circular.prototype.concatArr = function (params) {
+            let arr = params.arr
+            let arrs = params.arrs
+            let length = arr.length
+            let leng = arrs.length
+            let data = []
+
+            for (let i = 0; i < length; i++) {
+                for (let j = 0; j < leng; j++) {
+                    let obj = {
+                        x: arr[i],
+                        y: arrs[j]
+                    }
+
+                    data.push(obj)
+                }
+            }
+
+            return data
+        }
+
+        const circular = new Circular()
+    </script>
+</body>
+
+</html>
