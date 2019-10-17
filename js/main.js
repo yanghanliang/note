@@ -72,7 +72,7 @@ My.prototype.random = function (params) {
  * 现在只支持对象的参数
  * @param {object}          params
  * @param {object}          params.params - 传入的参数
- * @param {object}          params.defaultValue - 默认值
+ * @param {object}          params.defaultValue - 默认值 不存在默认值时，默认为 0
  * @return {object}         param 继承默认值后的参数
  */
 My.prototype.paramsInherit = function(params) {
@@ -205,12 +205,24 @@ My.prototype.getMaxValue = function (params) {
  * @lastEditDate    2019-10-15
  * @param {object}  params
  * @param {object}  params.range            范围
- * @param {array}  params.range.min         最小值
+ * @param {array}  params.range.min         最小值 - 默认为 0
  * @param {array}  params.range.max         最大值
- * @param {number}  params.number           个数
+ * @param {number}  params.number           个数 - 有默认值： 可用范围内的 20%
  * @return {array}  较为均匀的随机值
  */
 My.prototype.randomCoordinate = function(params) {
+    params.range.min = params.range.min ? params.range.min : 0
+
+    let defaultValue = {
+        number: Math.floor((params.range.max - params.range.min) * 0.02),
+    }
+    params = this.paramsInherit({
+        params: params,
+        defaultValue: defaultValue
+    })
+
+    console.log(params)
+
     let range = params.range.max - params.range.min
     let average = Math.floor(range / params.number)
     let temp = params.range.min
@@ -348,6 +360,15 @@ My.prototype.concatArr = function(params) {
     return data
 }
 
+/*
+ * 获取元素
+ * 和 jQuery 获取元素一致
+ * @param {object}           params
+ * @param {string}           params.select
+ */
+My.prototype.$ = function(select) {
+    return document.querySelector(select)
+}
 
 /**
  * 实例化
