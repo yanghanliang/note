@@ -334,34 +334,6 @@ My.prototype.sort = function(params) {
 }
 
 /*
- * 传如两个数组合成一个数组对象
- * @param {object}           params
- * @param {array}            params.arr
- * @param {array}            params.arrs
- * @param {number}           params.number
- */
-My.prototype.concatArr = function(params) {
-    let arr = params.arr
-    let arrs = params.arrs
-    let length = arr.length
-    let leng = arrs.length
-    let arrIndex = this.randomCoordinates({
-        range: {
-            min: 0,
-            max: length - 1,
-        },
-        number: length - 1
-    })
-    let data = []
-
-    for(let i = 0; i < params.number; i++) {
-        
-    }
-
-    return data
-}
-
-/*
  * 获取元素
  * 和 jQuery 获取元素一致
  * @param {object}           params
