@@ -59,7 +59,7 @@
             this.forCreatedEle()
         }
 
-        /*
+        /**
          * 循环创建所需要的所有元素
          */
         Circular.prototype.forCreatedEle = function () {
@@ -76,7 +76,7 @@
             }
         }
 
-        /*
+        /**
          * 获取坐标
          * @param {object}              params
          * @param {}                    params.
@@ -113,8 +113,6 @@
 
                 // 获取 x 的范围
                 let obj = this.getCircularRange(postData)
-
-                console.log(y, '---', obj)
 
                 // 可以看到 x 轴可选范围
                 // this.createdElement({
@@ -409,7 +407,6 @@
                 return Math.random() > 0.5 ? -1 : 1
             })
         }
-
 
         let circular = new Circular()
     </script>

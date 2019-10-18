@@ -7,221 +7,42 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        .box {
-            width: 500px;
-            height: 500px;
-            margin: 100px auto;
-            border-radius: 5px;
-            position: relative;
-            border-radius: 50%;
-            border: 1px solid #ddd;
-        }
-
-        .circular {
-            height: 2px;
-            position: absolute;
-            background-color: aquamarine;
-        }
     </style>
 </head>
 
 <body>
-    <div class="box" id="circular">
-        
-    </div>
     <script src="./main.js"></script>
     <script>
-        let Circular = function() {
-            this.box = this.$('#circular')
-            this.width = this.getStyle(this.box, 'width')
-            this.o = this.width / 2                             // 圆心
-            this.yCoordinate = []                               // y 轴坐标
-            this.xCoordinate = []                               // x 轴坐标
-            this.coordinate = []                                // 圆的位置坐标
-            this.circular = 40                                  // 圆的宽高
-            this.number = 10                                    // 小圆的个数
+        const my = new My()
 
-            this.init()
-        }
-
-        Circular.prototype = new My()
-        
-        Circular.prototype.init = function() {
-            // 获取坐标
-            this.getCoordinate()
-            // 打乱数组
-            this.coordinate = this.disruptedArr({
-                data: this.coordinate
-            })
-            // 创建元素
-            this.forCreatedEle()
-        }
-
-        /*
-         * 循环创建所需要的所有元素
-         */
-        Circular.prototype.forCreatedEle = function() {
-            for(let i = 0; i < this.number; i++) {
-                let item = this.coordinate[i]
-                let postData = {
-                    box: this.box,
-                    x: item.x,
-                    y: item.y,
-                    w: this.circular
-                }
-
-                this.createdElement(postData)
-            }
-        }
-
-        /*
-         * 获取坐标
-         * @param {object}              params
-         * @param {}                    params.
-         */
-        Circular.prototype.getCoordinate = function() {
-            this.yCoordinate = this.randomCoordinate({
+        function fn(params) {
+            let defaultValue = {
+                min: 0,
                 range: {
-                    max: this.width - this.circular / 2,
-                    min: this.circular / 2
+                    gg: 12,
+                    x: 0,
+                    arr: ['a', 'b', 'c', 'd']
                 },
+                a: 'a'
+            }
+
+            let data =  my.paramsInherit({
+                params: params,
+                defaultValue: defaultValue
             })
-
-            // 去掉不需要的距离
-            this.yCoordinate = this.arrExclude({
-                data: this.yCoordinate,
-                difference: this.circular,
-                symbol: '>'
-            })
-
-            let length = this.yCoordinate.length
-            const value = {
-                o: {
-                    x: this.o,
-                    y: this.o
-                },
-                r: this.o - this.circular / 2
-            }
-
-            for(let i = 0; i < length; i++) {
-                let y = this.yCoordinate[i]
-                let postData = Object.assign({}, value, {
-                    y: y
-                })
-
-                // 获取 x 的范围
-                let obj = this.getCircularRange(postData)
-
-                console.log(y ,'---', obj)
-
-                // 可以看到 x 轴可选范围
-                // this.createdElement({
-                //     box: this.box,
-                //     x: obj.x,
-                //     y: y,
-                //     w: obj.range
-                // })
-
-                let postData2 = {
-                    range: {
-                        max: obj.range + obj.x +  this.circular,
-                        min: obj.x + this.circular / 2
-                    },
-                }
-  
-                // 获取 x 轴范围内的随机数
-                let arr = this.randomCoordinate(postData2)
-
-                // 去掉不需要的距离
-                arr  = this.arrExclude({
-                    data: arr,
-                    difference: this.circular,
-                    symbol: '>'
-                })
-
-                let arrLength = arr.length
-
-                // 循环获取位置坐标
-                for(let j = 0; j < arrLength - 1; j++) {
-                    let coordinate = {
-                        x: arr[j],
-                        y: y,
-                        left: obj.x
-                    }
-
-                    this.coordinate.push(coordinate)
-                }
-            }
-
-            // console.log(this.coordinate, 'this.coordinate')
-            this.number = this.coordinate.length
-            console.log(`最多可插入${this.coordinate.length}个圆`)
+            console.log(data, my)
         }
 
-        /*
-         * 创建元素
-         * @param {object}              params
-         * @param {object}              params.box - DOM - 追加到的元素
-         * @param {number}              params.x - x 轴坐标
-         * @param {number}              params.y - y 轴坐标
-         * @param {number}              params.w - 宽度
-         */
-        Circular.prototype.createdElement = function(params) {
-            let ele = document.createElement('div')
-            ele.className = 'circular'
-            ele.style.top = params.y + 'px'
-            ele.style.left = params.x + 'px'
-            ele.style.width = params.w + 'px'
-            ele.style.height = params.w + 'px'
-
-            params.box.appendChild(ele)
-        }
-
-        /*
-         * 获取圆上的坐标
-         * 已知 y 轴一点，获取该 y 轴上 x 可用范围（不超出圆的范围
-         * 需要用到数学的勾股定理
-         * 直角三角形: 斜边平方 = 两直角边平方之和
-         * @param {object}                  params
-         * @param {number}                  params.y // y 轴坐标
-         * @param {object}                  params.o // 圆心坐标
-         * @param {number}                  params.o.x // 圆心在 x 轴方向的 x 坐标
-         * @param {number}                  params.o.y // 圆心在 y 轴方向的 y 坐标
-         * @param {number}                  params.r // 半径
-         * @return {object}                 params
-         * @return {number}                 params.range // 可用范围
-         * @return {number}                 params.x // left 距离左边的距离
-         */
-        Circular.prototype.getCircularRange = function(params) {
-            // 先判断 y 轴所在位置
-            let y = null
-            let x = null
-            let left = null
-
-            if(params.y === params.r) {
-                y = params.r
-            } else {
-                y = Math.abs(params.r - params.y) 
+        fn({
+            min: 20,
+            max: 50,
+            range: {
+                x: 10,
+                y: 5,
+                arr: [1, 2, 3]
             }
+        })
 
-            // 一边的(一半)
-            x = Math.sqrt(Math.pow(params.r, 2) - Math.pow(y, 2))
-            // 距离左边的位置
-            left = params.r - x
-            // 全部
-            x = x * 2
-
-            return {
-                range: x,
-                x: left
-            }
-        }
-        
-        let circular = new Circular()
     </script>
 </body>
 
