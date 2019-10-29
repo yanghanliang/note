@@ -63,6 +63,8 @@
 + git 查看某一个文件的（提交／修改）记录
     + git log --pretty=oneline 文件路径 || git log -p 文件路径
     + git show 6b14b5883e5a03d5e2110eb78633f622e81a36ac
++ git 查看文件还未提交的更改
+	+ git diff
 
 
 + 配制个人信息

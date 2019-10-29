@@ -5089,3 +5089,39 @@ eval(string) // 必需。要计算的字符串，其中含有要计算的 JavaSc
 eval("2+2") // 4
 
 ```
+
+## for-of 获取 key
+
+- 对象
+
+```js
+
+const object1 = {
+  a: 'somestring',
+  b: 42
+};
+
+for (let [key, value] of Object.entries(object1)) {
+  console.log(`${key}: ${value}`);
+}
+
+// "a: somestring"
+// "b: 42"
+
+```
+
+- 数组
+
+```js
+
+let arr = ['a','b','c']
+for(let [key, value] of arr.entries()) { 
+	console.log(key, value)
+}
+
+// 0 "a"
+// 1 "b"
+// 2 "c"
+
+```
+
