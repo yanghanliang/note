@@ -67,7 +67,7 @@ My.prototype.random = function (params) {
     }
 }
 
-/*
+/**
  * 参数继承-如果传入的参数存在则替换掉默认值
  * 现在只支持对象的参数
  * @param {object}          params
@@ -100,7 +100,7 @@ My.prototype.paramsInherit = function(params) {
     return params.params
 }
 
-/*
+/**
  * 深拷贝
  * @author                  yanghanliang
  * @created                 2019-09-27
@@ -139,12 +139,12 @@ My.prototype.forEach = function (data) {
     }
 }
 
-/*
+/**
  * 判断数据类型
- * @author          yanghanliang
- * @created         2019-09-27
- * @lastEditDate    2019-09-27
- * @param {*}       value
+ * @author                  yanghanliang
+ * @created                 2019-09-27
+ * @lastEditDate            2019-09-27
+ * @param {*}               value
  * @return {string} type    DataType
  */
 My.prototype.isType = function (value) {
@@ -197,16 +197,13 @@ My.prototype.getMaxValue = function (params) {
     }
 }
 
-/*
+/**
  * 获取某段范围内的随机不重复数据（坐标）
  * 适用范围是 number 比较大，且 range 比较大 例如 - number 10 range 300
- * @author          yanghanliang
- * @created         2019-10-15
- * @lastEditDate    2019-10-15
- * @param {object}  params
+ * @param {object}                          params
  * @param {object}  params.range            范围
- * @param {array}  params.range.min         最小值 - 默认为 0
- * @param {array}  params.range.max         最大值
+ * @param {array}   params.range.min        最小值 - 默认为 0
+ * @param {array}   params.range.max        最大值
  * @param {number}  params.number           个数 - 有默认值： 可用范围内的 2%
  * @return {array}  较为均匀的随机值
  */
@@ -241,12 +238,9 @@ My.prototype.randomCoordinate = function(params) {
     return data
 }
 
-/*
+/**
  * 获取某段范围内的随机不重复数据（坐标）
  * 适用范围是 number 比较大，且 range 比较小 例如 - number: 10 range: 10
- * @author          yanghanliang
- * @created         2019-10-17
- * @lastEditDate    2019-10-17
  * @param {object}  params
  * @param {object}  params.range            范围
  * @param {array}  params.range.min         最小值
@@ -277,7 +271,7 @@ My.prototype.randomCoordinates = function(params) {
     return data
 }
 
-/*
+/**
  * 去掉数组中差距小于或大于某值的数
  * @param {object}      params
  * @param {array}       params.data 排序好的数字数组
@@ -308,7 +302,7 @@ My.prototype.arrExclude = function(params) {
     // 去掉这个数组中 差距大于 2 的数据
 }
 
-/*
+/**
  * 打乱数组
  * @param {object}           params
  * @param {array}            params.data
@@ -320,7 +314,7 @@ My.prototype.disruptedArr = function(params) {
     })
 }
 
-/*
+/**
  * 数组排序
  * @param {object}           params
  * @param {array}            params.data
@@ -333,35 +327,7 @@ My.prototype.sort = function(params) {
     })
 }
 
-/*
- * 传如两个数组合成一个数组对象
- * @param {object}           params
- * @param {array}            params.arr
- * @param {array}            params.arrs
- * @param {number}           params.number
- */
-My.prototype.concatArr = function(params) {
-    let arr = params.arr
-    let arrs = params.arrs
-    let length = arr.length
-    let leng = arrs.length
-    let arrIndex = this.randomCoordinates({
-        range: {
-            min: 0,
-            max: length - 1,
-        },
-        number: length - 1
-    })
-    let data = []
-
-    for(let i = 0; i < params.number; i++) {
-        
-    }
-
-    return data
-}
-
-/*
+/**
  * 获取元素
  * 和 jQuery 获取元素一致
  * @param {object}           params

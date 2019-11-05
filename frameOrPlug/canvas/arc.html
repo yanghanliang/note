@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>弧形滑块</title>
     <style>
         .box {
             width: 600px;
@@ -78,6 +78,7 @@
             this.boxInfo = this.box.getBoundingClientRect()
             this.ctx = this.canvas.getContext('2d')
             this.time = 10
+            this.value = params.value ? params.value : 0
             this.startAngle = -90 // 开始的角度  正值走的是顺时针
             this.endAngle = 0 // 结束的角度 负值走的是逆时针
             this.circularX = this.boxInfo.width / 2 // 圆心的 x 轴坐标 - 不能设置动态的值,会影响到渐变色
@@ -95,6 +96,10 @@
 
         // 初始化
         My.prototype.init = function () {
+            if(this.value) {
+                this.endAngle = this.valueTangle({value: this.value})
+            }
+
             this.setBoxSize() // 设置盒子大小
             this.pressDown() // 鼠标按下滑块的事件
             this.mousemove() // 鼠标按下并且移动滑块的事件
@@ -473,7 +478,7 @@
             }
         }
 
-        let my = new My({ value: 100 })
+        let my = new My({ value: 70 })
 
     </script>
 </body>

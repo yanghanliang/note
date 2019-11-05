@@ -50,10 +50,10 @@
 
         document.getElementById('btn').onclick = function() {
             let ele = document.querySelector('.mm-box')
-            console.log(ele.clientLeft, 'clientLeft', 'ele.border')
-            console.log(ele.getBoundingClientRect(), 'getBoundingClientRect', '该元素到文档可视范围的距离，当文档有scrollTop值时，它的top和y值是负数')
+            console.log(ele.clientLeft, 'clientLeft', 'ele.border', '它没有clientRight')
+            console.log(ele.getBoundingClientRect(), 'getBoundingClientRect', '该元素到文档可视范围的距离，当文档有scrollTop值时，它的top和y值是负数, width: width + border + padding')
             console.log(document.documentElement.scrollTop, 'scrollTop', '相对于文档， div(元素)是没有这个属性的')
-            console.log(ele, ele.offsetTop, 'offsetTop', '元素距离有定位的祖先元素的距离： ele.margin + ... + parent.padding')
+            console.log(ele.offsetTop, 'offsetTop', '元素距离有定位的祖先元素的距离： ele.margin + ... + parent.padding')
             console.log(ele.scrollWidth, 'scrollWidth', 'width + padding * 2 + border * 2')
         }
     </script>
