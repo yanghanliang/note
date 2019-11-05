@@ -2,10 +2,10 @@
     <div class="index">
 		<search></search>
 		<section class="multiple clearfix">
-			<my-echarts></my-echarts>
-			<my-echarts :option="option"></my-echarts>
+			<!-- <my-echarts ref="echarts"></my-echarts>
+			<my-echarts :option="option"></my-echarts> -->
 			<my-echarts :option="option2"></my-echarts>
-			<my-echarts></my-echarts>
+			<!-- <my-echarts :server="getData"></my-echarts> -->
 		</section>
         <!-- <nuxt-link to="/abc">首页</nuxt-link> -->
     </div>
@@ -17,8 +17,10 @@
  * @author      yanghanliang
  * @created     2019-09-24
  */
+import moment from 'moment'
 import myEcharts from '~/components/public/echarts/index.vue'
 import search from '~/components/public/search/index.vue'
+import vueObj from '~/components/public/vue.js'
 
 export default {
 	// layout: 'blog',
@@ -36,6 +38,7 @@ export default {
 	},
 	data() {
 		return {
+			date: [moment().subtract(7, 'day').format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')],
 			input: '',
 			option: {
 				title : {
@@ -112,7 +115,7 @@ export default {
 				legend: {
 					orient: 'vertical',
 					x: 'left',
-					data:['直接访问','邮件营销','联盟广告','视频广告','搜索引擎']
+					data:['浏览量','点赞数','评论数','注册数','用户量']
 				},
 				series: [
 					{
@@ -139,14 +142,37 @@ export default {
 							}
 						},
 						data:[
-							{value:335, name:'直接访问'},
-							{value:310, name:'邮件营销'},
-							{value:234, name:'联盟广告'},
-							{value:135, name:'视频广告'},
-							{value:1548, name:'搜索引擎'}
+							{value:335, name:'浏览量'},
+							{value:310, name:'点赞数'},
+							{value:234, name:'评论数'},
+							{value:135, name:'注册数'},
+							{value:1548, name:'用户量'}
 						]
 					}
 				]
+			}
+		}
+	},
+	created() {
+		vueObj.$on('dateChange', (date, that) => {
+			console.log(this, that)
+			this.date = date
+		})
+	},
+	methods: {
+		async getData(date) {
+			console.log(date, 'date')
+			try {
+				const { data } = await this.$http.get('testData', {
+					params: {
+						start_date: '2019-05-01',
+						end_date: '2019-05-01'
+					}
+				})
+				console.log(data, 'data-page')
+				return data.data
+			} catch(e) {
+				console.log(e, 'e')
 			}
 		}
 	},
