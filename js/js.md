@@ -4238,7 +4238,7 @@ Date.parse(new Date())
 (new Date()).valueOf()
 1542211138859
 
-new Date().getTime()
+new Date('2018-05-01').getTime()
 1542211149348
 
 第一种：获取的时间戳是把毫秒改成000显示，因为这种方式只精确到秒

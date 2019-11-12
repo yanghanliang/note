@@ -2397,3 +2397,9 @@ service mysqld restart
 --2、使用 mysqld 脚本启动：
 /etc/inint.d/mysql restart
 
+--------------------------------------------SQL-----------------------------------------------------
+
+--求一个表中两个字段的和
+
+select sum(praise) + sum(`read`) FROM article
+
