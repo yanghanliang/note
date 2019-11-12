@@ -66,7 +66,7 @@ export default {
     },
     computed: {},
     created() {
-        console.log(this.date, 'date!!')
+        this.initData() // 初始化时间
     },
     methods: {
         triggerFocus() {
