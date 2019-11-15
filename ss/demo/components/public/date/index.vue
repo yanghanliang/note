@@ -1,7 +1,7 @@
 <template>
     <div class="my-date" @click="triggerFocus">
         <el-date-picker
-            v-model="date"
+            v-model="time"
             type="daterange"
             align="right"
             unlink-panels
@@ -9,7 +9,9 @@
             range-separator="-"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
+            @change="dateChange"
             ref="date"
+            value-format="yyyy-MM-dd"
             :picker-options="pickerOptions">
         </el-date-picker>
         <span>近七日</span>
@@ -18,11 +20,19 @@
 </template>
 
 <script>
+import vueObj from '~/components/public/vue.js'
+
+
 export default {
+    props: {
+        date: {
+            type: Array
+        }
+    },
     components: {},
     data() {
         return {
-            date: [],
+            time: [],
             pickerOptions: {
                 disabledDate(time) {
                     return time.getTime() > Date.now();
@@ -55,11 +65,20 @@ export default {
         }
     },
     computed: {},
-    created() {},
+    created() {
+        this.initData() // 初始化时间
+    },
     methods: {
         triggerFocus() {
             this.$refs.date.focus()
             console.log(this.$refs)
+        },
+        dateChange() {
+            // vueObj.$emit('dateChange', this.date, this)
+            this.$emit('dateChange', this.time)
+        },
+        initData() {
+            this.time = this.date
         }
     },
 }
