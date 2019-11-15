@@ -23,7 +23,7 @@
 ```pug
 
 template(slot-scope='scope', v-if="scope.height > 0")
-    el-table.table(:data="tableData", @row-click="rowExpand", row-key="id", @channelExpand="rowExpand", :expand-row-keys="entexpands", v-loading="loading", align="center", stripe)
+    el-table.table(:data="tableData", @row-click="rowExpand", row-key="id",  @expand-change="rowExpand" :expand-row-keys="entexpands", v-loading="loading", align="center", stripe)
         .no-data(slot="empty")
         el-table-column(type="expand")
             template(slot-scope="scope")

@@ -1,4 +1,4 @@
-## element 表单验证 数据嵌套太深
+## 1. element 表单验证 数据嵌套太深
 
 ```html
 
@@ -38,5 +38,21 @@ data() {
         },
     }
 }
+
+```
+
+
+
+---
+
+
+## 阻止表单回车默认提交
+
+@submit.native.prevent
+
+```html
+
+<el-form :model="form" :rules="rules" ref="form" @submit.native.prevent>
+</el-form>
 
 ```
