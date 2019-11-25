@@ -2,10 +2,9 @@
     <div class="index">
 		<search></search>
 		<section class="multiple clearfix">
-			<!-- <my-echarts ref="echarts"></my-echarts>
-			<my-echarts :option="option"></my-echarts> -->
-			<!-- <my-echarts :option="option2"></my-echarts> -->
 			<my-echarts :server="getData"></my-echarts>
+			<my-echarts type="line" :server="getData"></my-echarts>
+			<my-echarts type="bar" :server="getData"></my-echarts>
 		</section>
         <!-- <nuxt-link to="/abc">首页</nuxt-link> -->
     </div>

@@ -12,10 +12,13 @@
             @change="dateChange"
             ref="date"
             value-format="yyyy-MM-dd"
-            :picker-options="pickerOptions">
+            :picker-options="pickerOptions"
+            class="fl">
         </el-date-picker>
-        <span>近七日</span>
-        <i class="el-icon-date fr"></i>
+        <div class="fr">
+            <span>近七日</span>
+            <i class="el-icon-date"></i>
+        </div>
     </div>
 </template>
 
@@ -88,10 +91,10 @@ export default {
 @import '~/assets/scss/color/index.scss';
 
 .my-date {
-    width: 2.86rem;
-    height: .44rem;
+    width: 2.78rem;
+    height: .4rem;
     cursor: pointer;
-    line-height: .444rem;
+    line-height: .4rem;
     border-radius: .03rem;
     padding-right: .12rem;
     background-color: #fff;
@@ -113,8 +116,12 @@ export default {
 
     }
 
+    .fr {
+        font-size: 16px;
+    }
+
     .el-icon-date {
-        margin-top: .15rem;
+        font-size: 16px;
     }
 }
 
