@@ -40,6 +40,8 @@
 	+ git clone https://github.com/yanghanliang/douban-demo.git
 + pull 更新代码
 	+ git pull https://github.com/yanghanliang/douban-demo.git
++ 更新分支
+	+ git remote update
 
 + 修改git commit之后的描述信息
 	+ git rebase -i HEAD~3  // 3代表倒数第3次提交的内容
