@@ -20,7 +20,7 @@ My.prototype.getStyle = function (ele, attr) {
         return Number(value.slice(0, index))
     } else {
         // console.log('老铁！解决下兼容')
-        return el.currentStyle;
+        return ele.currentStyle;
     }
 }
 

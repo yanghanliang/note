@@ -2490,6 +2490,14 @@ overflow: hidden;
 -webkit-box-orient: vertical;
 text-overflow: ellipsis;
 
+> css 多行文本溢出 js判断是否有省略号
+
+```txt
+
+先不给 文本加溢出有省略号在CSS；
+给文本加行高 用js取文本总高度 如果大于 行高就表示有 再加个溢出有省略号CSS
+
+```
 
 ## 自定义字体
 
