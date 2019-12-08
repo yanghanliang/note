@@ -12,4 +12,15 @@ nginx 在容器外
     yarn build
         build 后可在"dist/v_1_0_mc"中查看是否成功打包
     yarn font
-    
+
+
+
+
+重启 docker
+    + systemctl start docker 
+
+查看 docker 项目 
+    + docker ps -a
+
+重启 docker 项目 
+    + docker start osec
