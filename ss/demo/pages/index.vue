@@ -62,3 +62,10 @@ export default {
 
 }
 </script>
+
+<style lang="scss" scoped>
+	.index {
+		padding: 0 0.3rem;
+		background-color: #fff;
+	}
+</style>

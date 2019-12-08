@@ -16,14 +16,14 @@
             class="fl">
         </el-date-picker>
         <div class="fr">
-            <span>近七日</span>
             <i class="el-icon-date"></i>
         </div>
     </div>
 </template>
 
 <script>
-import vueObj from '~/components/public/vue.js'
+import vueObj from '~/components/public/vue'
+import moment from 'moment'
 
 
 export default {
@@ -91,7 +91,7 @@ export default {
 @import '~/assets/scss/color/index.scss';
 
 .my-date {
-    width: 2.78rem;
+    width: 2.14rem;
     height: .4rem;
     cursor: pointer;
     line-height: .4rem;
@@ -104,16 +104,6 @@ export default {
         width: auto;
         border: none;
         background-color: transparent;
-
-        &::after {
-            content: "";
-            width: 1px;
-            height: .17rem;
-            margin-left: .1rem;
-            display: inline-block;
-            background-color: $border-color;   
-        }
-
     }
 
     .fr {
