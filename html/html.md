@@ -670,9 +670,17 @@ overflow: hidden; 将超出标签部分内容隐藏
 
 overflow: scroll; 设置滚动条(不超出时也有滚动条)
 
-
-
 overflow: auto; 自适应(超出时才有滚动条)
+
+## 隐藏滚动条还可以滚动
+
+```css
+
+.box::-webkit-scrollbar {
+    display: none;
+}
+
+```
 
 
 
