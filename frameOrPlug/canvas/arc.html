@@ -335,16 +335,16 @@
          */
         My.prototype.getSinAngle = function (params) {
             if (params.x >= this.circularX && params.y >= this.circularY) {
-                // console.log('0-90')
+                console.log('0-90')
                 return Math.asin(params.sin) / (Math.PI / 180)
             } else if (params.x >= this.circularX && params.y <= this.circularY) {
-                // console.log('270-360', Math.asin(params.sin) / (Math.PI / 180))
+                console.log('270-360', Math.asin(params.sin) / (Math.PI / 180))
                 return 360 + Math.asin(params.sin) / (Math.PI / 180)
             } else if (params.x <= this.circularX && params.y <= this.circularY) {
-                // console.log('180-270', Math.asin(params.sin) / (Math.PI / 180))
+                console.log('180-270', Math.asin(params.sin) / (Math.PI / 180))
                 return 180 - Math.asin(params.sin) / (Math.PI / 180)
             } else if (params.x <= this.circularX && params.y >= this.circularY) {
-                // console.log('90-180')
+                console.log('90-180')
                 return 180 - Math.asin(params.sin) / (Math.PI / 180)
             }
         }
@@ -383,8 +383,10 @@
                 let scrollX = document.documentElement.scrollLeft || document.body.scrollLeft
                 let scrollY = document.documentElement.scrollTop || document.body.scrollTop
                 // 获取 x 和 y
-                let x = e.clientX + scrollX - that.sliderInfo.width
-                let y = e.clientY + scrollY - that.sliderInfo.height
+                // let x = e.clientX + scrollX - that.sliderInfo.width
+                // let y = e.clientY + scrollY - that.sliderInfo.height
+                let x = e.clientX + scrollX - that.boxInfo.x
+                let y = e.clientY + scrollY - that.boxInfo.y
 
                 if (that.isPressDown) {
                     // that.slider.style.left = x + 'px'
