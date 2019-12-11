@@ -25,13 +25,14 @@ export default {
     .cd-left {
         width: 4rem;
         height: 500px;
+        float: left;
         background-color: #fff;
     }
 
     .cd-right {
         height: 500px;
-        float: left;
-        margin-left: 4rem;
+        margin-left: 4.5rem;
+        background-color: #fff;
     }
 }
 </style>
