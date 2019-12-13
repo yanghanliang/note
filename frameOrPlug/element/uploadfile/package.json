@@ -1,0 +1,16 @@
+{
+  "name": "@dll/uploadfile",
+  "version": "1.1.4",
+  "description": "上传文件",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@codehub.devcloud.huaweicloud.com:OSEC-pt_yanghanliang00001/front_dll_upload_file.git"
+  },
+  "author": "localhost_liang163@.com",
+  "license": "ISC",
+  "dependencies": {}
+}

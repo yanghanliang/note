@@ -41,6 +41,25 @@ data() {
 
 ```
 
+## 表单验证-验证失效
+
+```js
+
+let uploadRules = (rule, value, callback) => {
+    if(this.type === 3) {
+        let img = this.selectedSwiper.number.img
+        if(img !== this.uploadImgList.length) {
+            this.$message.error('请上传素材')
+            // return false 这种写法是错误的
+
+            callback(new Error(' ')) // 必须要有 callback 并且里面如果不需要文字，则必须是空字符串，否则验证错误时会显示一个空对象出来 {}
+        }
+    }
+    callback()
+}
+
+```
+
 
 
 ---
