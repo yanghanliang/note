@@ -1,5 +1,5 @@
 <template>
-    <div class="">
+    <div class="box">
         123
     </div>
 </template>
@@ -12,6 +12,8 @@ export default {
 }
 </script>
 
-<style lang="">
-    
+<style  scope>
+.box {
+    background-image: url("~assets/images/banner/banner.jpg")
+}
 </style>
