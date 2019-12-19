@@ -1,11 +1,17 @@
 <template>
-   <nav>
-        <nuxt-link to="/">首页</nuxt-link>
-        <a href="#">目录</a>
-		<nuxt-link to="/view/article">文章</nuxt-link>
-		<nuxt-link to="/view/demo/ss">尝试</nuxt-link>
-		<nuxt-link to="/view/components/demo">组件</nuxt-link>
-   </nav>
+    <nav class="clearfix">
+        <div class="fl">
+            <nuxt-link to="/">首页</nuxt-link>
+            <a href="#">目录</a>
+            <nuxt-link to="/view/article">文章</nuxt-link>
+            <nuxt-link to="/view/demo/ss">尝试</nuxt-link>
+            <nuxt-link to="/view/components/demo">组件</nuxt-link>
+        </div>
+        <div class="fr">
+            <nuxt-link to="/view/loginOrRegister/login">登录</nuxt-link>
+            <nuxt-link to="/view/loginOrRegister/register">注册</nuxt-link>
+        </div>
+    </nav>
 </template>
 
 <script>
