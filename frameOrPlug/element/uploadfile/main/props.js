@@ -140,6 +140,10 @@ let props = {
     text: {
         type: String,
         default: 'JPG/GIF/PNG　　≤300KB'
+    },
+    // 自定义属性(可传入你希望在上传成功后返回给你的任意值)
+    attr: {
+        default: null
     }
 }
 

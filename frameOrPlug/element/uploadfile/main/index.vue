@@ -1,5 +1,5 @@
 <template>
-    <div :class="['upload-file', isSuccess ? 'success' : '']">
+    <div :class="['upload-file', isSuccess ? 'success' : '']" ref="uploadBox">
         <slot name="header">
             <template v-if="src">
                 <i :class="icon" @click="clickPreview"></i>
@@ -125,6 +125,9 @@ export default {
             if(this.img) {
                 this.src = this.img
                 this.isSuccess = true
+            } else {
+               this.src = '' 
+               this.isSuccess = false
             }
         }
     },
@@ -146,7 +149,8 @@ export default {
             // 改变上传状态
             if(data.length > 0) {
                 this.isSuccess = true
-                this.onSuccess([].concat(data), file, filelist)
+                
+                this.onSuccess([].concat(data), file, filelist, this.attr)
             } else {
                 this.onError([].concat(data), file, filelist)
             }
@@ -164,9 +168,8 @@ export default {
 
             if (this.size > 0) {
                 var size = parseInt(file.size / 1024) // 计算文件有多少 KB
-                if (size > this.size) {
-                    let name = '文件'
-                    switch (this.type) {
+                let name = '文件'
+                switch (this.type) {
                     case 'image':
                         name = '图片'
                         break
@@ -175,7 +178,9 @@ export default {
                         break
                     default:
                         break
-                    }
+                }
+
+                if (size > this.size) {
                     if (this.size > 1024) {
                         let number = parseFloat(this.size / 1024)
                         number = number.toFixed(2)
@@ -183,6 +188,11 @@ export default {
                     } else {
                         this.$message.error(`请上传小于${this.size}KB的${name}`)
                     }
+                    return false
+                }
+
+                if(this.type && !file.type.includes(this.type)) {
+                    this.$message.error(`请上传${name}`)
                     return false
                 }
             }

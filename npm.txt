@@ -94,3 +94,35 @@ npm uninstall --global 包名
 
 # yarn install 或者  yarn
 npm install
+
+---
+
+### 私有化 npm 仓库
+
+# 注册用户
+
+根据提示输入用户名，密码，邮箱 （后面发布代码需要使用这三个资料）
+```
+npm adduser --registry http://npm.svon.org
+```
+
+# 修改 npm 源
+
+```
+npm config set registry http://npm.svon.org
+```
+
+# 发布代码
+
+```
+npm login         // 登录
+
+npm publish   // 发布
+```
+
+# 撤销包
+```
+
+npm unpublish 包名 --force
+
+```
