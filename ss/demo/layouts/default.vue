@@ -14,9 +14,3 @@ export default {
 	}
 }
 </script>
-
-<style lang="scss" scope="scoped">
-.w1 {
-	padding: 0 30px;
-}
-</style>

@@ -207,8 +207,3 @@ export default {
 </script>
 
 <style scoped lang="scss" src="~/assets/scss/page/view/article/index.scss"></style>
-<style scoped lang="scss">
-	.w1 {
-		background-color: transparent;
-	}
-</style>

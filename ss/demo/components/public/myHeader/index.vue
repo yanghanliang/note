@@ -23,18 +23,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~/assets/scss/color/index.scss';
-nav {
-    padding: 20px;
-
-    a {
-        color: $main-font;
-        opacity: 0.8;
-        margin-right: 30px;
+    @import '~/assets/scss/color/index.scss';
+    nav {
+        padding-top: 20px;
+        a {
+            color: $main-font;
+            opacity: 0.8;
+            margin-right: 30px;
+        }
+        a:hover {
+            opacity: 1;
+        }
     }
-    
-    a:hover {
-        opacity: 1;
-    }
-}
 </style>

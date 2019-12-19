@@ -12,18 +12,15 @@
             @change="dateChange"
             ref="date"
             value-format="yyyy-MM-dd"
-            :picker-options="pickerOptions"
-            class="fl">
+            :picker-options="pickerOptions">
         </el-date-picker>
-        <div class="fr">
-            <i class="el-icon-date"></i>
-        </div>
+        <span>近七日</span>
+        <i class="el-icon-date fr"></i>
     </div>
 </template>
 
 <script>
-import vueObj from '~/components/public/vue'
-import moment from 'moment'
+import vueObj from '~/components/public/vue.js'
 
 
 export default {
@@ -91,10 +88,10 @@ export default {
 @import '~/assets/scss/color/index.scss';
 
 .my-date {
-    width: 2.14rem;
-    height: .4rem;
+    width: 2.86rem;
+    height: .44rem;
     cursor: pointer;
-    line-height: .4rem;
+    line-height: .444rem;
     border-radius: .03rem;
     padding-right: .12rem;
     background-color: #fff;
@@ -104,14 +101,20 @@ export default {
         width: auto;
         border: none;
         background-color: transparent;
-    }
 
-    .fr {
-        font-size: 16px;
+        &::after {
+            content: "";
+            width: 1px;
+            height: .17rem;
+            margin-left: .1rem;
+            display: inline-block;
+            background-color: $border-color;   
+        }
+
     }
 
     .el-icon-date {
-        font-size: 16px;
+        margin-top: .15rem;
     }
 }
 
