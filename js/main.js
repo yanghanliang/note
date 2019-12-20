@@ -338,6 +338,20 @@ My.prototype.$ = function(select) {
 }
 
 /**
+ * 去掉对象中的空数据
+ * @param {object}           params
+ * @return {object}          params 处理后的对象
+ */
+My.prototype.removeEmptyObjects = function() {
+    for(let key in params) {
+        if(!params[key]) {
+            delete params[key]
+        }
+    }
+    return params
+}
+
+/**
  * 实例化
  */
 // var my = new My()
