@@ -17,6 +17,7 @@
 
 ```
 
+---
 
 ### table 展开行
 
@@ -61,3 +62,19 @@ rowExpand(row, event, column) {
         this.entexpands.remove(row.id)
      }
 },
+
+```
+
+---
+
+### 表格复选框默认选中
+
+| 方法名 | 说明 | 参数 
+---|---|---|---
+| toggleRowSelection | 用于多选表格，切换某一行的选中状态，如果使用了第二个参数，则是设置这一行选中与否（selected 为 true 则选中） | row, selected
+
+> 由于`element`在这里的选中与否是根据`全等于`进行判断，所以传入的`row`必须是表格数据中的值，如果传入的值是复制的表格数据，则不会选中
+
+
+
+

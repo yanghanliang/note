@@ -30,3 +30,31 @@ el-tabs(v-model="tabValue"
             i.el-icon-circle-plus-outline(@click="addCreative", status="link")
 
 ```
+
+
+### 删除 tab 时，页面会自动置顶
+
+> 删除`tab`时，会删除`tab`中的数据，`vue`会重新渲染，导致页面置顶
+
+解决的办法：
+    删除`tab`数据前，先获取文档的卷曲高度，删除后赋值即可
+
+```js
+
+// 删除 tab 时执行
+removeTab(name) {
+    var scrollTop = document.documentElement.scrollTop
+    this.creativeList = this.creativeList.filter((item, index) => {
+        if(item.name === name) {
+            // 更新当前选中的标签
+            this.tabValue = this.creativeList[index - 1].name
+        } else {
+            return item
+        }
+    })
+    this.$nextTick(() => {
+        document.documentElement.scrollTop = scrollTop
+    })
+},
+
+```

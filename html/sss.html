@@ -148,20 +148,30 @@
             }
         }
 
-        let arr = [
-                {
-                    name: {
-                        age: 10
-                    }
+        /**
+         * 判断某个数据源中是否存在拥有某个结构的数据
+         * @param {object}           params
+         * @param {array}            params.source 源数据
+         * @param {array}            params.data 数据
+         */
+        My.prototype.isExistence = function(params) {
+            let arr = []
+            let recursion = function(source, field) {
+                let str = ''
+                for(let i = 0, length = source.length; i < length; i++) {
+                    let item = source[i]
+                    str += '/' + item[field]
                 }
-            ]
+                arr.push(str)
+            }
+
+            recursion(params.source, 'name')
+        }
+
 
         let my = new My()
 
-        let copyArr = my.forEach(arr)
-        console.log(arr, copyArr, 'copyArr')
-        copyArr[0].name.age = 20
-        console.log(arr, copyArr, 'copyArr')
+        
     </script>
 </body>
 

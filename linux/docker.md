@@ -24,3 +24,10 @@ nginx 在容器外
 
 重启 docker 项目 
     + docker start osec
+
+
+-------------------------
+
+mn-dm-poc01  蒙牛测试
+mn-dm-prd01  蒙牛开发
+
