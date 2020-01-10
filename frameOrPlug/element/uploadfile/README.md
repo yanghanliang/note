@@ -116,3 +116,12 @@ methods: {
 
 ```
 
+
+#### 样式引入
+
+```scss
+
+@import '@dll/uploadfile/main/index.scss';
+
+```
+

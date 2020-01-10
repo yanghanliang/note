@@ -80,3 +80,10 @@ server {
 
 
 必须添加安全组, 添加完成后 -> 需要关联实例
+
+
+###
+
+启动nginx
+[root@mn-dm-poc01 conf]# cd /usr/local/nginx/sbin/
+[root@mn-dm-poc01 sbin]# ./nginx -s reload

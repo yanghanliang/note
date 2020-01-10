@@ -72,9 +72,10 @@
 + 配制个人信息
     git config --global user.name "userName"
     git config --global user.email "user@domain"
-
 + 强制提交
 	git push -u origin master -f   // 慎用
++ git通过命令更换远程仓库地址
+	+ git remote set-url origin ssh://git@git.quclouds.com:8022/mn_web/mnmc_static_front.git
 
 
 提示出错信息：fatal: remote origin already exists.

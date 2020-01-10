@@ -77,4 +77,24 @@ rowExpand(row, event, column) {
 
 
 
+### TypeError: u.$scopedSlots.default is not a function  表格报错
 
+> 问题描述：使用表格时做了v-if判断；首次渲染没有问题；反复操作便会报错；
+
++ 给每个`el-table-column`加上`key`
+
+```pug
+
+el-table.table-border(:data="areaTableData", stripe, style="width: 100%", height="400")
+    el-table-column(prop="name", label="地域", key="name")
+    el-table-column(prop="cost" label="花费(元)", v-if="selectVal == 'cost'", key="cost")
+        template(slot-scope="{row}")
+            span {{ row.cost | $money | $formatNumber }}
+    el-table-column(prop="impression" label="曝光数", v-if="selectVal === 'impression'", key="impression")
+    el-table-column(prop="cpm" label="CPM(元)", v-if="selectVal == 'cpm'", key="cpm")
+        template(slot-scope="{row}")
+            span {{ row.cpm | $money | $formatNumber }}
+    el-table-column(prop="click" label="点击数", v-if="selectVal == 'click'", key="click")
+
+
+```
