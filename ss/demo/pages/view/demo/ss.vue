@@ -12,7 +12,7 @@ export default {
 }
 </script>
 
-<style  scope>
+<style scope>
 .box {
     background-image: url("~assets/images/banner/banner.jpg")
 }

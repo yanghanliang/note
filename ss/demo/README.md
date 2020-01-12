@@ -37,3 +37,13 @@ import '~/node_modules/echarts/lib/component/tooltip'
 import '~/node_modules/echarts/lib/component/title'
 
 ```
+
+
+### webpack less/css文件中的background:url()编译后是 url([object module])
+
+> 背景图片未显示
+
+更换版本
+
+npm install --save-dev file-loader@^2.0.0
+

@@ -75,6 +75,8 @@
 
 + 强制提交
 	git push -u origin master -f   // 慎用
++ 查看远程仓库
+	git remote -v
 
 
 提示出错信息：fatal: remote origin already exists.

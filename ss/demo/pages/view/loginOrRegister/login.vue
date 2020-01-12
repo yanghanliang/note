@@ -162,14 +162,14 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .login {
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: #5f9ee4;
-    background: url("~assets/images/view/abc/login.jpg") no-repeat;
+    background: url("~assets/images/view/loginOrRegister/login.jpg") no-repeat;
     background-size: cover;
 }
 
