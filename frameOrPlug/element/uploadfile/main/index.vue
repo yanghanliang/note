@@ -153,6 +153,14 @@ export default {
                 this.onSuccess([].concat(data), file, filelist, this.attr)
             } else {
                 this.onError([].concat(data), file, filelist)
+
+                function abc(response) {
+                    if(response) {
+                        this.onSuccess([].concat(data), file, filelist, this.attr)
+                    } else {
+                        this.onError([].concat(data), file, filelist)
+                    }
+                }
             }
 
             // 清空已上传文件

@@ -2532,3 +2532,15 @@ width: fill-available;
 -moz-user-select:none;
 -ms-user-select:none;
 user-select:none;
+
+---
+
+## 提示
+
+`placeh`
+
+```html
+
+<input type="password" autocomplete="off" placeholder="请输入原密码" placeh class="el-input__inner">
+
+```

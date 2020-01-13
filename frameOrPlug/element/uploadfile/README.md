@@ -47,9 +47,12 @@ export default {
     <li>≤ 500M</li>
 </ul>
 <span slot="footer">点击进行上传</span>
-<div slot="successFooterLeft" class="clearfix" @click.stop="clickPreview">
-    <i class="fl icon-preview2"></i>
-    <span class="fl">创意预览</span>
+<div slot="successFooterLeft">
+    <!-- 对于特殊的slot，必须抽出一个div来写，否则会触发组件默认的slot方法 -->
+    <div class="clearfix" @click.stop="clickPreview">
+        <i class="fl icon-preview2"></i>
+        <span class="fl">创意预览</span>
+    </div>
 </div>
 <div slot="successFooterRight" class="clearfix">
     <i class="fl el-icon-delete"></i>
@@ -110,6 +113,15 @@ methods: {
         console.log('删除文件')
     }
 }
+
+```
+
+
+#### 样式引入
+
+```scss
+
+@import '@dll/uploadfile/main/index.scss';
 
 ```
 

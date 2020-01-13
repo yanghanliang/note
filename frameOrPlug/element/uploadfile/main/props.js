@@ -144,6 +144,10 @@ let props = {
     // 自定义属性(可传入你希望在上传成功后返回给你的任意值)
     attr: {
         default: null
+    },
+    // 
+    status: {
+
     }
 }
 
