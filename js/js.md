@@ -390,6 +390,15 @@ for(var i=0;i<files.length;i++){
 </br>
 
 
+### 获取数组中最后一个值
+
+> 在保证原数组不变的情况下，快速获取数组中最后一个值
+
+```js
+
+[1, 2, 3].slice(-1)[0]
+
+```
 
 
 
@@ -4238,7 +4247,7 @@ Date.parse(new Date())
 (new Date()).valueOf()
 1542211138859
 
-new Date().getTime()
+new Date('2018-05-01').getTime()
 1542211149348
 
 第一种：获取的时间戳是把毫秒改成000显示，因为这种方式只精确到秒
@@ -5145,3 +5154,39 @@ console.log(strSplicing(12345678, 3))
 >>>>>>> d76f0a5d3651bf0292aafb995ea9e81d1333bf73
 
 ```
+
+## for-of 获取 key
+
+- 对象
+
+```js
+
+const object1 = {
+  a: 'somestring',
+  b: 42
+};
+
+for (let [key, value] of Object.entries(object1)) {
+  console.log(`${key}: ${value}`);
+}
+
+// "a: somestring"
+// "b: 42"
+
+```
+
+- 数组
+
+```js
+
+let arr = ['a','b','c']
+for(let [key, value] of arr.entries()) { 
+	console.log(key, value)
+}
+
+// 0 "a"
+// 1 "b"
+// 2 "c"
+
+```
+

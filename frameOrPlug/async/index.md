@@ -1,4 +1,3 @@
-
 ### async 同时发送多个请求
 
 ```
@@ -15,8 +14,6 @@ async getShopList(date) {
 // get_shop_list 返回 Promise 对象
 
 ```
-
----
 
 ### 请求延迟
 

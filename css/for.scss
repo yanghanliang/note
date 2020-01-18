@@ -1,0 +1,20 @@
+// 循环
+$src: '/components/creative/creativeSwiper/images/';
+$type: '.png';
+$creativeList: (
+    (name: 'a_a', size: '200px 60px'),
+    (name: 'c', size: '204px 60px'),
+    (name: 'b_a', size: '138px 80px'),
+    (name: 'b_b', size: '138px 115px'),
+);
+@for $i from 1 through length($creativeList) {
+    $item: nth($creativeList, $i); // 获取 item
+    $name: map-get($item, name); // 获取 item 中的 name
+    $size: map-get($item, size);
+    $image: #{$src}#{$name}#{$type}; // 字符串拼接
+
+    .#{$name} {
+        background-image: url($image);
+        background-size: unquote($size); // 去掉引号
+    }
+}

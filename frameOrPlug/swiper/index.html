@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/css/swiper.min.css">
+    <style>
+        .swiper-slide {
+            width: 400px;
+            height: 400px;
+            float: left;
+            border: 1px solid red;
+        }
+
+        .gg {
+            width: 400px !important;
+            height: 280px;
+            border: 1px solid blue;
+        }
+
+        .prev1, .next1 {
+            bottom: 20px;
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            z-index: 5;
+            border-radius: 50%;
+            background-color: red;
+        }
+
+        .prev1 {
+            left: 0;
+        }
+
+        .next1 {
+            right: 0;
+        }
+
+        #swiper2 {
+            height: 300px;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="swiper-container" id="swiper1">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <div class="swiper-container" id="swiper2">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide gg">Slide 1abc</div>
+                        <div class="swiper-slide gg">Slide 2abc</div>
+                        <div class="swiper-slide gg">Slide 3abc</div>
+                        <div class="swiper-slide gg">Slide 4abc</div>
+                        <div class="swiper-slide gg">Slide 5abc</div>
+                        <div class="swiper-slide gg">Slide 6abc</div>
+                    </div>
+                    <div class="prev1"></div>
+                    <div class="next1"></div>
+                </div>
+            </div>
+            <div class="swiper-slide">Slide 2</div>
+            <div class="swiper-slide">Slide 3</div>
+        </div>
+        <!-- 如果需要分页器 -->
+        <div class="swiper-pagination"></div>
+
+        <!-- 如果需要导航按钮 -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+
+        <!-- 如果需要滚动条 -->
+        <div class="swiper-scrollbar"></div>
+    </div>
+
+
+    <script src="https://unpkg.com/swiper/js/swiper.min.js"> </script>
+    <script>
+        var mySwiper = new Swiper('#swiper1', {
+            // direction: 'vertical', // 垂直切换选项
+            loop: true, // 循环模式选项
+
+            // 如果需要分页器
+            pagination: {
+                el: '.swiper-pagination',
+            },
+
+            // 如果需要前进后退按钮
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+
+            // 如果需要滚动条
+            scrollbar: {
+                el: '.swiper-scrollbar',
+            },
+        })
+
+        new Swiper('#swiper2', {
+            autoplay: true,
+            width: 400,
+
+            // 如果需要前进后退按钮
+            navigation: {
+                nextEl: '.next1',
+                prevEl: '.prev1',
+            },
+        })
+    </script>
+</body>
+
+</html>

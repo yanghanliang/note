@@ -797,6 +797,10 @@ cp install.log /home/
 cp 复制内容1 复制内容2 复制内容3 复制到的位置是目录
 cp anaconda-ks.cfg install.log /home/
 
+# 复制文件夹
+cp -r 需要复制的文件夹路径 复制到的位置
+cp -r  ~/.ssh/ ./sshcopy
+
 #
 mv  移动文件
 mv 移动的内容1 移动的内容2 移动的内容3 移动到的位置必须是目录
@@ -3025,3 +3029,7 @@ svndata  仓库根路径
 
 sudo lsof -i:10005 // 10005 端口号
 sudo kill -9 7401 // -9 强制杀死
+
+
+## 查看系统
+lsb_release -a

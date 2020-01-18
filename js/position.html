@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .box {
+            width: 500px;
+            height: 500px;
+            padding: 10px;
+            margin: 50px auto;
+            border: 10px solid blue;
+            position: relative;
+        }
+
+        .min-box {
+            width: 70%;
+            height: 70%;
+            padding: 20px;
+            overflow: auto;
+            margin: 50px auto;
+            border: 10px solid green;
+        }
+
+        .mm-box {
+            width: 70%;
+            height: 120%;
+            padding: 10px;
+            margin: 50px auto;
+            border: 15px solid red;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="min-box">
+            <div class="mm-box"></div>
+        </div>
+    </div>
+    <button id="btn">btn</button>
+    
+    <script>
+        let ele1 = document.querySelector('.mm-box')
+        console.log(ele1.clientWidth, 'clientWidth', 'width + padding * 2')
+        console.log(ele1.offsetWidth, 'offsetWidth', 'width + padding * 2 + border * 2')
+        console.log(ele1.scrollWidth, 'scrollWidth', 'width + padding * 2')
+
+
+        document.getElementById('btn').onclick = function() {
+            let ele = document.querySelector('.mm-box')
+            console.log(ele.clientLeft, 'clientLeft', 'ele.border', '它没有clientRight')
+            console.log(ele.getBoundingClientRect(), 'getBoundingClientRect', '该元素到文档可视范围的距离，当文档有scrollTop值时，它的top和y值是负数, width: width + border + padding')
+            console.log(document.documentElement.scrollTop, 'scrollTop', '相对于文档， div(元素)是没有这个属性的')
+            console.log(ele.offsetTop, 'offsetTop', '元素距离有定位的祖先元素的距离： ele.margin + ... + parent.padding')
+            console.log(ele.scrollWidth, 'scrollWidth', 'width + padding * 2 + border * 2')
+        }
+    </script>
+</body>
+</html>

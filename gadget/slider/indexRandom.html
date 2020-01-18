@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>随机分叉</title>
+        <style>
+            .box {
+                width: 660px;
+                height: 10px;
+                margin-left: 50px;
+                margin-top: 100px;
+                border-radius: 5px;
+                position: relative;
+                background-color: pink;
+            }
+
+            .box .slider {
+                width: 22px;
+                height: 100%;
+                left: 50px;
+                user-select: none;
+                position: absolute;
+                background-color: blue;
+            }
+
+            .box .slider span {
+                top: -50px;
+                position: absolute;
+            }
+
+            .box .slider .left {
+                transform: translateX(-50%);
+            }
+
+            .box .slider .right {
+                transform: translateX(-50%);
+            }
+
+            /* .box .slider::before {
+                content: attr(left-value);
+                top: -30px;
+                position: absolute;
+            }
+
+            .box .slider::after {
+                content: attr(right-value);
+                top: -30px;
+                position: absolute;
+            }
+
+            .box .slider:nth-last-child(1)::after {
+                content: none;
+            }
+
+            .box .slider:only-child:nth-last-child(1)::after {
+                content: none;
+            } */
+        </style>
+        <script src="https://www.jscss.cc/static/js/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <label v-for="(item, index) in 10">
+                <template v-if="item !== 1">
+                    <input type="radio" :value="item" name="1" id="" @click="clickRadio(item)">{{ item }}
+                </template>
+            </label>
+            <div class="box">
+                <template v-for="(item, index) in sliderNumber">
+                    <div class="slider" :style="'left:' + item.left + 'px'" :key="index">
+                        <span class="left" :style="'left:-' + item.minLeft + 'px'">{{ item.leftValue }}%</span>
+                        <span v-if="index === sliderNumber.length - 1" class="right" :style="'left:' + item.minLeft + 'px'">{{ item.rightValue }}%</span>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <script>
+            new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        sliderNumber: [
+                            { 'left': 500, leftValue: 50 },
+                            { 'left': 500, leftValue: 50, rightValue: 50 }
+                        ],
+                        width: 0,
+                        percentage: '50%',
+                        radioValue: 2,
+                    }
+                },
+                mounted() {
+                    this.slider()
+                    this.init()
+                },
+                methods: {
+                    slider() {
+                        let vueObj = this
+
+                        let My = function() {
+                            this.box = document.querySelector('.box')                                           // 盒子
+                            this.boxLeft = this.box.getBoundingClientRect().left                                // 盒子距离坐标的偏移量
+                            this.slider = this.box.querySelector('.slider')                                     // 滑块
+                            this.isPressDown = false                                                            // 判断鼠标是否抬起
+                            this.width = this.box.getBoundingClientRect().width                                 // 获取盒子的宽度
+                            this.sliderWidth = document.querySelector('.slider').getBoundingClientRect().width  // 获取滑块的宽度
+                            this.limitRange = {}                                                                // 滑块的滑动范围限制
+                            this.mouseDistance = this.box.getBoundingClientRect().left + this.sliderWidth / 2   // 鼠标偏移量
+                            this.previous = null                                                                // 当前滑块的前一个元素
+                            this.next = null                                                                    // 当前滑块的后一个元素
+                            this.range = 0
+                            this.init()
+                        }
+
+                        My.prototype.init = function() {
+                            vueObj.width = this.width
+                            this.pressDown()        // 鼠标按下滑块时执行
+                            this.mousemove()        // 鼠标滑动时执行
+                            this.mouseup()          // 鼠标抬起时执行
+                        }
+
+                        // 点击滑块时执行
+                        My.prototype.pressDown = function() {
+                            let that = this
+                            that.box.addEventListener('mousedown', function(event) {
+                                // 利用传参兼容火狐
+                                let e = window.event || event
+                                // 获取目标元素
+                                let target = e.target ? e.target : e.srcElement
+                                // 获取元素标签内容
+                                let className = event.target.className
+
+                                if(className.includes('slider')) {
+                                    that.isPressDown = true
+                                    that.slider = target
+                                    that.getRange()
+                                    that.getCoordinate(e)
+                                }
+                            })
+                        }
+
+                        // 鼠标滑动时执行
+                        My.prototype.mousemove = function() {
+                            let that = this
+                            window.onmousemove = function(event) {
+                                // 利用传参兼容火狐
+                                let e = window.event || event
+                                // 获取目标元素
+                                let target = e.target ? e.target : e.srcElement
+                                // 获取元素标签内容
+                                let tagName = event.target.tagName
+
+                                // 分别兼容ie和chrome
+                                let scrollX = document.documentElement.scrollLeft || document.body.scrollLeft
+                                let scrollY = document.documentElement.scrollTop || document.body.scrollTop
+                                // 获取 x 和 y
+                                let end_x = e.clientX + scrollX
+
+                                if(that.isPressDown) {
+                                    if(that.limitRange.left && that.limitRange.right) {
+                                        // 存在多个滑块,点击中间的某个滑块时执行
+                                        if(that.limitRange.left + that.sliderWidth + that.sliderWidth / 2 + 2 <= end_x && that.limitRange.right - that.sliderWidth - that.sliderWidth / 2 - 2 >= end_x) {
+                                            that.slider.style.left = end_x - that.sliderWidth / 2 - that.boxLeft + 'px'
+                                        }
+                                    } else if(that.limitRange.left) {
+                                        // 存在多个滑块,最后一个元素
+                                        if(that.limitRange.left + that.sliderWidth + that.sliderWidth / 2 + 2 <= end_x && end_x <= that.width + that.boxLeft - that.sliderWidth / 2 - 2) {
+                                            that.slider.style.left = end_x - that.sliderWidth / 2 - that.boxLeft + 'px'
+                                        }
+                                    } else if(that.limitRange.right) {
+                                        // 存在多个滑块,第一个元素
+                                        if(end_x >= that.boxLeft + that.sliderWidth / 2 + 10 &&  end_x < that.limitRange.right - that.sliderWidth - that.sliderWidth / 2 - 2) {
+                                            that.slider.style.left = end_x - that.sliderWidth / 2 - that.boxLeft + 'px'
+                                        }
+                                    } else {
+                                        // 只有一个滑块时
+                                        if(end_x > that.boxLeft + that.sliderWidth / 2 + 10 && end_x < that.width + that.boxLeft - that.sliderWidth / 2 - 5) {
+                                            that.slider.style.left = end_x - that.sliderWidth / 2 - that.boxLeft + 'px'
+                                        }
+                                    }
+
+                                    // 计算百分比
+                                    that.percentage()
+                                }
+                            }
+                        }
+
+                        // 鼠标抬起事件
+                        My.prototype.mouseup = function() {
+                            let that = this
+                            window.onmouseup = function(event) {
+                                // 修改按下的状态
+                                that.isPressDown = false
+                                let valueEle = that.box.querySelectorAll('.slider span')
+                                let length = valueEle.length
+                                let sum = 0
+                                let lastEle = null
+                                let lastValue = 0
+                                for(let i = 0; i < length; i++) {
+                                    let item = valueEle[i]
+                                    let str = item.innerText
+                                    let value = str.slice(0, str.length - 1)
+                                    sum += Number(value)
+                                    if(i === length - 1) {
+                                        lastEle = item
+                                        lastValue = Number(value)
+                                    }
+                                }
+                                
+                                let difference = Math.abs(100 - sum)
+                                console.log(difference, 'difference', lastValue, sum)
+                                
+                                if(100 > sum) {
+                                    lastValue += difference
+                                    lastEle.innerText = lastValue + '%'
+                                } else if(100 < sum) {
+                                    lastValue -= difference
+                                    lastEle.innerText = lastValue + '%'
+                                }
+                            }
+                        }
+
+                        // 获取坐标
+                        My.prototype.getCoordinate = function() {
+                            // 重置状态
+                            this.limitRange = {}
+                            this.previous = null
+                            this.next - null
+
+                            this.previous = this.slider.previousElementSibling
+                            this.next = this.slider.nextElementSibling
+                            if(this.previous) {
+                                this.limitRange.left = this.previous.getBoundingClientRect().left
+                                // arr.push(previous.getBoundingClientRect().left)
+                            }
+                            if(this.next) {
+                                this.limitRange.right = this.next.getBoundingClientRect().right
+                                // arr.push(next.getBoundingClientRect().left)                                
+                            }
+                            console.log(this.previous, this.next)
+                        }
+
+                        // 计算百分比
+                        My.prototype.percentage = function() {
+                            this.leftPercentage()
+                            this.rightPercentage()
+                        }
+
+                        // 左边所占的百分比
+                        My.prototype.leftPercentage = function() {
+                            let previous = 0
+                            let slider = this.slider.getBoundingClientRect().left
+                            let distance = 0
+                            if(this.previous) {
+                                previous = this.previous.getBoundingClientRect().left + this.sliderWidth
+                                distance = slider - previous
+                            } else {
+                                slider = this.slider.getBoundingClientRect().left
+                                previous = this.boxLeft
+                                distance = slider - previous
+                            }
+                            
+                            let leftEle = this.slider.querySelector('.left')
+                            let value = distance / this.range * 100
+                            if(value > 1) {
+                                value = Math.floor(value) + '%'
+                            } else {
+                                value = Math.ceil(value) + '%'
+                            }
+                            leftEle.innerText = value
+                            leftEle.style.left = '-' + (distance - this.sliderWidth) / 2 + 'px'
+                        }
+
+                        // 右边所占的百分比
+                        My.prototype.rightPercentage = function() {
+                            let next = 0
+                            let rightEle = null
+                            let direction = ''
+                            let slider = this.slider.getBoundingClientRect().left + this.sliderWidth
+                            let distance = 0
+                            if(this.next) {
+                                rightEle = this.next.querySelector('span')
+                                direction = '-'
+
+                                next = this.next.getBoundingClientRect().left
+                                distance = next - slider
+                            } else {
+                                rightEle = this.slider.querySelector('.right')
+
+                                slider = this.slider.getBoundingClientRect().left + this.sliderWidth
+                                next = this.boxLeft + this.width
+                                distance = next - slider
+                            }
+                            
+                            console.log(distance / this.range * 100, 'kk')
+                            rightEle.innerText = Math.ceil(distance / this.range * 100) + '%'
+                            rightEle.style.left = direction + (distance + this.sliderWidth) / 2 + 'px'
+                        }
+
+                        // 获取范围
+                        My.prototype.getRange = function() {
+                            let length = this.box.querySelectorAll('.slider').length
+                            this.range = this.width - this.sliderWidth * length
+                        }
+
+                        new My()
+                    },
+                    clickRadio(num) {
+                        // 距离平均值
+                        let average = Math.floor(this.width / num)
+                        let tempDistance = 0
+                        let arr = []
+                        let value = Math.floor(100 / num)
+                        for(let i = 0; i < num - 1; i++) {
+                            tempDistance += average
+                            let obj = {
+                                left: tempDistance,
+                                minLeft: average / 2,
+                                leftValue: value
+                            }
+
+                            if(i === num - 2) {
+                                obj.rightValue = value + 100 % num
+                            }
+                            arr.push(obj)
+                        }
+
+                        // 必须清空
+                        this.sliderNumber = []
+                        setTimeout(() => {
+                            this.sliderNumber = arr
+                        }, 0)
+                    },
+                    init() {
+                        this.width = document.querySelector('.box').getBoundingClientRect().width
+                        let average = this.width / this.radioValue
+                        this.sliderNumber = [
+                            {
+                                left: average,
+                                minLeft: average / 2,
+                                leftValue: 100 / this.radioValue,
+                                rightValue: 100 / this.radioValue,
+                            }
+                        ]
+                    }
+                },
+            })
+            
+        </script>
+    </body>
+</html>

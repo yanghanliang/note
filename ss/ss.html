@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +7,6 @@
     <title>Document</title>
     <style>
         .box {
-<<<<<<< HEAD
             width: 800px;
             height: 500px;
             display: table;
@@ -21,19 +19,27 @@
             height: 100%;
             float: left;
             position: relative;
+            margin: 400px auto;
+            border: 1px solid red;
         }
 
-        .box>div:nth-child(1) {
-            background-color: aquamarine;
+        .crumbs:hover div {
+            /* display: block; */
         }
 
-        .box>div:nth-child(2) {
-            background-color: floralwhite;
-        }
-
-        .min-box {
+        .crumbs div {
+            /* display: none; */
             position: absolute;
-            background-color: pink;
+            border-radius: 50%;
+        }
+
+        .crumbs .c-home{
+            width: 300px;
+            height: 300px;
+            top: 50%;
+            left: 50%;
+            background-color: aquamarine;
+            transform: translate(-50%, -50%);
         }
 
         .w6 {
@@ -41,21 +47,21 @@
             height: 60px;
             background-color: forestgreen;
             display: inline-block;
-=======
-            width: 400px;
-            height: 400px;
-            margin: 70px auto;
->>>>>>> d76f0a5d3651bf0292aafb995ea9e81d1333bf73
+        }
+
+        .crumbs .c-home .child {
+            width: 100px;
+            height: 100px;
+            top: 0;
+            left: 50%;
+            background-color: bisque;
         }
     </style>
 </head>
-
 <body>
     <div class="box">
-<<<<<<< HEAD
         <div class="box-left">
         </div>
-        <div class="box-right"></div>
     </div>
 
     <script>
@@ -311,25 +317,6 @@
             data: data,
             filed: 'val'
         })
-=======
-        <div class="min"></div>
-    </div>
-
-    <script>
-        function getStyle(ele, attrs) {
-            if (window.getComputedStyle) {
-                let value = window.getComputedStyle(ele, null)[attrs]
-                let index = value.indexOf('px')
-                return Number(value.slice(0, index))
-            } else {
-                return ele.currentStyle
-            }
-        }
-
-        var width = getStyle(document.querySelector('.min'), 'width')
-        console.log(width)
->>>>>>> d76f0a5d3651bf0292aafb995ea9e81d1333bf73
     </script>
 </body>
-
 </html>
