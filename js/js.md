@@ -725,6 +725,20 @@ BOM的概念:Browser Object Model 浏览器对象模型
 
 ```
 
+
+### 刷新页面
+
+
++ history.go(0) 
++ location.reload() 
++ location=location 
++ location.assign(location) 
++ document.execCommand('Refresh') 
++ window.navigate(location)
++ location.replace(location) 
++ document.URL=location.href
+
+转载： `https://blog.csdn.net/qq_36657997/article/details/80932708`
 ---
 
 -----------------------------navigator对象-----------------------------

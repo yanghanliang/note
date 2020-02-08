@@ -45,6 +45,8 @@ data() {
 
 ## 表单验证-验证失效
 
+> 自定义表单验证内写 `return false`
+
 ```js
 
 data() {
@@ -76,6 +78,38 @@ data() {
 
 ---
 
+
+> vue 虚拟`DOM` 必须加 `key`
+
+因为他们的 `type` 一致，所以加 key
+
+> 正确写法
+
+```html
+
+<el-form-item label="密码" prop="password">
+    <el-input type="password" v-model="form.password"></el-input>
+</el-form-item>
+<el-form-item label="确认密码" prop="confirmPassword" key="passwords">
+    <el-input type="password" v-model="form.confirmPassword" @keyup.enter.native="register"></el-input>
+</el-form-item>
+
+```
+
+> 错误写法
+
+```html
+
+<el-form-item label="密码" prop="password">
+    <el-input type="password" v-model="form.password"></el-input>
+</el-form-item>
+<el-form-item label="确认密码" prop="passwords">
+    <el-input type="password" v-model="form.passwords" @keyup.enter.native="register"></el-input>
+</el-form-item>
+
+```
+
+---
 
 ## 验证纯数组
 
@@ -133,3 +167,22 @@ data() {
 
 ```
 
+## 表单验证异步处理
+
+```js
+
+this.$refs.form.validate(async (valid) => {
+    if (valid) {
+        try {
+            const { data } = await this.$http.post('user/addUser', {
+                username: '123',
+                password: '123456'
+            })
+            alert(data.msg)
+        } catch(e) {
+            console.log(e)
+        }
+    }
+})
+
+```

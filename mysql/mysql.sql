@@ -120,6 +120,11 @@ rename table new_person to person,person1 to person2;
 alter table person
 add age int;
 
+ALTER TABLE article
+ADD COLUMN rewazrd int(11) NOT NULL DEFAULT 0 COMMENT '打赏数',
+ADD COLUMN reprint int(11) NOT NULL DEFAULT 0 COMMENT '转载数',
+ADD COLUMN comment_number int(11) NOT NULL DEFAULT 0 COMMENT '评论数';
+
 -- 删除字段名
 alter table person
 drop age;

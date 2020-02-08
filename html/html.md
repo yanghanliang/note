@@ -115,15 +115,18 @@ position: absolute;
 设置具体值改变旋转中心的位置:transform-origin:150px 150px; // [left, top] || 默认为元素的中心旋转
 transform:rotate(30deg);    //deg角度,只能用这个单位
 
+
+注意: i 直接设置旋转不生效,是以为旋转不能设置给没有定位的行内元素,相对定位也不行,只能设置绝对定位||固定定位||块级元素||行内块元素
+
 .box {
-            width: 60px;
-            height: 60px;
-            background-color: red;
-            transition: all 1s linear;
-        }
-        .box:hover{
-            transform: rotate(360deg);
-        }
+    width: 60px;
+    height: 60px;
+    background-color: red;
+    transition: all 1s linear;
+}
+.box:hover{
+    transform: rotate(360deg);
+}
 
 
 transform:scale(0.5);-------------------设置缩放
@@ -2535,7 +2538,7 @@ user-select:none;
 
 ---
 
-## 提示
+## 提示(记住)
 
 `placeh`
 
