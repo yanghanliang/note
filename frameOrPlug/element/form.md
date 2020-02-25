@@ -186,3 +186,142 @@ this.$refs.form.validate(async (valid) => {
 })
 
 ```
+
+
+### 阻止浏览保存密码后的自动提示
+
+> 如果登录和注册在同一个页面的话，`key`是很必要的，可以防止一些虚拟`DOM`上的错误
+
+```html
+
+<el-form-item label="密码" prop="password" key="password">
+    <el-input :type="type.password" @focus="passwordFocus" ref="password" autocomplete="off" v-model="form.password"></el-input>
+    <!-- 这个是为了去掉浏览器默认的自动填充，这些都是在登录成功后点击浏览器默认的保存密码是才会出现的，不保存密码，则不会出现这种情况 -->
+    <input type="password" autocomplete="new-password" style="display: none"/>
+</el-form-item>
+<el-form-item label="确认密码" autocomplete="off" prop="confirmPassword" key="passwords">
+    <el-input :type="type.confirmPassword" @focus="confirmPasswordFocus" ref="confirmPassword" v-model="form.confirmPassword" @keyup.enter.native="register"></el-input>
+</el-form-item>
+
+```
+
+```js
+
+{
+    data() {
+		var confirmPassword = (rule, value, callback) => {
+			if (value) {
+				// 验证用户名是否重复
+				if (value === this.form.password) {
+					callback()
+				} else {
+					callback(new Error('两次密码不一致'))
+				}
+			} else {
+				return callback(new Error('请输入密码'))
+			}
+		}
+        return {
+            rules: {
+				password: [
+					{ trigger: 'change', message: '请输入密码', required: true },
+				],
+				confirmPassword: [
+					{ validator: confirmPassword, trigger: 'change', required: true }
+				]
+            },
+            type: {
+				password: 'text',
+				confirmPassword: 'text',
+            },
+            form: {
+				password: '',
+				confirmPassword: '',
+			},
+			lock: true
+        }
+    },
+    methods: {
+		// 这个是为了去掉浏览器默认的提示
+		passwordFocus() {
+			if (String(this.form.password).length === 0) {
+				if (this.lock) {
+					this.$refs.password.blur()
+					this.lock = false
+					setTimeout(() => {
+						this.type.password = 'text'
+						this.$refs.password.focus()
+						this.lock = true
+					})
+				}
+			}
+		},
+		confirmPasswordFocus() {
+			if (String(this.form.confirmPassword).length === 0) {
+				if (this.lock) {
+					this.$refs.confirmPassword.blur()
+					this.lock = false
+					setTimeout(() => {
+						this.type.confirmPassword = 'text'
+						this.$refs.confirmPassword.focus()
+						this.lock = true
+					})
+				}
+			}
+		}
+    },
+	watch: {
+		// 这个是为了去掉浏览器默认的提示
+		'form.password': function(value, v2) {
+			if (String(value).length > 0) {
+				setTimeout(() => {
+					this.type.password = 'password'
+				})
+			} else if (this.$refs.password) {
+				this.$refs.password.blur()
+				this.lock = false
+				setTimeout(() => {
+					this.type.password = 'text'
+					this.$refs.password.focus()
+					this.lock = true
+				})
+			}
+		},
+		'form.confirmPassword': function(value) {
+			if (String(value).length > 0) {
+				setTimeout(() => {
+					this.type.confirmPassword = 'password'
+				})
+			} else if (this.$refs.confirmPassword) {
+				this.$refs.confirmPassword.blur()
+				this.lock = false
+				setTimeout(() => {
+					this.type.confirmPassword = 'text'
+					this.$refs.confirmPassword.focus()
+					this.lock = true
+				})
+			}
+		}
+	},
+}
+
+
+```
+
+---
+
+#### 还有一种方法，也可以：阻止浏览保存密码后的自动提示（更简单）
+
+```html
+
+
+<el-form-item label="密码" prop="password">
+    <el-input type="text" onfocus="this.type = 'password'" v-model="commentForm.password"></el-input>
+</el-form-item>
+<el-form-item label="确认密码" prop="checkPass">
+    <el-input type="text" onfocus="this.type = 'password'" v-model="commentForm.checkPass" autocomplete="off"></el-input>
+</el-form-item>
+
+```
+
+注意，οnfοcus="this.type='password'"不能再IE上识别，需要做兼容性考虑，在网页初始化的时候处理下就好了，对于IE浏览器，在input标签上使用用type="password" autocomplete="off"后，浏览器是不会提示记住密码的。

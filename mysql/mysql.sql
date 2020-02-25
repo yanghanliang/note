@@ -2408,3 +2408,12 @@ service mysqld restart
 
 select sum(praise) + sum(`read`) FROM article
 
+-- 存在和不存在，包含和不包含
+
+in
+
+not in
+
+SELECT identification FROM jurisdiction WHERE id not in (1, 2, 3)
+SELECT identification FROM jurisdiction WHERE id in (1, 2, 3)
+

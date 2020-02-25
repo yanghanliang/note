@@ -56,7 +56,7 @@ rowExpand(row, event, column) {
      }
 
      if (this.entexpands.indexOf(row.id) < 0) {
-        this.entexpands= []
+        this.entexpands = []
         this.entexpands.push(row.id)
      } else {
         this.entexpands.remove(row.id)
@@ -96,5 +96,50 @@ el-table.table-border(:data="areaTableData", stripe, style="width: 100%", height
             span {{ row.cpm | $money | $formatNumber }}
     el-table-column(prop="click" label="点击数", v-if="selectVal == 'click'", key="click")
 
+
+```
+
+
+### v-if v-show 失效
+
+>  `slot-scope="{row}"`
+
+```html
+
+<!-- 错误写法 -->
+<el-table-column type="expand">
+    <template>
+        <el-select
+            v-if="selectVisible"
+            v-model="selectedList"
+            multiple
+            collapse-tags
+            style="margin-left: 20px;"
+            placeholder="请选择"
+        >
+            <el-option v-for="item in jurisdictionList" :key="item.id" :label="item.j_name" :value="item.id">
+            </el-option>
+        </el-select>
+        <el-button v-else class="button-new-tag" size="small" @click="selectVisible = !selectVisible">+ New Tag</el-button>
+    </template>
+</el-table-column>
+
+<!-- 正确写法 -->
+<el-table-column type="expand">
+    <template slot-scope="{row}">
+        <el-select
+            v-if="selectVisible"
+            v-model="selectedList"
+            multiple
+            collapse-tags
+            style="margin-left: 20px;"
+            placeholder="请选择"
+        >
+            <el-option v-for="item in jurisdictionList" :key="item.id" :label="item.j_name" :value="item.id">
+            </el-option>
+        </el-select>
+        <el-button v-else class="button-new-tag" size="small" @click="selectVisible = !selectVisible">+ New Tag</el-button>
+    </template>
+</el-table-column>
 
 ```
