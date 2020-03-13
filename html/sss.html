@@ -1,54 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
-        html,body {
-            height: 100%;
-            margin: 0;
-        }
-
-        header {
-            height: 50px;
-            top: 0;
-            position: absolute;
-            background-color: aqua;
-        }
-
-        footer {
-            height: 50px;
-            bottom: 0;
-            position: absolute;
-            background-color: aquamarine;
-        }
-
-        .main {
-            top: 0;
-            bottom: 0;
-            width: 100%;
-            position: absolute;
-            background-color: antiquewhite;
-        }
-
-        .content {
-            width: 50px;
-            height: 2000px;
-            top: 50px;
-            bottom: 0;
-            position: absolute;
-            padding-bottom: 50px;
-            background-color: red;
-        }
-    </style>
 </head>
+
 <body>
-    <div class="main">
-        <header>header</header>
-        <div class="content">
-            <footer>footer</footer>
-        </div>
-    </div>
+    <script>
+       window.onbeforeunload = onbeforeunload_handler;   
+    window.onunload = onunload_handler;   
+    function onbeforeunload_handler()
+	{   
+        var warning="确认退出?";           
+        return warning;   
+    }   
+       
+    function onunload_handler()
+	{   
+        var warning="谢谢光临";   
+        alert(warning);   
+    }
+    </script>
 </body>
+
 </html>

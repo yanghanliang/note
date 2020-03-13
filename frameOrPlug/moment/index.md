@@ -26,3 +26,12 @@ while (tempDate < endDate) {
 }
 
 ```
+
+---
+
+### 获取本周一的日期
+
+```js
+var weekOfday = moment().format('E') // 计算今天是这周第几天
+var last_monday = moment().subtract(weekOfday-1, 'days').format('YYYY/MM/DD') // 周一日期
+```

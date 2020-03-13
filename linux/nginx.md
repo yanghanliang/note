@@ -1,5 +1,8 @@
 + sudo apt-get install nginx // 安装nginx
 + nginx -v // 查看nginx的版本
++ whereis nginx // 查看nginx的安装目录
+
+
 + cd /etc/nginx/conf.d
 + sudo vi douban-com-8081.conf 
 	+ 创建文件
@@ -87,3 +90,15 @@ server {
 启动nginx
 [root@mn-dm-poc01 conf]# cd /usr/local/nginx/sbin/
 [root@mn-dm-poc01 sbin]# ./nginx -s reload
+
+
+### 查看网站是否可以访问
+
+curl http://127.0.0.1:8080
+
+
+### windos 下操作nginx
+
+start .\nginx.exe
+.\nginx.exe -s reload
+.\nginx.exe -v

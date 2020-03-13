@@ -1,4 +1,4 @@
 pm2 start http-server -p 8080
 
-
-
+nodemon app  --> pm2 start npm --watch --name api -- run nodemon app start
+npm run dev --> pm2 start npm --watch --name blog -- run dev

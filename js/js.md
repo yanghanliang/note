@@ -3257,6 +3257,12 @@ $     以什么结尾
 /m多行搜索
 
 
+######
+
+中文
+/[\u4e00-\u9fa5]/
+
+
 ###########################
 
 ip/掩码：
@@ -5097,7 +5103,6 @@ $("input[name*='code']");//name属性包含code的所有input标签
 
 ```
 
-<<<<<<< HEAD
 ```js
 
 Math.pow(3,2);   // 3的平方
@@ -5113,7 +5118,8 @@ Math.sqrt(9);   9 // 开方，返回结果3
 eval(string) // 必需。要计算的字符串，其中含有要计算的 JavaScript 表达式或要执行的语句。
 
 eval("2+2") // 4
-=======
+
+```
 
 #### 给数字添加一个分割符
 
@@ -5165,7 +5171,6 @@ var strSplicing = function(value, limit) {
    return myEach(val, limit)
 }
 console.log(strSplicing(12345678, 3))
->>>>>>> d76f0a5d3651bf0292aafb995ea9e81d1333bf73
 
 ```
 
@@ -5203,4 +5208,16 @@ for(let [key, value] of arr.entries()) {
 // 2 "c"
 
 ```
+
+---
+
+### 取数组中的值或者key,组成新的数组
+
+```js
+
+Object.values(arr)
+Object.keys(arr)
+
+```
+
 

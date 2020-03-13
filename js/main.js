@@ -328,6 +328,32 @@ My.prototype.sort = function(params) {
 }
 
 /**
+ * 数组对象排序
+ * @param {object}           params
+ * @param {array}            params.data 数组对象 [{value: 50}]
+ * @param {string}           params.key  已对象中的 key 为判断对象 value
+ * @param {string,boolean}   param.sort  升序或降序 默认降序 可选值 true 'desc'
+ * @return {array}           排序好之后的数组
+ */
+My.prototype.sortAO = function(params) {
+    const data = params.data
+    const key = params.key ? params.key : 'value' // 默认 value
+    const sort = params.sort ? '>' : '<' // 默认是降序
+
+    for (let i = 0, length = data.length; i < length - 1; i++) {
+        for (let j = 0; j < length - i - 1; j++) {
+            let rule = eval(data[j][key] + sort + data[j + 1][key])
+            if (rule) {
+                let temp = Object.assign({}, data[j])
+                data[j] = data[j + 1]
+                data[j + 1] = temp
+            }
+        }
+    }
+    return data
+}
+
+/**
  * 获取元素
  * 和 jQuery 获取元素一致
  * @param {object}           params
@@ -349,6 +375,36 @@ My.prototype.removeEmptyObjects = function() {
         }
     }
     return params
+}
+
+/**
+ * 字符串转为数组
+ * @param {object}           params
+ * @param {string}           params.str // 需要转为数组的字符串
+ * @param {number}           params.step // 步数，按它的值进行截取
+ * @return {array}           转成数组后的数据
+ */
+My.prototype.strsub =function(params) {
+    let arr = []
+    let length = params.str.length
+
+    if (length <= params.step) {
+        return [params.str]
+    } else {
+        let recursion = function(start, end, step) {
+            let value = params.str.slice(start, end)
+            arr.push(value)
+            if (length - end > step) {
+                recursion(end, end + step, step)
+            } else {
+                let last = params.str.slice(end)
+                arr.push(last)
+            }
+        }
+
+        recursion(0, params.step, params.step)
+    }
+    return arr
 }
 
 /**

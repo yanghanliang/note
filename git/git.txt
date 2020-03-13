@@ -7,7 +7,7 @@
 + 在 GitHub 上创建一个在线仓库。(将本地项目推送到 GitHub。)
 	+ git remote add origin https://github.com/你的GitHub用户名/admin-vue.git
 	+ git push -u origin master
-可选:
+
 + 创建一个新分支(创建功能)
 	+ git branch dev-login  	// dev-login  新分支的名称(最好写功能的名称)
 	+ git branch  				// 查看分支
@@ -69,6 +69,8 @@
     + git show 6b14b5883e5a03d5e2110eb78633f622e81a36ac
 + git 查看文件还未提交的更改
 	+ git diff
++ 查看git源
+	+ git remote -v
 
 
 + 配制个人信息

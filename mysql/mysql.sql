@@ -20,10 +20,10 @@ create database `jd`;
 
 -- 创建一个中文名 的数据库
 -- 需要给中文名用``包裹
-create database 黑马;
+create database 名字;
 -- 创建一个中文名 的数据库
 -- 需要给中文名用``包裹
-create database `黑马`;
+create database `名字`;
 
 -- 客户端告知服务器我们cmd的编码格式
 -- 服务器会自动进行转码
@@ -156,14 +156,14 @@ insert into person(name,id) values
 -- 值列表的顺序必须 和表的字段顺序一致
 -- id,name,age
 insert into person values 
-	(3,'迪丽热巴',18);
+	(3,'名字',18);
 
 -- 如果插入多条相同字段的数据,可以添加多个值列表
 -- 值列表之间用逗号分隔
 insert into person values 
-	(4,'迪丽热巴',28),
-	(5,'迪丽热巴',38),
-	(6,'迪丽热巴',48);
+	(4,'名字',28),
+	(5,'名字',38),
+	(6,'名字',48);
 
 
 -- 查询所有的数据
@@ -389,11 +389,11 @@ insert into string_1 values
 
 create table string_2 (
 	name varchar(20),
-	xihuan enum("林志玲","如花","迪丽热巴","鹏哥")
+	xihuan enum("林志玲","如花","名字","鹏哥")
 );
 
 insert into string_2 values
-	("正哥","迪丽热巴");
+	("正哥","名字");
 
 insert into string_2 values 
 	("正哥","刘欢");

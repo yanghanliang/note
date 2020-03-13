@@ -1316,12 +1316,20 @@ color:green;
 
 选择器与选择器之间用>隔开
 
+---
 
-兄弟选择器
+兄弟选择器（弟选择器，找到它的下一个元素）
 
 语法
 
 选择器与选择器之间用 + 隔开
+
+> 注意: html元素必须是紧挨着的
+
+---
+相邻兄弟选择器(弟弟们选择器) ~
+
+选中相邻的下面所有元素
 
 
 属性选择器
@@ -2545,5 +2553,13 @@ user-select:none;
 ```html
 
 <input type="password" autocomplete="off" placeholder="请输入原密码" placeh class="el-input__inner">
+
+```
+
+### 防止手机端展示pc端网站布局错乱
+
+```html
+
+    <meta name="viewport" content="width=device-width, initial-scale=0, maximum-scale=0, user-scalable=yes, shrink-to-fit=no">
 
 ```
