@@ -2554,6 +2554,7 @@ $('ul').children('.span') //筛选出符合条件的子元素,不是后代元素
 --------------------------添加类------------------------
 
 addClass('类名'); //添加类名
+ele.className = 'className'
 
 removeClass('类名'); //删除类名
 
@@ -5220,4 +5221,12 @@ Object.keys(arr)
 
 ```
 
+
+### 页面置底
+```js
+// 让页面置底
+this.$nextTick(() => {
+  this.$refs.show.scrollIntoView()
+})
+```
 

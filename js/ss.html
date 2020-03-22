@@ -1,66 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .box {
+            width: 100px;
+            height: 100px;
+            background-color: aqua;
+        }
+    </style>
 </head>
+
 <body>
+    <div class="box"></div>
     <script>
+        // compatibility for firefox and chrome
+        let PeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection
+        var pc = new PeerConnection({
+            iceServers: []
+        })
+        var noop = function () {}
+        var localIPs = {}
+        var ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g
 
-        const arr = [
-            {
-                txt: '小说',
-                value: 40
-            },
-            {
-                txt: '天气',
-                value: 100
-            },
-            {
-                txt: '游戏',
-                value: 50
-            },
-            {
-                txt: '音乐',
-                value: 75
-            },
-            {
-                txt: '编程',
-                value: 45
-            },
-            {
-                txt: '编程',
-                value: 45
-            },
-            {
-                txt: 'ss',
-                value: 10
-            }
-        ]
-        
-        const fn = function(params) {
-            const data = params.data
-            const key = params.key
-            const sort = params.sort ? '>' : '<' // 默认是降序
-
-            for (let i = 0, length = data.length; i < length - 1; i++) {
-                for (let j = 0; j < length - i - 1; j++) {
-                    let rule = eval(data[j][key] + sort + data[j + 1][key])
-                    if (rule) {
-                        let temp = Object.assign({}, data[j])
-                        data[j] = data[j + 1]
-                        data[j + 1] = temp
-                    }
-                }
-            }
+        function iterateIP(ip) {
+            if (!localIPs[ip]) sessionStorage.setItem('ip', ip)
+            localIPs[ip] = true
         }
 
-        fn({
-            data: arr,
-            key: 'value',
-            // sort: 'desc'
+        // create a bogus data channel
+        pc.createDataChannel('')
+
+        // create offer and set local description
+        pc.createOffer().then(function (sdp) {
+            sdp.sdp.split('\n').forEach(function (line) {
+                if (line.indexOf('candidate') < 0) return
+                line.match(ipRegex).forEach(iterateIP)
+            })
+
+            pc.setLocalDescription(sdp, noop, noop)
+        }).catch(function (reason) {
+            // An error occurred, so handle the failure to connect
         })
+
+        // sten for candidate events
+        pc.onicecandidate = function (ice) {
+            if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex))
+                return
+            ice.candidate.candidate.match(ipRegex).forEach(iterateIP)
+        }
     </script>
 </body>
+
 </html>

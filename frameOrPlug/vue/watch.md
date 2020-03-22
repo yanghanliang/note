@@ -19,3 +19,27 @@ new Vue({
 })
 
 ```
+
+### 配合计算属性,监听对象中特定的值
+
+```js
+
+computed: { // 配合 switch 监听对象中某一特定值
+    searchData() {
+        return this.pageData.searchData
+    }
+},
+data() {
+    return {
+        pageData: {
+            searchData: ''
+        }
+    }
+}
+watch: {
+    searchData: function (newQuestion, oldQuestion) { // 配合计算属性,监听对象中特定的值
+        this.pageData.lock = true
+    }
+}
+
+```

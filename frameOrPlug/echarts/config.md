@@ -5,9 +5,12 @@
 option = {
     toolbox: {
         feature: {
-            saveAsImage: {} // 可点击下载为图片
+            saveAsImage: {}, // 可点击下载为图片
             dataView: {readOnly: false}, // 数据视图
             restore: {}, // 刷新的按钮
+            magicType: { // 切换为堆叠
+                type: ['stack', 'tiled']
+            },
         }
     },
 }

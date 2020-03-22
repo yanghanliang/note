@@ -2563,3 +2563,17 @@ user-select:none;
     <meta name="viewport" content="width=device-width, initial-scale=0, maximum-scale=0, user-scalable=yes, shrink-to-fit=no">
 
 ```
+
+
+### 文本域行高问题
+```
+因为textarea不支持自适应高度，就是定好高度或者是行数之后，超出部分就会显示滚动条，看起来不美观。
+而用DIV来模拟时，首先遇到的问题是：div怎么实现输入功能？
+可能我们还是第一次见到这个属性contenteditable，如一个普通的block元素上加个contenteditable="true"就实现编辑，出现光标了。如
+```
+
+```html
+
+<div class="input" contenteditable="true"></div>
+
+```
