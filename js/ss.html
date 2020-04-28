@@ -17,41 +17,97 @@
 <body>
     <div class="box"></div>
     <script>
-        // compatibility for firefox and chrome
-        let PeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection
-        var pc = new PeerConnection({
-            iceServers: []
-        })
-        var noop = function () {}
-        var localIPs = {}
-        var ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g
+        // var insidePlant = '111'
+        // var foo = 'aaa'
+        // var fun = {
+        //     insidePlant: '222',
+        //     ret: function(param) {
+        //         var foo = param
+        //         this.foo = 'bbb'
+        //         console.log('ret this:' + this.insidePlant)
+        //         console.log('ret:' + insidePlant)
+        //         console.log('ret foo1:' + this.foo)
+        //         console.log('foo:' + foo)
+        //     }
+        // }
 
-        function iterateIP(ip) {
-            if (!localIPs[ip]) sessionStorage.setItem('ip', ip)
-            localIPs[ip] = true
+        // console.log(fun.insidePlant)
+        // console.log(foo)
+        // var newret = fun.ret
+        // newret('ooo')
+        // console.log('newret.foo:' + newret.foo)
+        // fun.ret()
+
+        // function my() {
+        //     var insidePlant = 'xxx'
+        //     console.log('var1:' + insidePlant)
+        //     console.log('this.insidePlant1:' + this.insidePlant)
+        //     var insidePlant = '333'
+        //     console.log('var2:' + insidePlant)
+        //     this.insidePlant = 'hhh'
+        //     console.log('this.insidenPlan2:' + insidePlant)
+        // }
+
+        // var t = new my()
+        // console.log('t:' + t.insidePlant)
+        // console.log('insdePlant:' + insidePlant)
+        let data = [
+            {
+                id: 1,
+                name: 'a',
+                pid: 0
+            },
+            {
+                id: 2,
+                name: 'b',
+                pid: 0
+            },
+            {
+                id: 3,
+                name: 'c',
+                pid: 1
+            },
+            {
+                id: 4,
+                name: 'd',
+                pid: 3
+            },
+            {
+                id: 5,
+                name: 'e',
+                pid: 2
+            }
+        ]
+
+        
+        let InfinitePoleClassification = function(data) {
+            let arr = []
+            let ipc = function(obj) {
+                for(let i = 0, length = data.length; i < length; i++) {
+                    let item = data[i]
+                    if (item.pid === obj.id) {
+                        ipc(item)
+                        if (obj.children) {
+                            obj.children.push(item)
+                        } else {
+                            obj.children = [item]
+                        }
+                    }
+                }
+                return obj
+            }
+
+            for(let i = 0, length = data.length; i < length; i++) {
+                let item = data[i]
+                if (item.pid === 0) {
+                    arr.push(ipc(item))
+                }
+            }
+
+            return arr
         }
 
-        // create a bogus data channel
-        pc.createDataChannel('')
-
-        // create offer and set local description
-        pc.createOffer().then(function (sdp) {
-            sdp.sdp.split('\n').forEach(function (line) {
-                if (line.indexOf('candidate') < 0) return
-                line.match(ipRegex).forEach(iterateIP)
-            })
-
-            pc.setLocalDescription(sdp, noop, noop)
-        }).catch(function (reason) {
-            // An error occurred, so handle the failure to connect
-        })
-
-        // sten for candidate events
-        pc.onicecandidate = function (ice) {
-            if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex))
-                return
-            ice.candidate.candidate.match(ipRegex).forEach(iterateIP)
-        }
+        InfinitePoleClassification(data)
     </script>
 </body>
 
