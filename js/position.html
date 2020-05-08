@@ -40,13 +40,12 @@
         </div>
     </div>
     <button id="btn">btn</button>
-    
+
     <script>
         let ele1 = document.querySelector('.mm-box')
         console.log(ele1.clientWidth, 'clientWidth', 'width + padding * 2')
         console.log(ele1.offsetWidth, 'offsetWidth', 'width + padding * 2 + border * 2')
         console.log(ele1.scrollWidth, 'scrollWidth', 'width + padding * 2')
-
 
         document.getElementById('btn').onclick = function() {
             let ele = document.querySelector('.mm-box')
