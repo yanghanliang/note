@@ -11,7 +11,9 @@ option = {
             magicType: { // 切换为堆叠
                 type: ['stack', 'tiled']
             },
-        }
+        },
+        axisPointer: { type: 'none' }, // 去掉鼠标悬浮时的中线
+        formatter: '￥{c}', // 修改悬浮时的提示内容
     },
 }
 
