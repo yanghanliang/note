@@ -10,6 +10,7 @@
         - counterclockwise：是否是逆时针。true是逆时针，false：顺时针，默认false;
         - 弧度和角度的转换公式： rad = deg*Math.PI/180;  
         - 在Math提供的方法中**sin、cos等都使用的弧度**
+        - 圆的面积公式 S = πr²
 
 ```
 
