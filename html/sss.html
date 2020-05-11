@@ -8,21 +8,22 @@
 </head>
 
 <body>
-    <script>
-       window.onbeforeunload = onbeforeunload_handler;   
-    window.onunload = onunload_handler;   
-    function onbeforeunload_handler()
-	{   
-        var warning="确认退出?";           
-        return warning;   
-    }   
-       
-    function onunload_handler()
-	{   
-        var warning="谢谢光临";   
-        alert(warning);   
-    }
-    </script>
+    <p>要使用的图像：</p>
+<img id="tulip" src="https://mdn.mozillademos.org/files/5397/rhino.jpg" alt="The Tulip" />
+
+<p>画布：</p>
+<canvas id="myCanvas" width="500" height="300" style="border:1px solid #d3d3d3;background:#ffffff;">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+
+<script>
+
+var c=document.getElementById("myCanvas");
+var ctx=c.getContext("2d");
+var img=document.getElementById("tulip");
+ctx.drawImage(img,10,10);
+
+</script>
 </body>
 
 </html>

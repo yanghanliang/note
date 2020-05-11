@@ -1,58 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        .box {
-            width: 100px;
-            height: 100px;
-            background-color: aqua;
-        }
     </style>
 </head>
-
 <body>
-    <div class="box"></div>
+    <div style="">
+        <canvas id="canvas" width="500" height="300" style="border:1px solid #d3d3d3;background:#ffffff;"></canvas>
+        <img id="imgUpload" src="./icon.jpg" />
+        <img id="imgCover" src="./timg.jpg" alt="" crossorigin="anonymous">
+    </div>
+    <img class="down_poster" src="" alt="">
     <script>
-        // compatibility for firefox and chrome
-        let PeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection
-        var pc = new PeerConnection({
-            iceServers: []
+        var eleImgCover = document.getElementById('imgCover');
+        eleImgCover.addEventListener('load', e => {
+            //海报背景（已存在的图片）
+            //上传图片（已通过方法获取到 document.getElementById("imgUpload").src = window.URL.createObjectURL(imgFile.files[0]);）
+            var imgUpload = document.getElementById('imgUpload');
+            //创建画布
+            var canvas = document.querySelector('#canvas');
+            //高宽设置
+            var upload_width = 380;
+            var upload_height = 380;
+            var cover_width = 1279;
+            var cover_height = 855;
+            canvas.width = cover_width;
+            canvas.height = cover_height;
+            var context = canvas.getContext('2d');
+            //底板图绘制
+            context.drawImage(eleImgCover, 0, 0, cover_width, cover_height, 0, 0, 500, 500);
+            //上传图像绘制
+            context.drawImage(imgUpload, 60, 60, upload_width, upload_height, 92, 302, 100, 100);
+            //给要存放此图片的img标签赋值
+            document.querySelector('.down_poster').setAttribute("src", canvas.toDataURL());
         })
-        var noop = function () {}
-        var localIPs = {}
-        var ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g
-
-        function iterateIP(ip) {
-            if (!localIPs[ip]) sessionStorage.setItem('ip', ip)
-            localIPs[ip] = true
-        }
-
-        // create a bogus data channel
-        pc.createDataChannel('')
-
-        // create offer and set local description
-        pc.createOffer().then(function (sdp) {
-            sdp.sdp.split('\n').forEach(function (line) {
-                if (line.indexOf('candidate') < 0) return
-                line.match(ipRegex).forEach(iterateIP)
-            })
-
-            pc.setLocalDescription(sdp, noop, noop)
-        }).catch(function (reason) {
-            // An error occurred, so handle the failure to connect
-        })
-
-        // sten for candidate events
-        pc.onicecandidate = function (ice) {
-            if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex))
-                return
-            ice.candidate.candidate.match(ipRegex).forEach(iterateIP)
-        }
     </script>
 </body>
-
 </html>
