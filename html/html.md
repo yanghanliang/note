@@ -588,102 +588,102 @@ font-size:contain;
 
 第六天
 
-浮动(为了解决块级元素在同一行显示)
+    浮动(为了解决块级元素在同一行显示)
 
-float:left;|right
+    float:left;|right
 
-特点:
+    特点:
 
-浮动的元素不占位置(脱标)
+    浮动的元素不占位置(脱标)
 
-浮动可以让块级元素在一行上显示
+    浮动可以让块级元素在一行上显示
 
-可以进行模式转换(类似于display)行内元素"行内块元素"
-
-
-
-作用:
-
-图片文字环绕效果(包裹性)文字的标签被压住了，但是文字没被压住。
+    可以进行模式转换(类似于display)行内元素"行内块元素"
 
 
 
+    作用:
 
-
-清除浮动:
-
-1. 在浮动标签后添加一个空标签
-
-.clear{
-
-clear:both; (清除左右浮动)
-
-}
-
-浮动的标签
-
-<div class="clear"></div>
+    图片文字环绕效果(包裹性)文字的标签被压住了，但是文字没被压住。
 
 
 
-2.给父元素设置overflow:hidden;
-
-overflow:hidden;可以将超出父元素的部分进行隐藏。
-
-visible 默认值
 
 
-3. 使用伪元素清除浮动(推荐)
+    清除浮动:
 
-.clearfix::after{
+    1. 在浮动标签后添加一个空标签
 
-content:" ";
+    .clear{
 
-height:0;
+    clear:both; (清除左右浮动)
 
-line-height:0;
+    }
 
-display:block;
+    浮动的标签
 
-clear:both;
-
-visibility:hidden;
-
-}
-
-.clearfix::after{
-
-zoom:1; (兼容IE)
-
-}
+    <div class="clear"></div>
 
 
 
-清除浮动的时机:
+    2.给父元素设置overflow:hidden;
 
-父容器没有高度(height=0 也不行)
+    overflow:hidden;可以将超出父元素的部分进行隐藏。
 
-父容器中所有的子元素都设置了浮动
+    visible 默认值
+
+
+    3. 使用伪元素清除浮动(推荐)
+
+    .clearfix::after{
+
+    content:" ";
+
+    height:0;
+
+    line-height:0;
+
+    display:block;
+
+    clear:both;
+
+    visibility:hidden;
+
+    }
+
+    .clearfix::after{
+
+    zoom:1; (兼容IE)
+
+    }
 
 
 
-overflow: visible; 默认可将超出部分显示
+    清除浮动的时机:
 
-overflow: hidden; 将超出标签部分内容隐藏
+    父容器没有高度(height=0 也不行)
 
-overflow: scroll; 设置滚动条(不超出时也有滚动条)
+    父容器中所有的子元素都设置了浮动
 
-overflow: auto; 自适应(超出时才有滚动条)
 
-## 隐藏滚动条还可以滚动
 
-```css
+    overflow: visible; 默认可将超出部分显示
 
-.box::-webkit-scrollbar {
-    display: none;
-}
+    overflow: hidden; 将超出标签部分内容隐藏
 
-```
+    overflow: scroll; 设置滚动条(不超出时也有滚动条)
+
+    overflow: auto; 自适应(超出时才有滚动条)
+
+    ## 隐藏滚动条还可以滚动
+
+    ```css
+
+    .box::-webkit-scrollbar {
+        display: none;
+    }
+
+    ```
 
 
 

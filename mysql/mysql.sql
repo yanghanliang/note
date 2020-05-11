@@ -2326,8 +2326,7 @@ delimiter ;
 
 window下:
 --数据库的备份
-mysqldump -h127.0.0.1 -P3306 -uroot -p graduation_project -B > E:/xxbiji/mysql/graduation_projec
-t.sql 
+mysqldump -h127.0.0.1 -P3306 -uroot -p graduation_project -B > E:/xxbiji/mysql/graduation_project.sql 
 
 -B参数，就是在备份文件里面，多加上了创建数据库的语句！
 

@@ -408,6 +408,39 @@ My.prototype.strsub =function(params) {
 }
 
 /**
+ * 无限极分类
+ * 菜单导航常用
+ * @param {array}            data // [{id: 1, pid: 0, name: 'a'}, {id: 2, pid: 1, name: 'b'}, {id: 3, pid: 2, name: 'c'}, {id: 4, pid: 0, name: 'd'}...]
+ * @return {array}           处理后的数据: [{id: 1, pid: 0, children[{id: 2, pid: 1, name: 'b', children: [{id: 3, pid: 2, name: 'c'}]}]}, {id: 4, pid: 0, name: 'd'}...]
+ */
+My.prototype.InfinitePoleClassification = function(data) {
+    let arr = []
+    let ipc = function(obj) {
+        for(let i = 0, length = data.length; i < length; i++) {
+            let item = data[i]
+            if (item.pid === obj.id) {
+                ipc(item)
+                if (obj.children) {
+                    obj.children.push(item)
+                } else {
+                    obj.children = [item]
+                }
+            }
+        }
+        return obj
+    }
+
+    for(let i = 0, length = data.length; i < length; i++) {
+        let item = data[i]
+        if (item.pid === 0) {
+            arr.push(ipc(item))
+        }
+    }
+
+    return arr
+}
+
+/**
  * 实例化
  */
 // var my = new My()
