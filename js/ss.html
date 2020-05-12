@@ -1,114 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        .box {
-            width: 100px;
-            height: 100px;
-            background-color: aqua;
-        }
     </style>
 </head>
-
 <body>
-    <div class="box"></div>
+    <div style="">
+        <canvas id="canvas" width="500" height="300" style="border:1px solid #d3d3d3;background:#ffffff;"></canvas>
+        <img id="imgUpload" src="./icon.jpg" />
+        <img id="imgCover" src="./timg.jpg" alt="" crossorigin="anonymous">
+    </div>
+    <img class="down_poster" src="" alt="">
     <script>
-        // var insidePlant = '111'
-        // var foo = 'aaa'
-        // var fun = {
-        //     insidePlant: '222',
-        //     ret: function(param) {
-        //         var foo = param
-        //         this.foo = 'bbb'
-        //         console.log('ret this:' + this.insidePlant)
-        //         console.log('ret:' + insidePlant)
-        //         console.log('ret foo1:' + this.foo)
-        //         console.log('foo:' + foo)
-        //     }
-        // }
-
-        // console.log(fun.insidePlant)
-        // console.log(foo)
-        // var newret = fun.ret
-        // newret('ooo')
-        // console.log('newret.foo:' + newret.foo)
-        // fun.ret()
-
-        // function my() {
-        //     var insidePlant = 'xxx'
-        //     console.log('var1:' + insidePlant)
-        //     console.log('this.insidePlant1:' + this.insidePlant)
-        //     var insidePlant = '333'
-        //     console.log('var2:' + insidePlant)
-        //     this.insidePlant = 'hhh'
-        //     console.log('this.insidenPlan2:' + insidePlant)
-        // }
-
-        // var t = new my()
-        // console.log('t:' + t.insidePlant)
-        // console.log('insdePlant:' + insidePlant)
-        let data = [
-            {
-                id: 1,
-                name: 'a',
-                pid: 0
-            },
-            {
-                id: 2,
-                name: 'b',
-                pid: 0
-            },
-            {
-                id: 3,
-                name: 'c',
-                pid: 1
-            },
-            {
-                id: 4,
-                name: 'd',
-                pid: 3
-            },
-            {
-                id: 5,
-                name: 'e',
-                pid: 2
-            }
-        ]
-
-        
-        let InfinitePoleClassification = function(data) {
-            let arr = []
-            let ipc = function(obj) {
-                for(let i = 0, length = data.length; i < length; i++) {
-                    let item = data[i]
-                    if (item.pid === obj.id) {
-                        ipc(item)
-                        if (obj.children) {
-                            obj.children.push(item)
-                        } else {
-                            obj.children = [item]
-                        }
-                    }
-                }
-                return obj
-            }
-
-            for(let i = 0, length = data.length; i < length; i++) {
-                let item = data[i]
-                if (item.pid === 0) {
-                    arr.push(ipc(item))
-                }
-            }
-
-            return arr
-        }
-
-        InfinitePoleClassification(data)
+        var eleImgCover = document.getElementById('imgCover');
+        eleImgCover.addEventListener('load', e => {
+            //海报背景（已存在的图片）
+            //上传图片（已通过方法获取到 document.getElementById("imgUpload").src = window.URL.createObjectURL(imgFile.files[0]);）
+            var imgUpload = document.getElementById('imgUpload');
+            //创建画布
+            var canvas = document.querySelector('#canvas');
+            //高宽设置
+            var upload_width = 380;
+            var upload_height = 380;
+            var cover_width = 1279;
+            var cover_height = 855;
+            canvas.width = cover_width;
+            canvas.height = cover_height;
+            var context = canvas.getContext('2d');
+            //底板图绘制
+            context.drawImage(eleImgCover, 0, 0, cover_width, cover_height, 0, 0, 500, 500);
+            //上传图像绘制
+            context.drawImage(imgUpload, 60, 60, upload_width, upload_height, 92, 302, 100, 100);
+            //给要存放此图片的img标签赋值
+            document.querySelector('.down_poster').setAttribute("src", canvas.toDataURL());
+        })
     </script>
 </body>
-
 </html>

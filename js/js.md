@@ -5230,3 +5230,16 @@ this.$nextTick(() => {
 })
 ```
 
+### 打印或取预览html
+
+```js
+const print = document.querySelector('#printing > .content')
+document.body.innerHTML = print.innerHTML
+window.print()
+window.location.reload()
+```
+```scss
+@media print {
+  // 修改打印时 css 的样式
+}
+```

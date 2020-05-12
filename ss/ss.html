@@ -6,34 +6,5 @@
     <title>Document</title>
 </head>
 <body>
-    <script>
-        /**
-         * 字符串截取
-         * @param {object}           params
-         * @param {string}           params.str
-         * @param {number}           params.step
-         */
-        let arr = []
-        function test(params) {
-            if (params.str.length > params.step) {
-                let item = params.str.slice(-params.step)
-                arr.unshift(item)
-                test({
-                    str: params.str.slice(0, -params.step),
-                    step: params.step,
-                })
-            } else {
-                if (params.str) {
-                    arr.unshift(params.str)
-                }
-            }
-        }
-
-        let newArr = test({
-            str: '12345678',
-            step: 2
-        })
-        console.log(arr, 'arr', newArr)
-    </script>
 </body>
 </html>
