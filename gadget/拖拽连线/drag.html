@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .chapter {
+            width: 150px;
+            height: 150px;
+            user-select: none;
+            border-radius: 50%;
+            line-height: 150px;
+            text-align: center;
+            background-color: pink;
+        }
+
+        .s-left {
+            width: 200px;
+            height: 1000px;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="s-left fl" id="chapter-box">
+        <div class="chapter">章</div>
+        <div class="chapter">章2</div>
+        <div class="chapter">章3</div>
+        <div class="chapter">章4</div>
+    </div>
+    <script>
+        let My = function() {
+            this.isDown = false
+            this.eleInfo = null
+            this.ele = null
+            this.scrollTop = 0
+            this.x = 0
+            this.y = 0
+
+            this.init()
+        }
+        
+        My.prototype.init = function() {
+            this.mousedown()
+            this.mousemove()
+            this.mouseup()
+            this.scroll()
+        }
+
+        // 元素按下
+        My.prototype.mousedown = function() {
+            let parent = document.querySelector('#chapter-box')
+            parent.addEventListener('mousedown', e => {
+                if (e.target.className.includes('chapter')) {
+                    document.body.style.cursor = 'pointer'
+                    this.ele = e.target
+                    this.ele.style.position = 'absolute'
+                    let cloneEle = this.ele.cloneNode(true)
+                    parent.appendChild(cloneEle)
+                    this.eleInfo = cloneEle.getBoundingClientRect()
+                    this.isDown = true
+                }
+            })
+        }
+
+        // 鼠标移动
+        My.prototype.mousemove = function() {
+            document.addEventListener('mousemove', e => {
+                if (this.isDown) {
+                    this.x = e.x
+                    this.y = e.y
+                    this.move()
+                }
+            })
+        }
+
+        // 元素抬起
+        My.prototype.mouseup = function() {
+            document.addEventListener('mouseup', e => {
+                this.isDown = false
+                document.body.style.cursor = 'default'
+            })
+        }
+
+        // 元素滚动
+        My.prototype.scroll = function() {
+            document.addEventListener('scroll', e => {
+                this.scrollTop = document.documentElement.scrollTop
+                this.move()
+            })
+        }
+
+        // 元素移动
+        My.prototype.move = function() {
+            if (this.ele && this.isDown) {
+                this.ele.style.top = this.y - this.eleInfo.height / 2 + this.scrollTop + 'px'
+                this.ele.style.left = this.x - this.eleInfo.width / 2 + 'px'
+            }
+        }
+        
+        new My()
+    </script>
+</body>
+</html>
