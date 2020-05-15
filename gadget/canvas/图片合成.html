@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    </style>
+</head>
+<body>
+    <div>
+        <canvas id="canvas" width="500" height="300" style="border:1px solid #d3d3d3;background:#ffffff;"></canvas>
+        <img id="imgUpload" src="./icon.jpg" />
+        <img id="imgCover" src="./timg.jpg" alt="" crossorigin="anonymous">
+    </div>
+    <img class="down_poster" src="" alt="">
+    <script>
+        var eleImgCover = document.getElementById('imgCover');
+        eleImgCover.addEventListener('load', e => {
+            //海报背景（已存在的图片）
+            //上传图片（已通过方法获取到 document.getElementById("imgUpload").src = window.URL.createObjectURL(imgFile.files[0]);）
+            var imgUpload = document.getElementById('imgUpload');
+            //创建画布
+            var canvas = document.querySelector('#canvas');
+            //高宽设置
+            var upload_width = 380;
+            var upload_height = 380;
+            var cover_width = 1279;
+            var cover_height = 855;
+            canvas.width = cover_width;
+            canvas.height = cover_height;
+            var context = canvas.getContext('2d');
+            //底板图绘制
+            context.drawImage(eleImgCover, 0, 0, cover_width, cover_height, 0, 0, 500, 500);
+            //上传图像绘制
+            context.drawImage(imgUpload, 60, 60, upload_width, upload_height, 92, 302, 100, 100);
+            //给要存放此图片的img标签赋值
+            document.querySelector('.down_poster').setAttribute("src", canvas.toDataURL());
+        })
+    </script>
+</body>
+</html>

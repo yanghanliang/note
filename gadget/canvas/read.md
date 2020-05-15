@@ -6,13 +6,21 @@
   - x,y：圆心坐标。 
         - r：半径大小。
         - sAngle:绘制开始的角度。 圆心到最右边点是0度，顺时针方向弧度增大。
-        - eAngel:结束的角度，注意是弧度。π
+        - eAngel:结束的角度，注意是弧度。2*Math.PI
         - counterclockwise：是否是逆时针。true是逆时针，false：顺时针，默认false;
         - 弧度和角度的转换公式： rad = deg*Math.PI/180;  
         - 在Math提供的方法中**sin、cos等都使用的弧度**
         - 圆的面积公式 S = πr²
 
 ```
+
+---
+
+### canvas 等比例缩放
+
+> 用style固定canvas的宽高，设置canvas的width，height属性为了图片宽高即可
+
+`属性和样式可不一样噢~`
 
 ---
 
