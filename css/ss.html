@@ -15,54 +15,67 @@
             }
 
             .box {
-                width: 200px;
+                width: 400px;
                 height: 400px;
-                top: 10px;
-                right: -146px;
-                position: fixed;
-                border-top-left-radius: 100%;
-                border-bottom-left-radius: 100%;
-                background-color: aquamarine;
-                border-top-right-radius: 100%;
-                border-bottom-right-radius: 100%;
+                border: 1px solid #ddd;
             }
 
-            .lateralPush {
-                animation-name: lateralPush;
+            .min-box {
+                width: 200px;
+                height: 400px;
+                background-color: sandybrown;
+
+                animation-name: blur;
+                animation-duration: 1s; /* 所用的时间 */
+                animation-timing-function: cubic-bezier(1, 1, 0, 0); /* 执行的速度曲线 ease  默认速度 ease 先快后慢 linear 匀速  cubic-bezier: 值越大就越慢 */
+                animation-delay: 0ms; /* 延迟 */
+                animation-iteration-count: 1; /* 执行次数: infinite(无数次), 可以直接设置需要的次数如: 2 */
+                animation-direction: alternate; /* 反向动画 */
+            }
+
+            .box:hover .min-box {
+                animation-name: focus;
                 animation-duration: 1s; /* 所用的时间 */
                 animation-timing-function: cubic-bezier(1, 1, 0, 0); /* 执行的速度曲线 ease  默认速度 ease 先快后慢 linear 匀速  cubic-bezier: 值越大就越慢 */
                 animation-delay: 0ms; /* 延迟 */
                 animation-iteration-count: 1; /* 执行次数: infinite(无数次), 可以直接设置需要的次数如: 2 */
                 animation-direction: alternate; /* 反向动画 */
                 animation-fill-mode: forwards; /* 最后的状态 */
-
             }
 
-            /* 暂停动画 */
-            .lateralPush:hover {
-                animation-play-state: paused;
-            }
-
-            @keyframes lateralPush {
+            @keyframes blur {
                 0% { 
-                    width: 316px;
-                    right: -246px;
+                    opacity: 0;
+                    display: none;
                 }
+
+                1% {
+                    display: block;
+                }
+
                 100% {
-                    top: 70px;
-                    width: 500px;
-                    height: 400px;
-                    right: -200px;
+                   opacity: 1;
+                }
+            }
+
+            @keyframes focus {
+                0% { 
+                    opacity: 1;
+                }
+
+                /* 1% {
+                } */
+
+                100% {
+                   opacity: 0;
+                   display: none;
                 }
             }
         </style>
     </head>
     <body>
-        <button>点击</button>
-        <div class="box lateralPush"></div>
-        <script>
-            var btn = document.querySelector('button')
-
-        </script>
+        <div class="box">
+            <div class="min-box"></div>
+        </div>
     </body>
 </html>
