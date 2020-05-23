@@ -25,9 +25,15 @@
         + git checkout test // 切换回之前的开发||测试分支
 		+ git branch -r			// 查看远程分支
 		+ 删除远程分支
-			+ git branch -r -d origin/dev-login
-			+ git push origin :dev-login
-				+ dev-login  	// 分支名
+			+ git branch -r -d origin/<分支名> // git branch -r -d origin/dev-login
+			+ git push origin :<分支名> // git push origin :dev-login
+
++ git tag(标签)
+	+ git tag -a <tag name> -m <message> <commit版本号>
+	+ git push origin <tag name> // 推送一个标签到远程
+	+ git tag -d <tag name> // 本地删除标签
+	+ git push origin :refs/tags/<tag name> // 删除远程标签
+
 + git回滚到任意版本
 	+ git log
 		+ 提示：如果提交次数太多，一屏显示不了，最后一行会显示: 表示未显示全，按键盘上的Q键，可以显示下一页
@@ -51,7 +57,7 @@
 	+ wq  // 保存退出
 	+ git commit --amend  // 修改commit信息
 	+ git rebase --continue
-	+ git push -f  // 推送到服务端
+	+ git push -f  // 强行推送到服务端（慎用）
 
 + 让 git 不管理某些文件
 	+ 删除之前错误上传的一些不需要管理的文件(文件夹需要添加 -r 参数)
@@ -71,7 +77,6 @@
 	+ git diff
 + 查看git源
 	+ git remote -v
-
 
 + 配制个人信息
     git config --global user.name "userName"
