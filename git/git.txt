@@ -49,7 +49,7 @@
 + pull 更新代码
 	+ git pull https://github.com/yanghanliang/douban-demo.git
 + 更新分支
-	+ git remote update
+	+ git remote update [-p] // 如果远程的分支删除了，本地还保留原有的分支 -p 会将它删除，且不会删除本地的分支
 
 + 修改git commit之后的描述信息
 	+ git rebase -i HEAD~3  // 3代表倒数第3次提交的内容
