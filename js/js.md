@@ -922,6 +922,8 @@ ele();
 1. e.stopPropagation();
 2. window.event.cancelBubble=true;      IE8的写法
 
+stopImmediatePropagation 既能阻止事件向父元素冒泡，也能阻止元素同事件类型的其它监听器被触发
+
 例子:
 my$('dv1').onclick = function () {
   console.log(this.id);
@@ -5252,4 +5254,30 @@ window.location.reload()
 @media print {
   // 修改打印时 css 的样式
 }
+```
+
+```js
+const variableList = ['index', 'admin', 'mobile']
+// 循环定义全局变量
+// 这种方式是传入什么就以什么为this
+// 回调函数内部的this默认指向window
+// 可以使用bind, callback.bind(this) 绑定this指向
+// variableList.forEach(function (name) {
+// 	this['_' + name] = []
+// }.bind(this))
+
+variableList.forEach(function (name) {
+	this['_' + name] = []
+}, window)
+
+// 第二种写法
+variableList.forEach(function (name) {
+	this['_' + name] = []
+})
+
+// 第三种写法
+variableList.forEach(name => {
+	this['_' + name] = []
+})
+
 ```
