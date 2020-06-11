@@ -12,8 +12,23 @@ option = {
                 type: ['stack', 'tiled']
             },
         },
-        axisPointer: { type: 'none' }, // 去掉鼠标悬浮时的中线
+        axisPointer: { type: 'none' }, // 去掉鼠标悬浮时的中线 - 这可能是记错了
         formatter: '￥{c}', // 修改悬浮时的提示内容
+    },
+    axisPointer: { show: false }, // 去掉鼠标悬浮时的中线
+    title: {
+        itemGap: 10, // 主副标题距离
+    },
+    polar: {
+        center: ['50%', '50%'],
+        radius: '120%' // 图形大小
+    },
+    grid: {
+        // 组件离容器的距离（边距）
+        left: 30,
+        top: 30,
+        bottom: 30,
+        right: 15,
     },
 }
 

@@ -876,21 +876,18 @@ li[midd^="abc"]
 排除伪类
 
 div:not(.two){
-
-width:200px;
-
-height:200px;
-
-background-color:red;}
-
+    width:200px;
+    height:200px;
+    background-color:red;
+}
 
 
 <div class="one two">23588</div>
-
 <div class="one">只改变他的属性时，用排除伪类</div>
 
+排除多个类
 
-
+div:not(.w-auto):not(.h-auto) 
 
 
 background-image:url(2.png) 设置背景图片
