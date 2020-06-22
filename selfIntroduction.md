@@ -55,9 +55,13 @@
 26. 关于http协议
 27. 处理异步有哪几种方式
 28. poimses 和 async 的优缺点
+    + 简洁
+    + 错误处理
+    + 条件语句
+    + 调试
 29. es6的遍历有哪几种方式
     map filter
-30. bfc 
+30. bfc
 31. dislay 的值有哪些
 32. 模块化开发
 
@@ -68,9 +72,237 @@
     let 有暂时死区，不会被提升。
 
 34. 简单的说一下http协议
-35. 说一下面向对象或者面向过程m
+35. 说一下面向对象或者面向过程
 
 
 36. vue中的data为什么是函数
+    防止变量污染
 
 37. 节流和防抖（今日头条）
+
+
+
+38. 回流和重绘
+39. call applay 还有一个什么忘了
+40. 如何判断数组和对象的类型
+    + instanceof
+        `arr instanceof Array`
+    + constructor
+        `arr.constructor === Array`
+
+41. http 缓存
+
+---
+
+手写面试题
+
+一，用正则表达式来将字符串"I? love ?? the ?great ? ?wall in ?beijing"更改为："I love the Great Wall in Beijing"，主要是为了解决编码的问题导致的问题，规律：
+
+1，乱码只有两种特殊字符分别是'?'和' ';
+
+2，如果乱码的末尾是'?'则它的下一位字母肯定是大写；
+
+二，不使用类似for，while循环控制语句和js本身自带方法（如：forEach）的情况下，实现将一个空数组[]赋值成[0,2,4,6,8,10,...,100]，范围0-100便可。
+
+三，设计一个自由可灵活配置的时间调度器，有a,b,c,d...很多个需要被调度的方法（方法名称的命名可随意），调度有两种形式，一个是顺序调用（例如调度完a后才能调度b），一个是间隔某个时间进行循环调度。用一个统一的方法进行封装可以实现下列的例子：
+
+1，可以为5秒后调用a,3秒后调用b，10秒后调用。c...z方法不执行（不执行的方法可以设计成不传递参数），那么在第14秒的时候开始重新从0秒循环，又变成第一秒后调用a,3秒后调用b，这样循环往复；
+
+2，每间隔6秒调用一次a,每间隔4秒调用一次b，c...z方法不执行；
+
+3，第一秒先执行a，3秒后执行b，但是c却是每间隔3秒执行一次，d是每间隔4秒执行一次，a和b是每4秒进行一次循环；
+
+4，a不执行，b和c每间隔3秒执行一次，d不执行；
+
+
+```js
+// 第一题
+var str='I? love ?? the ?great ? ?wall in ?beijing'
+console.log(str.replace(/[?][a-zA-Z]/g,function($1){return $1.toLocaleUpperCase() }).replace(/[\s]*[?][\s]*/g, function($1){ return ' ' }).replace(/[\s]+/g, function($1) { return ' ' }))
+ 
+ 
+// 第二题
+var arr = []
+var nowDate = new Date().getTime()
+var tempId = setInterval(function(){
+    if (new Date().getTime() - nowDate > 20 * 1000){
+        clearInterval(tempId)
+        console.log(arr)
+    } else {
+        arr.push(Math.floor(Math.random() * (0 - 100 + 1)) + 100) 
+    }}, 1000)
+ 
+ 
+// 第三题
+const dateDispatch = function(params) {
+    params.forEach((item, index) => {
+        // 如果没有传入时间参数，则按顺序循环
+        if (item.restartTime) {
+            this[item.fnName] = setInterval(() => {
+                if (item.waitFor) {
+                    setTimeout(() => {
+                        item.functionBody()
+                    }, item.waitFor * 1000)
+                } else {
+                    item.functionBody()
+                }
+            }, item.restartTime * 1000)
+        } else {
+            if (item.waitFor) {
+                setTimeout(() => {
+                    item.functionBody()
+                }, item.waitFor * 1000)
+            } else {
+                item.functionBody()
+            }
+        }
+    })
+}
+ 
+// 可以为5秒后调用a,3秒后调用b，10秒后调用
+// 理解为 15秒后调用a, 13秒后调用b
+const paramsA = [
+    {
+        fnName: 'a', // 方法名
+        waitFor: 15, // 等待执行时间
+        callback: null, // 回调函数
+        restartTime: null, // 重新开始执行的时间
+        functionBody: function() { // 函数体
+            console.log('a方法')
+        }
+    },
+    {
+        fnName: 'b', // 方法名
+        waitFor: 13, // 等待执行时间
+        callback: null, // 回调函数
+        restartTime: null, // 重新开始执行的时间
+        functionBody: function() { // 函数体
+            console.log('b方法')
+        }
+    },
+    {
+        fnName: 'a', // 方法名
+        waitFor: 1, // 等待执行时间
+        callback: null, // 回调函数
+        restartTime: 14, // 重新开始执行的时间
+        functionBody: function() { // 函数体
+            console.log('a方法')
+        }
+    },
+    {
+        fnName: 'b', // 方法名
+        waitFor: 3, // 等待执行时间
+        callback: null, // 回调函数
+        restartTime: 14, // 重新开始执行的时间
+        functionBody: function() { // 函数体
+            console.log('b方法')
+        }
+    },
+]
+ 
+const paramsB = [
+    {
+        fnName: 'a', // 方法名
+        waitFor: null, // 等待执行时间
+        callback: null, // 回调函数
+        restartTime: 6, // 重新开始执行的时间
+        functionBody: function() { // 函数体
+            console.log('a方法')
+        }
+    },
+    {
+        fnName: 'b', // 方法名
+        waitFor: null, // 等待执行时间
+        callback: null, // 回调函数
+        restartTime: 4, // 重新开始执行的时间
+        functionBody: function() { // 函数体
+            console.log('b方法')
+        }
+    },
+]
+ 
+const paramsC = [
+    {
+        fnName: 'a', // 方法名
+        waitFor: 1, // 等待执行时间
+        callback: null, // 回调函数
+        restartTime: null, // 重新开始执行的时间
+        functionBody: function() { // 函数体
+            console.log('a方法')
+        }
+    },
+    {
+        fnName: 'b', // 方法名
+        waitFor: 3, // 等待执行时间
+        callback: null, // 回调函数
+        restartTime: null, // 重新开始执行的时间
+        functionBody: function() { // 函数体
+            console.log('b方法')
+        }
+    },
+    {
+        fnName: 'c', // 方法名
+        waitFor: null, // 等待执行时间
+        callback: null, // 回调函数
+        restartTime: 3, // 重新开始执行的时间
+        functionBody: function() { // 函数体
+            console.log('c方法')
+        }
+    },
+    {
+        fnName: 'd', // 方法名
+        waitFor: null, // 等待执行时间
+        callback: null, // 回调函数
+        restartTime: 4, // 重新开始执行的时间
+        functionBody: function() { // 函数体
+            console.log('d方法')
+        }
+    },
+    {
+        fnName: 'a', // 方法名
+        waitFor: null, // 等待执行时间
+        callback: null, // 回调函数
+        restartTime: 4, // 重新开始执行的时间
+        functionBody: function() { // 函数体
+            console.log('a方法')
+        }
+    },
+    {
+        fnName: 'b', // 方法名
+        waitFor: null, // 等待执行时间
+        callback: null, // 回调函数
+        restartTime: 4, // 重新开始执行的时间
+        functionBody: function() { // 函数体
+            console.log('b方法')
+        }
+    }
+]
+ 
+const paramsD = [
+    {
+        fnName: 'b', // 方法名
+        waitFor: 3, // 等待执行时间
+        callback: null, // 回调函数
+        restartTime: null, // 重新开始执行的时间
+        functionBody: function() { // 函数体
+            console.log('a方法')
+        }
+    },
+    {
+        fnName: 'c', // 方法名
+        waitFor: 3, // 等待执行时间
+        callback: null, // 回调函数
+        restartTime: null, // 重新开始执行的时间
+        functionBody: function() { // 函数体
+            console.log('a方法')
+        }
+    },
+]
+ 
+dateDispatch(paramsB)
+// dateDispatch(paramsC)
+// dateDispatch(paramsD)
+// dateDispatch(paramsA)
+```
+
+---
