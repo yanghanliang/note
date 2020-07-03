@@ -78,10 +78,17 @@
 	+ git diff
 + 查看git源
 	+ git remote -v
++ 添加git源
+	+ git remote add origin git@code.aliyun.com:bytc/yuboweb.git
 
 + 配制个人信息
     git config --global user.name "userName"
     git config --global user.email "user@domain"
++ 查看git用户名和邮箱
+    git config --global user.name
+    git config --global user.email
++ 添加多个源
+	git remote set-url --add --push origin https://github.com/yanghanliang/dy.git
 + 强制提交
 	git push -u origin master -f   // 慎用
 + 查看远程仓库
@@ -161,3 +168,9 @@ git commit -m '暂存'
 回滚到暂存前的提交即可
 
 git reset --hard 9870987979
+
+
+#### 关于换行
+
+git config --global core.autocrlf true
+
