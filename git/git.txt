@@ -89,6 +89,7 @@
     git config --global user.email
 + 添加多个源
 	git remote set-url --add --push origin https://github.com/yanghanliang/dy.git
+	git remote set-url --add --push origin git@code.aliyun.com:bytc/yuboweb.git
 + 强制提交
 	git push -u origin master -f   // 慎用
 + 查看远程仓库
