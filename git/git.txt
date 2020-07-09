@@ -90,6 +90,11 @@
 + 添加多个源
 	git remote set-url --add --push origin https://github.com/yanghanliang/dy.git
 	git remote set-url --add --push origin git@code.aliyun.com:bytc/yuboweb.git
++ 添加多个远程仓库
+	+ git remote add my https://github.com/yanghanliang/dy.git // my 名字
+	+ git pull my 远程分支名：本地分支名
+		+ git pull my develop
+	+ git push my   本地分支名：远程分支名
 + 强制提交
 	git push -u origin master -f   // 慎用
 + 查看远程仓库
