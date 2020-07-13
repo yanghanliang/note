@@ -87,6 +87,16 @@
 + 查看git用户名和邮箱
     git config --global user.name
     git config --global user.email
++ 查看当前远程Git库源地址
+	git remote -v
+	git remote -version
++ 修改当前的源地址
+	git remote set-url origin [GIT URL] // orgin为当前源地址名，[GIT URL]为欲修改源地址
++ 添加一个新的Git库源地址：
+	git remote add [NAME] [GIT URL] // [NAME]为新的Git库源地址名，[GIT URL]为新的git库源地址
++ 删除一个Git库源地址：
+	git remote remove [NAME]
+	git remote rm [NAME] // [NAME]为Git库源地址名
 + 添加多个源
 	git remote set-url --add --push origin https://github.com/yanghanliang/dy.git
 	git remote set-url --add --push origin git@code.aliyun.com:bytc/yuboweb.git
