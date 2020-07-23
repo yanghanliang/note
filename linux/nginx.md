@@ -102,3 +102,33 @@ curl http://127.0.0.1:8080
 start .\nginx.exe
 .\nginx.exe -s reload
 .\nginx.exe -v
+
+
+### 方案一 
+
+#### 1. 修改hosts文件
++ 在这个目录`C:\Windows\System32\drivers\etc`下，找到 HOSTS 文件
+
+添加 `127.0.0.1 www.demo.com`
+
+#### 2. 修改接口地址
+
++ 基地址改为: `http://www.demo.com/`
+
+#### 3. nginx 配置
+
+```
+server {
+  listen       80;
+  server_name  www.demo.com;
+
+  location  ^~/bookmark/ {
+    proxy_pass http://localhost:3001/;
+  }
+}
+
+```
+
+重启nginx,强制刷新浏览器，防止缓存
+
+
