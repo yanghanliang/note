@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "es5",                          /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
+    "noImplicitAny": false,
+    "module": "amd",
+    "removeComments": false,
+    "sourceMap": false,
+    "outDir": "js"//你要生成js的目录
+  }
+}

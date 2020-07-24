@@ -70,6 +70,9 @@ npm install --global yarn
 yarn设置淘宝镜像
 yarn config set registry https://registry.npm.taobao.org
 
+设置代理
+npm config set https-proxy http://127.0.0.1:12639
+npm config set proxy http://127.0.0.1:12639
 
 npm init
 # yarn init
@@ -126,3 +129,24 @@ npm publish   // 发布
 npm unpublish 包名 --force
 
 ```
+
+---
+
+npm install报错类似于npm WARN tar ENOENT: no such file or directory, open '***\node_modules\.staging\***
+
+`
+npm WARN tar ENOENT: no such file or directory, open 'D:\project\company\YYBLayerFlowAbtest\vue-src\node_modules\.staging\lodash-661abd79\fp\wrapperReverse.js'
+npm WARN tar ENOENT: no such file or directory, open 'D:\project\company\YYBLayerFlowAbtest\vue-src\node_modules\.staging\lodash-661abd79\fp\wrapperValue.js'
+npm WARN tar ENOENT: no such file or directory, open 'D:\project\company\YYBLayerFlowAbtest\vue-src\node_modules\.staging\lodash-661abd79\fp\xor.js'
+npm WARN tar ENOENT: no such file or directory, open 'D:\project\company\YYBLayerFlowAbtest\vue-src\node_modules\.staging\lodash-661abd79\fp\xorBy.js'
+npm WARN tar ENOENT: no such file or directory, open 'D:\project\company\YYBLayerFlowAbtest\vue-src\node_modules\.staging\lodash-661abd79\fp\xorWith.js'
+npm WARN tar ENOENT: no such file or directory, open 'D:\project\company\YYBLayerFlowAbtest\vue-src\node_modules\.staging\lodash-661abd79\fp\zip.js'
+npm WARN tar ENOENT: no such file or directory, open 'D:\project\company\YYBLayerFlowAbtest\vue-src\node_modules\.staging\lodash-661abd79\fp\zipAll.js'
+npm WARN tar ENOENT: no such file or directory, open 'D:\project\company\YYBLayerFlowAbtest\vue-src\node_modules\.staging\lodash-661abd79\fp\zipObj.js'
+npm WARN tar ENOENT: no such file or directory, open 'D:\project\company\YYBLayerFlowAbtest\vue-src\node_modules\.staging\lodash-661abd79\fp\zipObject.js'
+npm WARN tar ENOENT: no such file or directory, open 'D:\project\company\YYBLayerFlowAbtest\vue-src\node_modules\.staging\lodash-661abd79\fp\zipObjectDeep.js'
+npm WARN tar ENOENT: no such file or directory, open 'D:\project\company\YYBLayerFlowAbtest\vue-src\node_modules\.staging\lodash-661abd79\fp\zipWith.js'
+`
+
+解决方法:
+删除文件 package-lock.json，再重新执行npm i或者npm install

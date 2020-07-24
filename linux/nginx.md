@@ -102,3 +102,31 @@ curl http://127.0.0.1:8080
 start .\nginx.exe
 .\nginx.exe -s reload
 .\nginx.exe -v
+
+---
+
+### 服务器配置
+
+server {
+        listen          3000;
+        server_name     localhost;
+        root            /web/blog/dist;
+        index           index.html;
+
+        location / {
+                try_files  $uri $uri/ @router;
+                index      index.html;
+                #proxy_pass http://127.0.0.1:8080;
+        }
+
+        location @router {
+                rewrite ^.*$ /index.html last;
+        }
+
+        location /baidu {
+                proxy_pass http://api.fanyi.baidu.com/api/trans/vip/translate;
+        }
+        location /robot {
+                proxy_pass http://api.qingyunke.com/api.php;
+        }
+}
