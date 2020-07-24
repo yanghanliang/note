@@ -186,7 +186,28 @@ git commit -m '暂存'
 git reset --hard 9870987979
 
 
-#### 关于换行
+#### 关于换行(没什么用)
 
 git config --global core.autocrlf true
+
+---
+
+#### Git分支命名规范，分支名命名规范： type/xxx ，具体type 如下
+
+feat：新功能（feature）
+fix：修复bug
+docs：文档（documentation）
+style： 格式（不影响代码运行的变动）
+refactor：重构
+test：增加测试
+chore：构建过程或辅助工具的变动
+ci: ci构建相关
+
+
+
+
+
+
+
+
 
