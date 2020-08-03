@@ -5315,3 +5315,16 @@ variableList.forEach(name => {
 })
 
 ```
+
+
+#### 可选链
+
+https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/%E5%8F%AF%E9%80%89%E9%93%BE
+
+`let nestedProp = obj.first?.second; => let nestedProp = obj.first && obj.first.second;`
+
+`
+为了避免报错，在访问obj.first.second之前，要保证 obj.first 的值既不是 null，也不是 undefined。如果只是直接访问 obj.first.second，而不对 obj.first 进行校验，则有可能抛出错误。
+`
+
+`let result = someInterface.customMethod?.();`
