@@ -7,175 +7,350 @@
 </head>
 <body>
     <script>
-        const dateDispatch = function(params) {
-            params.forEach((item, index) => {
-                // 如果没有传入时间参数，则按顺序循环
-                if (item.restartTime) {
-                    this[item.fnName] = setInterval(() => {
-                        if (item.waitFor) {
-                            setTimeout(() => {
-                                item.functionBody()
-                            }, item.waitFor * 1000)
-                        } else {
-                            item.functionBody()
-                        }
-                    }, item.restartTime * 1000)
-                } else {
-                    if (item.waitFor) {
-                        setTimeout(() => {
-                            item.functionBody()
-                        }, item.waitFor * 1000)
-                    } else {
-                        item.functionBody()
-                    }
-                }
-            })
-        }
-
-        // 可以为5秒后调用a,3秒后调用b，10秒后调用
-        // 理解为 15秒后调用a, 13秒后调用b
-        const paramsA = [
+        const data = [
             {
-                fnName: 'a', // 方法名
-                waitFor: 15, // 等待执行时间
-                callback: null, // 回调函数
-                restartTime: null, // 重新开始执行的时间
-                functionBody: function() { // 函数体
-                    console.log('a方法')
-                }
-            },
-            {
-                fnName: 'b', // 方法名
-                waitFor: 13, // 等待执行时间
-                callback: null, // 回调函数
-                restartTime: null, // 重新开始执行的时间
-                functionBody: function() { // 函数体
-                    console.log('b方法')
-                }
-            },
-            {
-                fnName: 'a', // 方法名
-                waitFor: 1, // 等待执行时间
-                callback: null, // 回调函数
-                restartTime: 14, // 重新开始执行的时间
-                functionBody: function() { // 函数体
-                    console.log('a方法')
-                }
-            },
-            {
-                fnName: 'b', // 方法名
-                waitFor: 3, // 等待执行时间
-                callback: null, // 回调函数
-                restartTime: 14, // 重新开始执行的时间
-                functionBody: function() { // 函数体
-                    console.log('b方法')
-                }
-            },
-        ]
-
-        const paramsB = [
-            {
-                fnName: 'a', // 方法名
-                waitFor: null, // 等待执行时间
-                callback: null, // 回调函数
-                restartTime: 6, // 重新开始执行的时间
-                functionBody: function() { // 函数体
-                    console.log('a方法')
+                "2020-08-01T00:00:00.000Z":{
+                    "性别男":0,
+                    "count":575459,
+                    "性别女":0,
+                    "年龄1-17岁":0,
+                    "年龄18-29岁":0,
+                    "年龄30-40岁":0,
+                    "年龄41-50岁":0,
+                    "年龄51以上":57553,
+                    "城市等级":960381,
+                    "品牌huawei":3037049,
+                    "品牌honor":1490186,
+                    "品牌oppo":1565127,
+                    "品牌vivo":1523156,
+                    "品牌samsung":244706,
+                    "品牌xiaomi":575459
+                },
+                "2020-08-02T00:00:00.000Z":{
+                    "性别男":0,
+                    "count":571698,
+                    "性别女":0,
+                    "年龄1-17岁":0,
+                    "年龄18-29岁":0,
+                    "年龄30-40岁":0,
+                    "年龄41-50岁":0,
+                    "年龄51以上":53557,
+                    "城市等级":931859,
+                    "品牌huawei":2965090,
+                    "品牌honor":1448536,
+                    "品牌oppo":1496002,
+                    "品牌vivo":1477035,
+                    "品牌samsung":230201,
+                    "品牌xiaomi":571698
+                },
+                "2020-08-03T00:00:00.000Z":{
+                    "性别男":0,
+                    "count":585873,
+                    "性别女":0,
+                    "年龄1-17岁":0,
+                    "年龄18-29岁":0,
+                    "年龄30-40岁":0,
+                    "年龄41-50岁":0,
+                    "年龄51以上":54900,
+                    "城市等级":1110771,
+                    "品牌huawei":3120723,
+                    "品牌honor":1479224,
+                    "品牌oppo":1548540,
+                    "品牌vivo":1527255,
+                    "品牌samsung":237103,
+                    "品牌xiaomi":585873
+                },
+                "2020-08-04T00:00:00.000Z":{
+                    "性别男":0,
+                    "count":583854,
+                    "性别女":0,
+                    "年龄1-17岁":0,
+                    "年龄18-29岁":0,
+                    "年龄30-40岁":0,
+                    "年龄41-50岁":0,
+                    "年龄51以上":54633,
+                    "城市等级":1084604,
+                    "品牌huawei":3083448,
+                    "品牌honor":1472720,
+                    "品牌oppo":1547743,
+                    "品牌vivo":1519853,
+                    "品牌samsung":233551,
+                    "品牌xiaomi":583854
                 }
             },
             {
-                fnName: 'b', // 方法名
-                waitFor: null, // 等待执行时间
-                callback: null, // 回调函数
-                restartTime: 4, // 重新开始执行的时间
-                functionBody: function() { // 函数体
-                    console.log('b方法')
-                }
-            },
-        ]
-
-        const paramsC = [
-            {
-                fnName: 'a', // 方法名
-                waitFor: 1, // 等待执行时间
-                callback: null, // 回调函数
-                restartTime: null, // 重新开始执行的时间
-                functionBody: function() { // 函数体
-                    console.log('a方法')
-                }
-            },
-            {
-                fnName: 'b', // 方法名
-                waitFor: 3, // 等待执行时间
-                callback: null, // 回调函数
-                restartTime: null, // 重新开始执行的时间
-                functionBody: function() { // 函数体
-                    console.log('b方法')
-                }
-            },
-            {
-                fnName: 'c', // 方法名
-                waitFor: null, // 等待执行时间
-                callback: null, // 回调函数
-                restartTime: 3, // 重新开始执行的时间
-                functionBody: function() { // 函数体
-                    console.log('c方法')
-                }
-            },
-            {
-                fnName: 'd', // 方法名
-                waitFor: null, // 等待执行时间
-                callback: null, // 回调函数
-                restartTime: 4, // 重新开始执行的时间
-                functionBody: function() { // 函数体
-                    console.log('d方法')
-                }
-            },
-            {
-                fnName: 'a', // 方法名
-                waitFor: null, // 等待执行时间
-                callback: null, // 回调函数
-                restartTime: 4, // 重新开始执行的时间
-                functionBody: function() { // 函数体
-                    console.log('a方法')
-                }
-            },
-            {
-                fnName: 'b', // 方法名
-                waitFor: null, // 等待执行时间
-                callback: null, // 回调函数
-                restartTime: 4, // 重新开始执行的时间
-                functionBody: function() { // 函数体
-                    console.log('b方法')
+                "2020-08-01T00:00:00.000Z":{
+                    "性别男":0,
+                    "count":575459,
+                    "性别女":0,
+                    "年龄1-17岁":0,
+                    "年龄18-29岁":0,
+                    "年龄30-40岁":0,
+                    "年龄41-50岁":0,
+                    "年龄51以上":57553,
+                    "城市等级":960381,
+                    "品牌huawei":3037049,
+                    "品牌honor":1490186,
+                    "品牌oppo":1565127,
+                    "品牌vivo":1523156,
+                    "品牌samsung":244706,
+                    "品牌xiaomi":575459
+                },
+                "2020-08-02T00:00:00.000Z":{
+                    "性别男":0,
+                    "count":571698,
+                    "性别女":0,
+                    "年龄1-17岁":0,
+                    "年龄18-29岁":0,
+                    "年龄30-40岁":0,
+                    "年龄41-50岁":0,
+                    "年龄51以上":53557,
+                    "城市等级":931859,
+                    "品牌huawei":2965090,
+                    "品牌honor":1448536,
+                    "品牌oppo":1496002,
+                    "品牌vivo":1477035,
+                    "品牌samsung":230201,
+                    "品牌xiaomi":571698
+                },
+                "2020-08-03T00:00:00.000Z":{
+                    "性别男":0,
+                    "count":585873,
+                    "性别女":0,
+                    "年龄1-17岁":0,
+                    "年龄18-29岁":0,
+                    "年龄30-40岁":0,
+                    "年龄41-50岁":0,
+                    "年龄51以上":54900,
+                    "城市等级":1110771,
+                    "品牌huawei":3120723,
+                    "品牌honor":1479224,
+                    "品牌oppo":1548540,
+                    "品牌vivo":1527255,
+                    "品牌samsung":237103,
+                    "品牌xiaomi":585873
+                },
+                "2020-08-04T00:00:00.000Z":{
+                    "性别男":0,
+                    "count":583854,
+                    "性别女":0,
+                    "年龄1-17岁":0,
+                    "年龄18-29岁":0,
+                    "年龄30-40岁":0,
+                    "年龄41-50岁":0,
+                    "年龄51以上":54633,
+                    "城市等级":1084604,
+                    "品牌huawei":3083448,
+                    "品牌honor":1472720,
+                    "品牌oppo":1547743,
+                    "品牌vivo":1519853,
+                    "品牌samsung":233551,
+                    "品牌xiaomi":583854
                 }
             }
         ]
 
-        const paramsD = [
-            {
-                fnName: 'b', // 方法名
-                waitFor: 3, // 等待执行时间
-                callback: null, // 回调函数
-                restartTime: null, // 重新开始执行的时间
-                functionBody: function() { // 函数体
-                    console.log('a方法')
+        const Fn = function(data) {
+            let first = data.splice(0, 1)
+            data.forEach((item, index) => {
+                for(let date in item) {
+                    let obj = item[date]
+                    for (let key in obj) {
+                        first[0][date][key] += obj[key]
+                    }
                 }
-            },
-            {
-                fnName: 'c', // 方法名
-                waitFor: 3, // 等待执行时间
-                callback: null, // 回调函数
-                restartTime: null, // 重新开始执行的时间
-                functionBody: function() { // 函数体
-                    console.log('a方法')
-                }
-            },
-        ]
+            })
+            console.log(first[0], 'first[0]')
+            return first[0]
+        }
 
-        dateDispatch(paramsB)
-        // dateDispatch(paramsC)
-        // dateDispatch(paramsD)
-        // dateDispatch(paramsA)
+        Fn(data)
+
+
+        let obj1 = {
+            "2020-08-01T00:00:00.000Z":{
+                "性别男":0,
+                "count":575459,
+                "性别女":0,
+                "年龄1-17岁":0,
+                "年龄18-29岁":0,
+                "年龄30-40岁":0,
+                "年龄41-50岁":0,
+                "年龄51以上":57553,
+                "城市等级":960381,
+                "品牌huawei":3037049,
+                "品牌honor":1490186,
+                "品牌oppo":1565127,
+                "品牌vivo":1523156,
+                "品牌samsung":244706,
+                "品牌xiaomi":575459
+            },
+            "2020-08-02T00:00:00.000Z":{
+                "性别男":0,
+                "count":571698,
+                "性别女":0,
+                "年龄1-17岁":0,
+                "年龄18-29岁":0,
+                "年龄30-40岁":0,
+                "年龄41-50岁":0,
+                "年龄51以上":53557,
+                "城市等级":931859,
+                "品牌huawei":2965090,
+                "品牌honor":1448536,
+                "品牌oppo":1496002,
+                "品牌vivo":1477035,
+                "品牌samsung":230201,
+                "品牌xiaomi":571698
+            },
+            "2020-08-03T00:00:00.000Z":{
+                "性别男":0,
+                "count":585873,
+                "性别女":0,
+                "年龄1-17岁":0,
+                "年龄18-29岁":0,
+                "年龄30-40岁":0,
+                "年龄41-50岁":0,
+                "年龄51以上":54900,
+                "城市等级":1110771,
+                "品牌huawei":3120723,
+                "品牌honor":1479224,
+                "品牌oppo":1548540,
+                "品牌vivo":1527255,
+                "品牌samsung":237103,
+                "品牌xiaomi":585873
+            },
+            "2020-08-04T00:00:00.000Z":{
+                "性别男":0,
+                "count":583854,
+                "性别女":0,
+                "年龄1-17岁":0,
+                "年龄18-29岁":0,
+                "年龄30-40岁":0,
+                "年龄41-50岁":0,
+                "年龄51以上":54633,
+                "城市等级":1084604,
+                "品牌huawei":3083448,
+                "品牌honor":1472720,
+                "品牌oppo":1547743,
+                "品牌vivo":1519853,
+                "品牌samsung":233551,
+                "品牌xiaomi":583854
+            }
+        }
+
+        let obj2 = {
+            "2020-08-01T00:00:00.000Z":{
+                "性别男":3,
+                "count":575459,
+                "性别女":0,
+                "年龄1-17岁":0,
+                "年龄18-29岁":0,
+                "年龄30-40岁":0,
+                "年龄41-50岁":0,
+                "年龄51以上":57553,
+                "城市等级":960381,
+                "品牌huawei":3037049,
+                "品牌honor":1490186,
+                "品牌oppo":1565127,
+                "品牌vivo":1523156,
+                "品牌samsung":244706,
+                "品牌xiaomi":575459
+            },
+            "2020-08-02T00:00:00.000Z":{
+                "性别男":0,
+                "count":571698,
+                "性别女":0,
+                "年龄1-17岁":0,
+                "年龄18-29岁":0,
+                "年龄30-40岁":0,
+                "年龄41-50岁":0,
+                "年龄51以上":53557,
+                "城市等级":931859,
+                "品牌huawei":2965090,
+                "品牌honor":1448536,
+                "品牌oppo":1496002,
+                "品牌vivo":1477035,
+                "品牌samsung":230201,
+                "品牌xiaomi":571698
+            },
+            "2020-08-03T00:00:00.000Z":{
+                "性别男":0,
+                "count":585873,
+                "性别女":0,
+                "年龄1-17岁":0,
+                "年龄18-29岁":0,
+                "年龄30-40岁":0,
+                "年龄41-50岁":0,
+                "年龄51以上":54900,
+                "城市等级":1110771,
+                "品牌huawei":3120723,
+                "品牌honor":1479224,
+                "品牌oppo":1548540,
+                "品牌vivo":1527255,
+                "品牌samsung":237103,
+                "品牌xiaomi":585873
+            },
+            "2020-08-04T00:00:00.000Z":{
+                "性别男":0,
+                "count":583854,
+                "性别女":0,
+                "年龄1-17岁":0,
+                "年龄18-29岁":0,
+                "年龄30-40岁":0,
+                "年龄41-50岁":0,
+                "年龄51以上":54633,
+                "城市等级":1084604,
+                "品牌huawei":3083448,
+                "品牌honor":1472720,
+                "品牌oppo":1547743,
+                "品牌vivo":1519853,
+                "品牌samsung":233551,
+                "品牌xiaomi":583854
+            }
+        }
+
+        const text = function(text) {
+            if (text.includes('性别')) {
+                return 'gender'
+            } else if (text.includes('年龄')) {
+                return 'age'
+            } else if (text.includes('城市')) {
+                return 'city_level'
+            } else if (text.includes('品牌')) {
+                return 'brand'
+            } 
+        }
+
+        const cz = function(experienceGroupData, homogeneityData) {
+            const fied = {
+                "性别男": "gender",
+                "性别女": "gender",
+                
+            } 
+            let arr = []
+            for(let date in experienceGroupData) {
+                let obj = experienceGroupData[date]
+                let data = []
+                
+                for (let key in obj) {
+                    let temp = {}
+                    temp.mainExpValue = obj[key]
+                    temp.controlExpValue = homogeneityData[date][key]
+                    temp.tagName = text(key)
+                    temp.tagValue = key
+
+                    data.push(temp)
+                }
+                arr.push({
+                    label: date,
+                    data
+                }) 
+            }
+
+            return arr
+        }
+
+        cz(obj1, obj2)
     </script>
 </body>
 </html>
