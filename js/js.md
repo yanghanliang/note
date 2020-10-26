@@ -5153,6 +5153,7 @@ $("input[name*='code']");//name属性包含code的所有input标签
 ```js
 
 Math.pow(3,2);   // 3的平方
+// 3 ** 2   同理
 
 Math.sqrt(9);   9 // 开方，返回结果3
 

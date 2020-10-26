@@ -117,7 +117,7 @@
 + 查看远程仓库
 	git remote -v
 + git通过命令更换远程仓库地址
-	+ git remote set-url origin ssh://git@git.quclouds.com:8022/mn_web/mnmc_static_front.git
+	+ git remote set-url origin http://git@git.quclouds.com:8022/mn_web/mnmc_static_front.git
 
 
 提示出错信息：fatal: remote origin already exists.
@@ -222,3 +222,11 @@ ci: ci构建相关
 
 原因时在子目录中提交的（大部分时候在子目录提交也是没问题的），切到最外面一层目录提交即可
 
+
+##### 如果push遇到在输入密码是熟错后，就会报这个错误 fatal: Authentication failed for
+
+解决办法：
+
+git config --system --unset credential.helper
+
+之后你在push就会提示输入名称和密码
