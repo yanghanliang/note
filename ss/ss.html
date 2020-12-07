@@ -1,16 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <link rel="icon" href="/favicon.ico"><title>page_src</title><link href="/js/about.4f6b7486.js" rel="prefetch"><link href="/css/app.ba4c6127.css" rel="preload" as="style">
-        <link href="/js/app.985c2e5b.js" rel="preload" as="script"><link href="/js/chunk-vendors.797b63c7.js" rel="preload" as="script"><link href="/css/app.ba4c6127.css" rel="stylesheet">
-    </head>
-    <body>
-        <noscript><strong>We're sorry but page_src doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript>
-        <div id="app"></div>
-        <script src="/js/chunk-vendors.797b63c7.js"></script>
-        <script src="/js/app.985c2e5b.js"></script>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const sqlFormat = (params) => {
+            const main = {
+                search: (currentParams) => {
+                    const { fields, values, tableName } = currentParams;
+                    const operatorList = {
+                        ge: '>=',
+                        gt: '>',
+                        le: '<=',
+                        lt: '<',
+                        eq: '=',
+                    }
+                    let arr = [];
+                    fields.forEach((field, index) => {
+                        console.log(values[index], values, fields)
+                        const value = values[index];
+                        let str = `${field} like '%${value}%'`;
+
+                        if (!currentParams.isLike) {
+                            str = `${field} ${operatorList[currentParams.operator]} ${value}`;
+                        }
+
+                        arr.push(str);
+                    });
+                    currentParams.relationSymbol = ` ${currentParams.relationSymbol} `;
+                    const sql = `SELECT * FROM \`${tableName}\` WHERE ${arr.join(currentParams.relationSymbol)}`;
+
+                    return sql;
+                },
+                insert: (currentParams) => {
+                    const { fields, values } = currentParams;
+                    const fieldStr = fields.join(', ');
+                    const valueStr = values.join(', ');
+                    const sql = `INSERT INTO \`${tableName}\` (${fieldStr}) VALUES (${valueStr})`;
+
+                    return sql;
+                },
+                update: (currentParams) => {
+                    const { fields, values } = currentParams;
+                    let arr = [];
+                    fields.forEach((field, index) => {
+                        const str = `${field} = ${values[index]}`;
+                        arr.push(str);
+                    });
+
+                    const sql = `UPDATE \`${tableName}\` SET ${arr.join(', ')} WHERE ${currentParams.field} = ${currentParams.value}`;
+
+                    return sql;
+                },
+                delete: (currentParams) => {
+                    const sql = `DELETE from ${tableName} WHERE id in (${currentParams.join(', ')})`;
+
+                    return sql;
+                },
+            };
+
+            return main[params.type](params);
+        }
+
+        /**
+         * 获取某个范围的随机数
+         * @param {object}      params
+         * @param {object}      params.postData 接口获取到的数据 { startTime: '16068943374', name: 'yhl', }
+         * @param {object}      params.fields 对应的字段 { startTime: 'start_time', name: 'name' }
+         * @param {string}      params.type 默认: search - 搜索
+         * @param {number}      params.min 最小值
+         * @param {number}      params.max 最大值
+         * @returns {number} value 默认情况下: min 到 max 之间的值 - 包含最大值和最小值
+         */
+        var sqlDataHandle  = function(params) {
+            const { postData, fields, type = 'search', tableName = 'tableName' } = params;
+            const paramList = {
+                search: {
+                    relationSymbol: 'and',
+                    isLike: true,
+                    operator: 'eq',
+                },
+                update: {
+                    field: 'id',
+                    value: '',
+                },
+                delete: [1, 2],
+            };
+            let currentParams = params?.currentParams ? params.currentParams : paramList[type];
+            let valueArr = [];
+            let fieldArr = [];
+
+            // 这里将传入的值和字段进行转换，并分开存储
+            for (const key in fields) {
+                const field = `\`${fields[key]}\``;
+                const value = typeof postData[key] === 'number' ? postData[key] : `'${postData[key]}'`;
+
+                valueArr.push(value);
+                fieldArr.push(field);
+            }
+
+            currentParams.type = type;
+            currentParams.fields = fieldArr;
+            currentParams.values = valueArr;
+            currentParams.tableName = tableName;
+
+            const sql = sqlFormat(currentParams);
+
+            return sql;
+        }
+
+        const postData = {
+            startTime: 16068943374,
+            name: 'yhl',
+        };
+
+        const fields = {
+            startTime: 'start_time',
+            name: 'name',
+        };
+
+        const currentParams = {
+            relationSymbol: 'or',
+            isLike: false,
+            operator: 'lt',
+        };
+
+        const data = sqlDataHandle({ type: 'search', postData, fields, currentParams });
+
+        console.log(data);
+    </script>
+</body>
 </html>
