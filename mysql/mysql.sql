@@ -331,7 +331,7 @@ insert into time_1 values
 	('2017-12-22 06:55:25','2017-12-22 10:40:10');
 
 -- datetime记录的范围从1000-01-01 00:00:00 ~ 9999-12-31 23:59:59
--- timestamp 从1970-01-01 00:00:00~2038-01-19 
+-- timestamp 从1970-01-01 00:00:00~2038-01-19
 -- 记录字段为 生日 我们可以选择datetime
 -- 订单下单的时间: 我们可以选择timestamp 或者 datetime
 insert into time_1(a) values

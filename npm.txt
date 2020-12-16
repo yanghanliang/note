@@ -152,3 +152,9 @@ npm WARN tar ENOENT: no such file or directory, open 'D:\project\company\YYBLaye
 
 解决方法:
 删除文件 package-lock.json，再重新执行npm i或者npm install
+
+
+####  tarball data for monaco-editor@0.17.1 (sha512-JAc0mtW7NeO+0SwPRcdkfDbWLgkqL9WfP1NbpP9wNASsW6oWqgZqNIWt4teymGjZIXTElx3dnQmUYHmVrJ7HxA==) seems to be corrupted. Trying one more time.
+
+更换源再安装
+

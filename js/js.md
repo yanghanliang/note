@@ -5340,3 +5340,26 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/%E5%
 `
 
 `let result = someInterface.customMethod?.();`
+
+
+#### 根据url链接，获取图片大小
+
+async function getImageSize(imgUrl) {
+  return new Promise((resolve, reject) => {
+    let img = new Image();
+    img.onload = () => {
+      resolve({
+        width: img.width,
+        height: img.height
+      });
+      img = null;
+    };
+
+    img.onerror = (e) => {
+      reject(new Error('getImageSize fail, img onerror:' + e));
+      img = null;
+    };
+    img.src = imgUrl;
+  });
+}
+
