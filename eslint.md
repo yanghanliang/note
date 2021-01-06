@@ -9,6 +9,6 @@ alert('foo');
 ```
 
 ```js
-// 让eslint 忽略下一行的检测
+// 让eslint 忽略下一行的检测sheng'd
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 ```

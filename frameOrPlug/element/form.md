@@ -26,7 +26,8 @@ data() {
         rules: {
             budget: [
                 { required: true, message: '请输入总预算', trigger: 'blur' },
-                { validator: orderDudget, trigger: 'blur' }
+                { validator: orderDudget, trigger: 'blur' },
+                { pattern:/(.apk)$/, message: '请上传.apk类型的文件', trigger: 'change' },
             ],
             freControl: {
                 min: [

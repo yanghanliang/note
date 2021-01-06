@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    html,body{
+      height: 100%;
+      border: 1px solid transparent;
+    }
+    .button {
+      width: 200px;
+      height: 50px;
+      line-height: 50px;
+      background-color: aqua;
+      margin: 700px auto 0;
+      text-align: center;
+    }
+    .micro-currency {
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      position: fixed;
+      background-color: rgba(0, 0, 0, .5);
+    }
+    .gif {
+      top: 100px;
+      left: 50%;
+      position: absolute;
+      transform: translateX(-50%);
+    }
+    .mCImg {
+      display: none;
+      position: fixed;
+      width: 150px;
+      height: 150px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-image: url("./wz_coin.png");
+    }
+  </style>
+</head>
+<body>
+  <div id="button" class="button">按钮</div>
+  <div id="microCurrency" class="micro-currency">
+    <img id="gif" class="gif" src="./wz_coin.png" alt="">
+  </div>
+  <div id="mCImg" class="mCImg">
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script>
+    $(document).ready(() => {
+
+      const gif = $('#gif');
+      const button = $('#button');
+      const mCImg = $('#mCImg');
+      const microCurrency = $('#microCurrency');
+      const { top: gifTop, left: gifLeft, } = gif[0].getBoundingClientRect();
+      const { top: buttonTop, left: buttonLeft, } = button[0].getBoundingClientRect();
+      const { width: buttonWidth, height: buttonHeight } = button[0].getBoundingClientRect();
+      const { width: mCImgWidth, height: mCImgHeight } = mCImg[0].getBoundingClientRect();
+      console.log(gifTop, gifLeft, 'gif.offset()', document.querySelector('#gif').getBoundingClientRect())
+      
+      setTimeout(() => {
+        microCurrency.animate({
+          'opacity': 0,
+        }, 3000, () => {
+          microCurrency.css('display', 'none');
+        });
+        mCImg.css({ display: 'block', top: `${gifTop}px`, left: `${gifLeft}px` });
+        setTimeout(() => {
+          console.log(buttonHeight, mCImgHeight, '??')
+          mCImg.animate({
+            top: buttonTop + buttonHeight / 2 - mCImgHeight / 2 + 'px',
+            left: buttonLeft + buttonWidth / 2 + mCImgWidth / 2 + 'px',
+          }, 3000);
+        });
+    })
+    }, 2000);
+
+
+
+  </script>
+</body>
+</html>

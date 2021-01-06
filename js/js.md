@@ -5363,3 +5363,10 @@ async function getImageSize(imgUrl) {
   });
 }
 
+#### 换行写法
+
+(window.location.host === 'nutty.qq.com'
+  && process.env.ACCESS_ENV === 'production')
+  ? ACCESS_FORMAL_URL
+  : ACCESS_TEST_URL;
+
