@@ -103,8 +103,37 @@ start .\nginx.exe
 .\nginx.exe -s reload
 .\nginx.exe -v
 
+---
 
-### 方案一 
+### 服务器配置
+
+server {
+        listen          3000;
+        server_name     localhost;
+        root            /web/blog/dist;
+        index           index.html;
+
+        location / {
+                try_files  $uri $uri/ @router;
+                index      index.html;
+                #proxy_pass http://127.0.0.1:8080;
+        }
+
+        location @router {
+                rewrite ^.*$ /index.html last;
+        }
+
+        location /baidu {
+                proxy_pass http://api.fanyi.baidu.com/api/trans/vip/translate;
+        }
+        location /robot {
+                proxy_pass http://api.qingyunke.com/api.php;
+        }
+}
+
+---
+
+### nginx 去掉url部分参数 
 
 #### 1. 修改hosts文件
 + 在这个目录`C:\Windows\System32\drivers\etc`下，找到 HOSTS 文件

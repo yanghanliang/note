@@ -3329,6 +3329,12 @@ ip/掩码：
 /^2[\d]?$|^1[\d]{1,2}$|^[\d]{1,2}$/ // 自己写的
 
 
+#####
+
+匹配只含有数字字母下划线的组合
+/^[A-Za-z0-9_]+$/
+
+
 ###########################
 
 例:
@@ -5153,6 +5159,7 @@ $("input[name*='code']");//name属性包含code的所有input标签
 ```js
 
 Math.pow(3,2);   // 3的平方
+// 3 ** 2   同理
 
 Math.sqrt(9);   9 // 开方，返回结果3
 
@@ -5315,3 +5322,51 @@ variableList.forEach(name => {
 })
 
 ```
+
+
+#### 驼峰转换
+
+'getDataName'.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase(); // get_data_name
+
+
+#### 可选链
+
+https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/%E5%8F%AF%E9%80%89%E9%93%BE
+
+`let nestedProp = obj.first?.second; => let nestedProp = obj.first && obj.first.second;`
+
+`
+为了避免报错，在访问obj.first.second之前，要保证 obj.first 的值既不是 null，也不是 undefined。如果只是直接访问 obj.first.second，而不对 obj.first 进行校验，则有可能抛出错误。
+`
+
+`let result = someInterface.customMethod?.();`
+
+
+#### 根据url链接，获取图片大小
+
+async function getImageSize(imgUrl) {
+  return new Promise((resolve, reject) => {
+    let img = new Image();
+    img.onload = () => {
+      resolve({
+        width: img.width,
+        height: img.height
+      });
+      img = null;
+    };
+
+    img.onerror = (e) => {
+      reject(new Error('getImageSize fail, img onerror:' + e));
+      img = null;
+    };
+    img.src = imgUrl;
+  });
+}
+
+#### 换行写法
+
+(window.location.host === 'nutty.qq.com'
+  && process.env.ACCESS_ENV === 'production')
+  ? ACCESS_FORMAL_URL
+  : ACCESS_TEST_URL;
+

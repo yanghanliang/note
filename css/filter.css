@@ -1,0 +1,13 @@
+/* 暗模式 */
+html {
+    filter: invert(7%) hue-rotate(-261deg);
+}
+
+/* https://dev.to/dip15739/dark-mode-with-only-1-css-property-17fl */
+
+
+/*************************************************************************/
+
+
+
+

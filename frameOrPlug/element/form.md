@@ -26,7 +26,8 @@ data() {
         rules: {
             budget: [
                 { required: true, message: '请输入总预算', trigger: 'blur' },
-                { validator: orderDudget, trigger: 'blur' }
+                { validator: orderDudget, trigger: 'blur' },
+                { pattern:/(.apk)$/, message: '请上传.apk类型的文件', trigger: 'change' },
             ],
             freControl: {
                 min: [
@@ -40,6 +41,12 @@ data() {
 }
 
 ```
+
+---
+
+动态循环深层次复杂验证
+
+可以采用页面组件话，将表单循环复杂部分，拆成子组件进行验证
 
 ---
 
