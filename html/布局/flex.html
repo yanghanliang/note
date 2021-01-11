@@ -10,27 +10,67 @@
             padding: 0;
             width: 100%;
             height: 100%;
+            color: #fff;
+            font-size: 30px;
+            font-weight: bold;
+            text-align: center;
         }
         .box {
             display: flex;
+            margin-bottom: 20px;
         }
-        .box-left,.box-right {
+        .box > div {
             height: 300px;
+            line-height: 300px;
         }
-        .box-left {
-            flex: 39.8;
+        .box > div:nth-child(1) {
             background-color: red;
         }
-        .box-right {
-            flex: 59.5;
+        .box > div:nth-child(2) {
             background-color: aqua;
+        }
+        .box > div:nth-child(3) {
+            background-color: blueviolet;
         }
     </style>
 </head>
 <body>
     <div class="box">
-        <div class="box-left"></div>
-        <div class="box-right"></div>
+        <div style="flex: 1;">1</div>
+        <div style="flex: 1;">1</div>
+    </div>
+
+    <div class="box">
+        <div style="flex: 5;">5</div>
+        <div style="flex: 5;">5</div>
+    </div>
+
+    <div class="box">
+        <div style="flex: 3;">3</div>
+        <div style="flex: 7;">7</div>
+    </div>
+
+    <div class="box">
+        <div style="flex: 4;">4</div>
+        <div style="flex: 6;">6</div>
+    </div>
+
+    <div class="box">
+        <div style="flex: 4">4</div>
+        <div style="width: 200px;">width: 200px</div>
+        <div style="flex: 6;">6</div>
+    </div>
+
+    <div class="box">
+        <div style="width: 300px;">width: 300px</div>
+        <div style="width: 200px;">width: 200px</div>
+        <div style="flex: 6;">6</div>
+    </div>
+
+    <div class="box">
+        <div style="width: 300px;">width: 300px</div>
+        <div style="width: 200px;">width: 200px</div>
+        <div style="flex: 1;">1</div>
     </div>
 </body>
 </html>

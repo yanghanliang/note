@@ -2599,3 +2599,22 @@ user-select:none;
 [animation-iteration-count]    规定动画应该播放的次数。
 [animation-direction]          规定是否应该轮流反向播放动画。
 [animation-fill-mode]          属性规定动画在播放之前或之后，其动画效果是否可见。
+
+
+#### 字体引入
+
+```css
+@font-face {
+  font-family: 'DIN Alternate';
+  src: url('../fonts/dinalternate.ttf')
+}
+.ff {
+  font-family: 'DIN Alternate';
+  color: #FFB347;
+}
+```
+
+#### 调试工具
+
+chrome://inspect/#devices
+
