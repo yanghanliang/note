@@ -7,130 +7,28 @@
 </head>
 <body>
     <script>
-        const sqlFormat = (params) => {
-            const main = {
-                search: (currentParams) => {
-                    const { fields, values, tableName } = currentParams;
-                    const operatorList = {
-                        ge: '>=',
-                        gt: '>',
-                        le: '<=',
-                        lt: '<',
-                        eq: '=',
-                    }
-                    let arr = [];
-                    fields.forEach((field, index) => {
-                        console.log(values[index], values, fields)
-                        const value = values[index];
-                        let str = `${field} like '%${value}%'`;
-
-                        if (!currentParams.isLike) {
-                            str = `${field} ${operatorList[currentParams.operator]} ${value}`;
-                        }
-
-                        arr.push(str);
-                    });
-                    currentParams.relationSymbol = ` ${currentParams.relationSymbol} `;
-                    const sql = `SELECT * FROM \`${tableName}\` WHERE ${arr.join(currentParams.relationSymbol)}`;
-
-                    return sql;
-                },
-                insert: (currentParams) => {
-                    const { fields, values } = currentParams;
-                    const fieldStr = fields.join(', ');
-                    const valueStr = values.join(', ');
-                    const sql = `INSERT INTO \`${tableName}\` (${fieldStr}) VALUES (${valueStr})`;
-
-                    return sql;
-                },
-                update: (currentParams) => {
-                    const { fields, values } = currentParams;
-                    let arr = [];
-                    fields.forEach((field, index) => {
-                        const str = `${field} = ${values[index]}`;
-                        arr.push(str);
-                    });
-
-                    const sql = `UPDATE \`${tableName}\` SET ${arr.join(', ')} WHERE ${currentParams.field} = ${currentParams.value}`;
-
-                    return sql;
-                },
-                delete: (currentParams) => {
-                    const sql = `DELETE from ${tableName} WHERE id in (${currentParams.join(', ')})`;
-
-                    return sql;
-                },
-            };
-
-            return main[params.type](params);
+        const pagination = function(data = [], currentPage = 1, pageNumber) {
+            const startPage = (currentPage - 1) * pageNumber
+            const endPage = currentPage * pageNumber
+            return data.slice(startPage, endPage)
         }
 
-        /**
-         * 获取某个范围的随机数
-         * @param {object}      params
-         * @param {object}      params.postData 接口获取到的数据 { startTime: '16068943374', name: 'yhl', }
-         * @param {object}      params.fields 对应的字段 { startTime: 'start_time', name: 'name' }
-         * @param {string}      params.type 默认: search - 搜索
-         * @param {number}      params.min 最小值
-         * @param {number}      params.max 最大值
-         * @returns {number} value 默认情况下: min 到 max 之间的值 - 包含最大值和最小值
-         */
-        var sqlDataHandle  = function(params) {
-            const { postData, fields, type = 'search', tableName = 'tableName' } = params;
-            const paramList = {
-                search: {
-                    relationSymbol: 'and',
-                    isLike: true,
-                    operator: 'eq',
-                },
-                update: {
-                    field: 'id',
-                    value: '',
-                },
-                delete: [1, 2],
-            };
-            let currentParams = params?.currentParams ? params.currentParams : paramList[type];
-            let valueArr = [];
-            let fieldArr = [];
-
-            // 这里将传入的值和字段进行转换，并分开存储
-            for (const key in fields) {
-                const field = `\`${fields[key]}\``;
-                const value = typeof postData[key] === 'number' ? postData[key] : `'${postData[key]}'`;
-
-                valueArr.push(value);
-                fieldArr.push(field);
-            }
-
-            currentParams.type = type;
-            currentParams.fields = fieldArr;
-            currentParams.values = valueArr;
-            currentParams.tableName = tableName;
-
-            const sql = sqlFormat(currentParams);
-
-            return sql;
+        const arrSort = function(data = [], field = 'name') {
+            arrSort = data.sort((a, b) => {
+                if (a > b) {
+                    return 1;
+                } else if (a == b) {
+                    return 0;
+                } else {
+                    return -1;
+                }
+            })
         }
 
-        const postData = {
-            startTime: 16068943374,
-            name: 'yhl',
-        };
-
-        const fields = {
-            startTime: 'start_time',
-            name: 'name',
-        };
-
-        const currentParams = {
-            relationSymbol: 'or',
-            isLike: false,
-            operator: 'lt',
-        };
 
         const data = sqlDataHandle({ type: 'search', postData, fields, currentParams });
 
-        console.log(data);
+        
     </script>
 </body>
 </html>

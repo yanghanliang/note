@@ -182,7 +182,7 @@ delete from person;
 
 
 -- 更新数据
-update person set age=20 
+update person set age=20
 	where id=6;
 
 -- 如果不加where所有的数据都会变化
