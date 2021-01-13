@@ -72,5 +72,17 @@
         <div style="width: 200px;">width: 200px</div>
         <div style="flex: 1;">1</div>
     </div>
+
+    <div class="box">
+        <div style="width: 200px;">width: 200px</div>
+        <div style="flex: 1;">1  这里需要注意如果它存在子元素，且子元素超出原本的父元素，它仍然会被撑开，可以设置overflow: hiddle;保证它不被子元素撑开</div>
+    </div>
+
+    <div class="box" style="justify-content: space-between;">
+        <div style="width: 300px;"></div>
+        <div style="width: 300px;"></div>
+        <div style="width: 300px;"></div>
+    </div>
+    
 </body>
 </html>

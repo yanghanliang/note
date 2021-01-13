@@ -19,7 +19,6 @@ class PeekableQueue extends Queue {
 
 
 // 类的成员方法，可以返回 this， 来实现链式调用。
-
 class Jedi {
     jump() {
     this.jumping = true;
