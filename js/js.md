@@ -5370,3 +5370,8 @@ async function getImageSize(imgUrl) {
   ? ACCESS_FORMAL_URL
   : ACCESS_TEST_URL;
 
+
+#### 生成一个数组
+
+var arr = Array.from({length:10}, (v,k) => k + 1)
+// [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]

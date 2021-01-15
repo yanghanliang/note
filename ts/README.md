@@ -52,9 +52,9 @@ let httpStatus:Test = Test.success // 200
 #### 关键字
 ```ts
 
-// 内部和其字类中使用
+// 内部和其字类中使用 - 受保护的
 protected name: string
-// 内部使用
+// 内部使用 - 私有的
 private age: numbrt
 // 继承
 extends
