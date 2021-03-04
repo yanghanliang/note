@@ -22,6 +22,16 @@ pickerOptions: {
         return time.getTime() < Date.now() - 24 * 60 * 60 * 1000
         // return time.getTime() < new Date(this.form.begin_time).getTime(); // 结束时间大于开始时间-关键在于箭头函数
     },
+    // disabledDate: (time) => {
+    //     const endTime = time.getTime();
+    //     const nowTime = new Date().getTime();
+    //     const startTime = new Date(this.ruleForm.startTime).getTime();
+    //     if (startTime < nowTime) {
+    //         return endTime < nowTime;
+    //     }
+
+    //     return endTime < startTime;
+    // },
     shortcuts: [
         {
             text: '今天',

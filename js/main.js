@@ -521,6 +521,26 @@ My.prototype.money = function (value, params) {
     return value
 }
 
+// 判断类型
+My.prototype.checkType = function (value, type) {
+  const rules = {
+    int(v) {
+      return /^[\d]+$/.test(v);
+    },
+    float(v) {
+      return /^[\d]+[.]{1}[\d]{1,2}$/.test(v);
+    },
+    string(v) {
+      return /[\S]+/.test(v);
+    },
+    version(v) {
+      return /^[\d]+[.]{1}[\d]+[.]{1}[\d]+$/.test(v);
+    },
+  };
+
+  return rules[type](value);
+}
+
 /**
  * 实例化
  */

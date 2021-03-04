@@ -3334,6 +3334,28 @@ ip/掩码：
 匹配只含有数字字母下划线的组合
 /^[A-Za-z0-9_]+$/
 
+####
+
+// 判断类型
+checkType(value, type) {
+  const rules = {
+    int(v) {
+      return /^[\d]+$/.test(v);
+    },
+    float(v) {
+      return /^[\d]+[.]{1}[\d]{1,2}$/.test(v);
+    },
+    string(v) {
+      return /[\S]+/.test(v);
+    },
+    version(v) {
+      return /^[\d]+[.]{1}[\d]+[.]{1}[\d]+$/.test(v);
+    },
+  };
+
+  return rules[type](value);
+},
+
 
 ###########################
 
@@ -5375,3 +5397,10 @@ async function getImageSize(imgUrl) {
 
 var arr = Array.from({length:10}, (v,k) => k + 1)
 // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+#### every 测试数组中的所有元素是否通过提供的功能实现的测试。它返回一个布尔值。
+
+[12, 5, 8, 130, 44].every(x => x >= 10);   // false
+[12, 54, 18, 130, 44].every(x => x >= 10); // true
+
+
