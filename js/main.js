@@ -523,22 +523,24 @@ My.prototype.money = function (value, params) {
 
 // 判断类型
 My.prototype.checkType = function (value, type) {
-  const rules = {
-    int(v) {
-      return /^[\d]+$/.test(v);
-    },
-    float(v) {
-      return /^[\d]+[.]{1}[\d]{1,2}$/.test(v);
-    },
-    string(v) {
-      return /[\S]+/.test(v);
-    },
-    version(v) {
-      return /^[\d]+[.]{1}[\d]+[.]{1}[\d]+$/.test(v);
-    },
-  };
+    const rules = {
+        int: v => /^[\d]+$/.test(v),
+        float: v => /^[\d]+[.]{1}[\d]+$/.test(v),
+        string: v => /[\S]+/.test(v),
+        version: v => /^[\d]+[.]{1}[\d]+[.]{1}[\d]+$/.test(v),
+    };
 
-  return rules[type](value);
+    return rules[type](value);
+}
+
+/**
+ * 
+ * @param {string} str 
+ * @description 驼峰转换：将驼峰命名的变量转换成下划线的字母
+ * @returns {string}
+ */
+My.prototype.humpConversion = function (str) {
+    return str.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase();
 }
 
 /**

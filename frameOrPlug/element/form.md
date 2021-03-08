@@ -332,3 +332,44 @@ this.$refs.form.validate(async (valid) => {
 ```
 
 注意，οnfοcus="this.type='password'"不能再IE上识别，需要做兼容性考虑，在网页初始化的时候处理下就好了，对于IE浏览器，在input标签上使用用type="password" autocomplete="off"后，浏览器是不会提示记住密码的。
+
+
+#### 公共表单校验方法
+
+
+```js
+methods: {
+    validateForm(form) {
+        // 使用方式：
+        // const verificationItem = await validateForm(this.$refs.form);
+        // if (!verificationItem) return;
+        return new Promise((resolve) => {
+            if (Array.isArray(form)) {
+            let length = 0;
+            form.forEach((item) => {
+                item.validate((valid) => {
+                if (valid) {
+                    length += 1;
+                }
+                });
+            });
+
+            if (length === form.length) {
+                return resolve(true);
+            }
+
+            return resolve(false);
+            }
+
+            form.validate((valid) => {
+            if (valid) {
+                return resolve(true);
+            }
+
+            resolve(false);
+            });
+        });
+    }
+}
+
+```
