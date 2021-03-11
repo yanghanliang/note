@@ -127,6 +127,14 @@
 		+ git add . // 保存处理后的冲突文件
 		+ git rebase --continue // 确认解决了冲突文件
 
+
+---
+拉取子模块：
+git submodule update --init --recursive
+
+---
+
+
 ```
 WIP   		Work in progress, do not merge yet. // 开发中
 LGTM 		Looks good to me. // Riview 完别人的 PR ，没有问题
@@ -249,3 +257,5 @@ ci: ci构建相关
 git config --system --unset credential.helper
 
 之后你在push就会提示输入名称和密码
+
+
