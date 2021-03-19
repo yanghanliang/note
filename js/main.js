@@ -546,4 +546,4 @@ My.prototype.humpConversion = function (str) {
 /**
  * 实例化
  */
-// var my = new My()
+window.my = new My()
