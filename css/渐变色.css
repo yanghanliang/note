@@ -4,3 +4,6 @@ div {
     background: -moz-linear-gradient(40deg, red, pink); /* Firefox 3.6 - 15 */
     background: linear-gradient(40deg, red, pink); /* 标准的语法 */
 }
+
+/* 文字渐变 */
+/* https://www.jb51.net/css/647191.html */
