@@ -14,7 +14,13 @@ new Vue({
     watch: {
         'options.attrInfo': function() {
             this.formRules()
-        }
+        },
+        item: {
+            deep: true,
+            handler: function(newVal) {
+                console.log(newVal, 'mviewImages')
+            }
+        },
     },
 })
 
@@ -41,5 +47,20 @@ watch: {
         this.pageData.lock = true
     }
 }
+
+```
+
+#### vue监听不到props中的值时
+
+```js
+
+watch: {
+　　data: {
+　　　　immediate: true, // 关键 immediate
+　　　　handler: function(newVal) {
+　　　　　　console.log(newVal);
+　　　　}
+　　}
+},
 
 ```

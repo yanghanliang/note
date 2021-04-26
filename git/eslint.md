@@ -13,9 +13,9 @@ npm run pre-commit
 
 {
 	"scripts": {
-		"eslint": "eslint --ext .js,.vue pages",
-		"lintfix": "eslint --ext .js,.vue pages --fix",
-		"pre-commit": "npm run eslint"
+		"pre-commit": "npm run eslint",
+		"eslint": "eslint --ext .js,.vue */*",
+        "lintfix": "eslint --ext .js,.vue */* --fix"
 	},
 }
 
