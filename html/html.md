@@ -1813,6 +1813,8 @@ position:absolute; 不影响整体布局
 
 空格white-space: pre;(保留) nowrap;(不换行)
 
+white-space: pre-line; // 解析换行
+
 
 
 显示 {display:block;}(块) inline;(内嵌) list-item;(列表项) run-in;(追加部分) compact;(紧凑) marker;(标记) table; inline-table; table-raw-group; table-header-group; table-footer-group; table-raw; table-column-group; table-column; table-cell; table-caption;(表格标题)
@@ -2520,6 +2522,7 @@ display: -webkit-box;
 overflow: hidden;
 -webkit-box-orient: vertical;
 text-overflow: ellipsis;
+word-wrap: break-word;
 
 > css 多行文本溢出 js判断是否有省略号
 
@@ -2618,4 +2621,11 @@ user-select:none;
 
 chrome://inspect/#devices
 http://debugx5.qq.com
+
+
+#### 文字边框颜色
+
+color: transparent;
+-webkit-text-fill-color: #ffdaa6; /*文字的填充色*/
+-webkit-text-stroke: 1.2px #000;
 

@@ -3634,6 +3634,9 @@ return unescape(document.cookie.substring(c_start,c_end))
 escape() 函数可对字符串进行编码，这样就可以在所有的计算机上读取该字符串。(类似于加密)
 unescape()  解密
 
+encodeURIComponent() // url 参数编码
+decodeURIComponent() // 解码
+
 
 ##
 
@@ -3655,19 +3658,17 @@ function getCookie(cookieName) {
 //获取地址栏数据
 SearchList.prototype.queryUrlParams = function(){
   // 获取搜索信息url 后面的信息
-  var obj = {};
-  var search = location.search; //获取地址栏的值
-  if(search){
-    search = search.replace('/^\?/', ''); //删除第一个问号
-    if(search){
-      var arr = search.split('&'); //以&符分开字符串并转成数组
-      arr.forEach(function(){
-        var itemArr = v.split('='); //以&符分开字符串并转成数组
-        obj[itemArr[0]] = itemArr[1]; //再组成数组
-      })
-    }
+  const obj = {}
+  const search = location.href.split('?')[1] // 获取地址栏的值
+  if (search) {
+    const arr = search.split('&') // 以&符分开字符串并转成数组
+    arr.forEach(function (v) {
+      const itemArr = v.split('=') // 以&符分开字符串并转成数组
+      obj[itemArr[0]] = itemArr[1] // 再组成数组
+    })
   }
-  return obj;
+
+  return obj
 };
 
 获取地址栏的值,并将字符串转成关联数组
@@ -5402,5 +5403,88 @@ var arr = Array.from({length:10}, (v,k) => k + 1)
 
 [12, 5, 8, 130, 44].every(x => x >= 10);   // false
 [12, 54, 18, 130, 44].every(x => x >= 10); // true
+
+
+#### 复制
+
+```js
+const textarea = document.createElement('textarea')
+textarea.style.width = '0'
+textarea.style.height = '0'
+textarea.style.opacity = '0' // 切记不能写 display: none，否则复制不到内容
+document.body.appendChild(textarea)
+textarea.value = txt
+textarea.select() // 选中文本内容
+const test = document.execCommand('Copy')
+console.log(test, 'test', textarea.getAttribute('value'))
+```
+
+
+
+#### 设备运行环境检测
+
+```js
+
+function getType() {
+    var u = navigator.userAgent, app = navigator.appVersion;
+    var ua = navigator.userAgent.toLowerCase();
+
+    return { //偵測移動端瀏覽器版本信息
+        trident: u.indexOf('Trident') > -1, //IE 核心
+        presto: u.indexOf('Presto') > -1, //opera 核心
+        webKit: u.indexOf('AppleWebKit') > -1, //Apple, google 核心
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //Firefox 核心
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //行動裝置
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android 或 uc 瀏覽器
+        iPhone: u.indexOf('iPhone') > -1, //是否為 iPhone 或者 QQHD 瀏覽器
+        iPad: u.indexOf('iPad') > -1, //是否 iPad
+        webApp: u.indexOf('Safari') == -1, //是否 web 应该程序，没有头部与底部
+        iosv: u.substr(u.indexOf('iPhone OS') + 9, 3),//ios 版本
+        weixin: ua.match(/MicroMessenger/i) == "micromessenger",//微信瀏覽器
+        fbapp: u.indexOf('FBAV') > -1,//Facebook App 內瀏覽器
+        line: u.indexOf('Line') > -1//Line 內瀏覽器
+    };
+}
+
+```
+
+#### 节流和防抖
+
+> 防抖（debounce）
+所谓防抖，就是指触发事件后在 n 秒内函数只能执行一次，如果在 n 秒内又触发了事件，则会重新计算函数执行时间。
+
+> 节流（throttle）
+所谓节流，就是指连续触发事件但是在 n 秒中只执行一次函数。
+
+
+```js
+var test = {
+  timeId: null,
+  startTime: 0,
+  antiShake: function(cb) { // 防抖
+    clearTimeout(this.timeId)
+    this.timeId = setTimeout(cb, 3000)
+  },
+  throttle: function(cb) { // 节流
+    let nowTime = +new Date()
+    if (nowTime - this.startTime > 3000) {
+      cb()
+      this.startTime = +new Date()
+    }
+  },
+}
+
+document.querySelector('#button').addEventListener('click', function() {
+  test.throttle(function() {
+    console.log(123)
+  })
+})
+
+```
+
+
+
+
 
 

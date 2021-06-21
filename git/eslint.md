@@ -13,9 +13,9 @@ npm run pre-commit
 
 {
 	"scripts": {
+		"eslint": "eslint **/**",
 		"pre-commit": "npm run eslint",
-		"eslint": "eslint --ext .js,.vue */*",
-        "lintfix": "eslint --ext .js,.vue */* --fix"
+        "lintfix": "eslint **/** --fix"
 	},
 }
 
@@ -81,3 +81,18 @@ module.exports = {
 }
 
 ```
+
+4. 安装必要包
+
+```json
+
+"devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.23.0",
+    "eslint-plugin-vue": "^7.8.0",
+    "standard": "^16.0.3"
+}
+
+```
+
+`yarn add -D babel-eslint@^10.1.0 eslint@^7.23.0 eslint-plugin-vue@^7.8.0 standard@^16.0.3`
